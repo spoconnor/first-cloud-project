@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E8B6D193-DD20-4440-9A76-06DEF9CBF556}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>voxelworld</RootNamespace>
+    <AssemblyName>voxel-world</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="World\Block.cs" />
+    <Compile Include="World\Blocks.cs" />
+    <Compile Include="World\Coords.cs" />
+    <Compile Include="World\Position.cs" />
+    <Compile Include="World\WorldData.cs" />
+    <Compile Include="World\WorldHost.cs" />
+    <Compile Include="World\WorldSettings.cs" />
+    <Compile Include="World\Generator\ClutterGenerator.cs" />
+    <Compile Include="World\Generator\Generator.cs" />
+    <Compile Include="World\Generator\PerlinNoise.cs" />
+    <Compile Include="World\Generator\TreeGenerator.cs" />
+    <Compile Include="World\Render\TexCoordsShort.cs" />
+    <Compile Include="World\TextureType.cs" />
+    <Compile Include="World\Enums.cs" />
+    <Compile Include="World\Game.cs" />
+    <Compile Include="World\OpenTk\Vector3d.cs" />
+    <Compile Include="World\OpenTk\Vector2d.cs" />
+    <Compile Include="World\OpenTk\Vector4d.cs" />
+    <Compile Include="World\OpenTk\Matrix4d.cs" />
+    <Compile Include="World\OpenTk\MathHelper.cs" />
+    <Compile Include="World\OpenTk\Vector2.cs" />
+    <Compile Include="World\OpenTk\Vector3.cs" />
+    <Compile Include="World\OpenTk\Vector4.cs" />
+    <Compile Include="World\OpenTk\Quaternoiond.cs" />
+    <Compile Include="World\OpenTk\Quaternoion.cs" />
+    <Compile Include="World\OpenTk\Matrix4.cs" />
+    <Compile Include="World\Settings.cs" />
+    <Compile Include="World\Constants.cs" />
+    <Compile Include="World\Chunk.cs" />
+    <Compile Include="World\ChunkCoords.cs" />
+    <Compile Include="World\Chunks.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="World\" />
+    <Folder Include="World\OpenTk\" />
+  </ItemGroup>
+</Project>
