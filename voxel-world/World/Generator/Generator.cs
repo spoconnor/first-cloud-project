@@ -26,7 +26,7 @@ namespace Sean.World.Generator
 
 		public static void Generate()
 		{
-			Debug.WriteLine("Generating new world: " + Settings.WorldFilePath);
+//			Debug.WriteLine("Generating new world: " + Settings.WorldFilePath);
 			Debug.WriteLine("World type: {0}, Size {1}x{2}", WorldData.WorldType, WorldData.SizeInChunksX, WorldData.SizeInChunksZ);
 
 			Settings.Random = string.IsNullOrEmpty(WorldData.RawSeed) ? new Random() : new Random(GetNumericSeed());

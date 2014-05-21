@@ -43,7 +43,7 @@ namespace Sean
             set
             {
                 _chunkUpdatesDisabled = value;
-                if (!_chunkUpdatesDisabled) WorldHost.BuildChunkHandle.Set();
+//                if (!_chunkUpdatesDisabled) WorldHost.BuildChunkHandle.Set();
             }
         }
         
@@ -82,26 +82,26 @@ namespace Sean
         public static float JumpSpeed = Constants.INITIAL_JUMP_VELOCITY;
         
         /// <summary>Short world name. Name of the file without any path info.</summary>
-        public static string WorldName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(WorldFilePath)) return "unknown"; //gm: this will happen when connected to a server, may want to have the server tell the client eventually what the world is called?
-                return WorldFilePath.Contains(System.IO.Path.DirectorySeparatorChar.ToString()) ? WorldFilePath.Substring(WorldFilePath.LastIndexOf(System.IO.Path.DirectorySeparatorChar.ToString()) + 1) : WorldFilePath;
-            }
-        }
+//        public static string WorldName
+//        {
+//            get
+//            {
+//                if (string.IsNullOrEmpty(WorldFilePath)) return "unknown"; //gm: this will happen when connected to a server, may want to have the server tell the client eventually what the world is called?
+//                return WorldFilePath.Contains(System.IO.Path.DirectorySeparatorChar.ToString()) ? WorldFilePath.Substring(WorldFilePath.LastIndexOf(System.IO.Path.DirectorySeparatorChar.ToString()) + 1) : WorldFilePath;
+//            }
+//        }
         
-        private static string _worldFilePath;
-        /// <summary>File path for the world. Full directory and file extension are added in the setter.</summary>
-        public static string WorldFilePath
-        {
-            get { return _worldFilePath; }
-            set
-            {
-                _worldFilePath = String.Format("{0}{1}{2}{3}", Config.SaveDirectory.FullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
-                WorldFileTempPath = String.Format("{0}.temp", _worldFilePath);
-            }
-        }
+//        private static string _worldFilePath;
+//        /// <summary>File path for the world. Full directory and file extension are added in the setter.</summary>
+//        public static string WorldFilePath
+//        {
+//            get { return _worldFilePath; }
+//            set
+//            {
+//                _worldFilePath = String.Format("{0}{1}{2}{3}", Config.SaveDirectory.FullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
+//                WorldFileTempPath = String.Format("{0}.temp", _worldFilePath);
+//            }
+//        }
         
         public static string WorldFileTempPath { get; private set; }
         

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using System.Xml;
 
 namespace Sean.World
 {
@@ -57,11 +58,11 @@ namespace Sean.World
 				settingsNode.Attributes.Append(xml.CreateAttribute("SizeZ")).Value = WorldData.SizeInChunksZ.ToString();
 
 				//chunks / clutter / light sources
-				var chunksNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "Chunks", ""));
-				foreach (Chunk chunk in WorldData.Chunks)
-				{
-					chunksNode.AppendChild(chunk.GetXml(xml));
-				}
+//				var chunksNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "Chunks", ""));
+//				foreach (Chunk chunk in WorldData.Chunks)
+//				{
+//					chunksNode.AppendChild(chunk.GetXml(xml));
+//				}
 
 				return Encoding.UTF8.GetBytes(xml.OuterXml);
 			}

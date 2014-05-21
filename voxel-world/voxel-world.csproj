@@ -34,7 +34,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
+    <Reference Include="OpenTK">
+      <HintPath>..\deps\OpenTK\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -53,23 +58,20 @@
     <Compile Include="World\TextureType.cs" />
     <Compile Include="World\Enums.cs" />
     <Compile Include="World\Game.cs" />
-    <Compile Include="World\OpenTk\Vector3d.cs" />
-    <Compile Include="World\OpenTk\Vector2d.cs" />
-    <Compile Include="World\OpenTk\Vector4d.cs" />
-    <Compile Include="World\OpenTk\Matrix4d.cs" />
-    <Compile Include="World\OpenTk\MathHelper.cs" />
-    <Compile Include="World\OpenTk\Vector2.cs" />
-    <Compile Include="World\OpenTk\Vector3.cs" />
-    <Compile Include="World\OpenTk\Vector4.cs" />
-    <Compile Include="World\OpenTk\Quaternoiond.cs" />
-    <Compile Include="World\OpenTk\Quaternoion.cs" />
-    <Compile Include="World\OpenTk\Matrix4.cs" />
     <Compile Include="World\Settings.cs" />
     <Compile Include="World\Constants.cs" />
     <Compile Include="World\Chunk.cs" />
     <Compile Include="World\ChunkCoords.cs" />
     <Compile Include="World\Chunks.cs" />
+    <Compile Include="RestApi\IWorldService.cs" />
+    <Compile Include="RestApi\WorldServiceImpl.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="RestApi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
 </Project>

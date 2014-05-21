@@ -27,7 +27,7 @@ namespace Sean
             
             CalculateProjectionMatrix ();
             UpdateFrustum ();
-            WorldHost.BuildWorld ();
+//            WorldHost.BuildWorld ();
         }
 #endregion
         

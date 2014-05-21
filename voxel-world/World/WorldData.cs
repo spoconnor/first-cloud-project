@@ -170,14 +170,14 @@ namespace Sean.World
 				}
 			}
 
-			//if theres a dynamic item on top of this block then let it fall
-			foreach (var item in chunk.GameItems.Values)
-			{
-				if (!item.IsMoving && item.Coords.Xblock == position.X && item.Coords.Yblock == position.Y + 1 && item.Coords.Zblock == position.Z)
-				{
-					item.IsMoving = true;
-				}
-			}
+//			//if theres a dynamic item on top of this block then let it fall
+//			foreach (var item in chunk.GameItems.Values)
+//			{
+//				if (!item.IsMoving && item.Coords.Xblock == position.X && item.Coords.Yblock == position.Y + 1 && item.Coords.Zblock == position.Z)
+//				{
+//					item.IsMoving = true;
+//				}
+//			}
 		}
 
 		/// <summary>Place multiple blocks in the world of the same type.</summary>
@@ -236,64 +236,64 @@ namespace Sean.World
 			gzstream.Dispose();
 			fstream.Dispose();
 
-			File.Copy(Settings.WorldFileTempPath, Settings.WorldFilePath, true);
-			File.Delete(Settings.WorldFileTempPath);
+//			File.Copy(Settings.WorldFileTempPath, Settings.WorldFilePath, true);
+//			File.Delete(Settings.WorldFileTempPath);
 		}
 
 		/// <summary>
 		/// Called from Server.Controller class only. The scenarios where we load from disk are if this is a server launching with a previously saved world
 		/// or if this is a single player and the server thread is loading the previously saved world.
 		/// </summary>
-		internal static void LoadFromDisk()
-		{
-			var stopwatch = new Stopwatch();
-			stopwatch.Start();
-
-			var fstream = new FileStream(Settings.WorldFilePath, FileMode.Open);
-			var gzstream = new GZipStream(fstream, CompressionMode.Decompress);
-
-			var bytesRead = 0;
-			var worldSettingsSizeBytes = new byte[sizeof(int)];
-			while (bytesRead < sizeof(int))
-			{
-				bytesRead += gzstream.Read(worldSettingsSizeBytes, bytesRead, sizeof(int) - bytesRead); //read the size of the world config xml
-			}
-			var worldSettingsBytes = new byte[BitConverter.ToInt32(worldSettingsSizeBytes, 0)];
-
-			bytesRead = 0;
-			while (bytesRead < worldSettingsBytes.Length)
-			{
-				bytesRead += gzstream.Read(worldSettingsBytes, bytesRead, worldSettingsBytes.Length - bytesRead);
-			}
-			WorldSettings.LoadSettings(worldSettingsBytes);
-
-			var chunkTotal = SizeInChunksX * SizeInChunksZ;
-			var chunkCount = 1;
-			var tasks = new Task[chunkTotal];
-			for (var x = 0; x < SizeInChunksX; x++) //loop through each chunk and load it
-			{
-				for (var z = 0; z < SizeInChunksZ; z++)
-				{
-					var chunkBytes = new byte[Chunk.SIZE_IN_BYTES];
-					bytesRead = 0;
-					while (bytesRead < chunkBytes.Length)
-					{
-						bytesRead += gzstream.Read(chunkBytes, bytesRead, chunkBytes.Length - bytesRead);
-					}
-					int x1 = x, z1 = z;
-					var task = Task.Factory.StartNew(() => LoadChunk(Chunks[x1, z1], chunkBytes));
-					tasks[chunkCount - 1] = task;
-					chunkCount++;
-				}
-			}
-			Task.WaitAll(tasks);
-			gzstream.Close();
-			fstream.Close();
-
-			stopwatch.Stop();
-			Debug.WriteLine("World load from disk time: {0}ms", stopwatch.ElapsedMilliseconds);
-
-		}
+//		internal static void LoadFromDisk()
+//		{
+//			var stopwatch = new Stopwatch();
+//			stopwatch.Start();
+//
+//			var fstream = new FileStream(Settings.WorldFilePath, FileMode.Open);
+//			var gzstream = new GZipStream(fstream, CompressionMode.Decompress);
+//
+//			var bytesRead = 0;
+//			var worldSettingsSizeBytes = new byte[sizeof(int)];
+//			while (bytesRead < sizeof(int))
+//			{
+//				bytesRead += gzstream.Read(worldSettingsSizeBytes, bytesRead, sizeof(int) - bytesRead); //read the size of the world config xml
+//			}
+//			var worldSettingsBytes = new byte[BitConverter.ToInt32(worldSettingsSizeBytes, 0)];
+//
+//			bytesRead = 0;
+//			while (bytesRead < worldSettingsBytes.Length)
+//			{
+//				bytesRead += gzstream.Read(worldSettingsBytes, bytesRead, worldSettingsBytes.Length - bytesRead);
+//			}
+//			WorldSettings.LoadSettings(worldSettingsBytes);
+//
+//			var chunkTotal = SizeInChunksX * SizeInChunksZ;
+//			var chunkCount = 1;
+//			var tasks = new Task[chunkTotal];
+//			for (var x = 0; x < SizeInChunksX; x++) //loop through each chunk and load it
+//			{
+//				for (var z = 0; z < SizeInChunksZ; z++)
+//				{
+//					var chunkBytes = new byte[Chunk.SIZE_IN_BYTES];
+//					bytesRead = 0;
+//					while (bytesRead < chunkBytes.Length)
+//					{
+//						bytesRead += gzstream.Read(chunkBytes, bytesRead, chunkBytes.Length - bytesRead);
+//					}
+//					int x1 = x, z1 = z;
+//					var task = Task.Factory.StartNew(() => LoadChunk(Chunks[x1, z1], chunkBytes));
+//					tasks[chunkCount - 1] = task;
+//					chunkCount++;
+//				}
+//			}
+//			Task.WaitAll(tasks);
+//			gzstream.Close();
+//			fstream.Close();
+//
+//			stopwatch.Stop();
+//			Debug.WriteLine("World load from disk time: {0}ms", stopwatch.ElapsedMilliseconds);
+//
+//		}
 
 		internal static void LoadChunk(Chunk chunk, byte[] bytes)
 		{
