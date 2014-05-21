@@ -12,33 +12,19 @@ namespace Sean
     {
         #region Constructors
         //gm: from the OpenTK source code (Graphics\GraphicsMode.cs), here is GraphicsMode.Default, it does seem to select sensible choices -> default display bpp, 16 bit depth buffer, 0 bit stencil buffer, 2 buffers
-        public Game () : base(Constants.DEFAULT_GAME_WIDTH, Constants.DEFAULT_GAME_HEIGHT, GraphicsMode.Default, string.Format("Voxel Game {0}: {1}", Settings.VersionDisplay, Config.UserName))
+        public Game ()
         {
+            
+            Width = Constants.DEFAULT_GAME_WIDTH;
+            Height = Constants.DEFAULT_GAME_HEIGHT;
+           
+
             //note: cant easily thread these loading tasks because they all need to run on the thread that creates the GL context
             Settings.Game = this;
 
-            VSync = Config.VSync ? VSyncMode.On : VSyncMode.Off;        
 
-            //load hosts (change enabled to false for debugging with any combination of hosts)
-            PerformanceHost = new PerformanceHost { Enabled = true };
-            SkyHost = new SkyHost { Enabled = true };
-            WorldHost = new WorldHost { Enabled = true };
-            InputHost = new InputHost { Enabled = true };
-            CharacterHost = new CharacterHost { Enabled = true };
-            BlockCursorHost = new BlockCursorHost { Enabled = true };
-            UiHost = new UiHost { Enabled = true };
-            _hosts = new IHost[] {
-                PerformanceHost,
-                SkyHost,
-                WorldHost,
-                InputHost,
-                BlockCursorHost,
-                CharacterHost,
-                UiHost
-            };
+            WorldHost = new WorldHost();
             
-            NetworkClient.AcceptPackets = true;
-   
             CalculateProjectionMatrix ();
             UpdateFrustum ();
             WorldHost.BuildWorld ();
@@ -61,7 +47,9 @@ namespace Sean
         public static Coords CameraCoords = new Coords();
         public static float cameraRange = 40.0f;
         public static float cameraAngle = MathHelper.PiOver4;
-        
+
+        public static int Height;
+        public static int Width;
         
         //public static ScriptDriver scriptDriver = new ScriptDriver ();
 #endregion
@@ -88,10 +76,10 @@ namespace Sean
             ModelView = Matrix4d.LookAt (
                 CameraCoords.Xf, 
                 CameraCoords.Yf, 
-                CameraCoords.Zf, 
-                Player.Coords.Xf, 
-                Player.Coords.Yf, 
-                Player.Coords.Zf, 
+                CameraCoords.Zf,
+                PlayerCoords.Xf,
+                PlayerCoords.Yf,
+                PlayerCoords.Zf, 
                 0, 1, 0);
             
             Matrix4d clip;

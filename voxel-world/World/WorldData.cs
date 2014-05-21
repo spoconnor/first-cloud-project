@@ -246,8 +246,6 @@ namespace Sean.World
 		/// </summary>
 		internal static void LoadFromDisk()
 		{
-			if (Config.Mode == ModeType.JoinServer) throw new Exception("World should not be loaded from disk when joining a server.");
-
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
@@ -295,7 +293,6 @@ namespace Sean.World
 			stopwatch.Stop();
 			Debug.WriteLine("World load from disk time: {0}ms", stopwatch.ElapsedMilliseconds);
 
-			InitializeAllLightMaps();
 		}
 
 		internal static void LoadChunk(Chunk chunk, byte[] bytes)

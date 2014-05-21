@@ -1,4 +1,5 @@
 using System;
+using System.Xml.Serialization;
 namespace OpenTK
 {
     public struct Vector3d : IEquatable<Vector3d>

@@ -41,7 +41,7 @@ namespace Sean.World.Generator
 			var chunkCount = 1;
 			foreach (Chunk chunk in WorldData.Chunks)
 			{
-				Settings.Launcher.UpdateProgressInvokable(string.Format("Generating Chunks {0} / {1}", chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ), chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ);
+				Console.WriteLine(string.Format("Generating Chunks {0} / {1}", chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ), chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ);
 				
 				//bm: we can't run this in parallel or the results will not be deterministic based on our seed.
 				GenerateChunk(WorldData.Chunks[chunk.Coords.X, chunk.Coords.Z], heightMap, mineralMap);
@@ -51,7 +51,6 @@ namespace Sean.World.Generator
 
 			//loop through chunks again for actions that require the neighboring chunks to be built
 			Debug.WriteLine("Completing growth in chunks and building heightmaps...");
-			Settings.Launcher.UpdateProgressInvokable("Completing growth in chunks...", 0, 0);
 			foreach (Chunk chunk in WorldData.Chunks)
 			{
 				//build heightmap here only so we know where to place trees/clutter (it will get built again on world load anyway)
@@ -61,20 +60,13 @@ namespace Sean.World.Generator
 
 				//generate trees
 				if (WorldData.GenerateWithTrees) TreeGenerator.Generate(chunk, takenPositions);
-
-				//generate clutter
-				ClutterGenerator.Generate(chunk, takenPositions);
 			}
 
 			Settings.Random = new Random(); //reset the random object to ensure the seed is not used for any more random numbers as this could make gameplay predictable
 			Debug.WriteLine("World generation complete.");
 
-			//default sun to directly overhead in new worlds
-			SkyHost.SunAngleRadians = OpenTK.MathHelper.PiOver2;
-			SkyHost.SunLightStrength = SkyHost.BRIGHTEST_SKYLIGHT_STRENGTH;
 
 			Debug.WriteLine("New world saving...");
-			Settings.Launcher.UpdateProgressInvokable("New world saving...", 0, 0);
 			WorldData.SaveToDisk();
 			Debug.WriteLine("New world save complete.");
 		}

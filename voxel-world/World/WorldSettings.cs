@@ -55,32 +55,12 @@ namespace Sean.World
 				settingsNode.Attributes.Append(xml.CreateAttribute("SizeX")).Value = WorldData.SizeInChunksX.ToString();
 				settingsNode.Attributes.Append(xml.CreateAttribute("SizeY")).Value = Chunk.CHUNK_HEIGHT.ToString(); //for possible future use
 				settingsNode.Attributes.Append(xml.CreateAttribute("SizeZ")).Value = WorldData.SizeInChunksZ.ToString();
-				settingsNode.Attributes.Append(xml.CreateAttribute("SunAngleRadians")).Value = SkyHost.SunAngleRadians.ToString();
-				settingsNode.Attributes.Append(xml.CreateAttribute("SunLightStrength")).Value = SkyHost.SunLightStrength.ToString(); //need the strength because even though it would get calculated on the first update, we need it before that to build the initial frustum of chunks correctly
 
 				//chunks / clutter / light sources
 				var chunksNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "Chunks", ""));
-				var cluttersNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "Clutters", ""));
-				var lightSourcesNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "LightSources", ""));
 				foreach (Chunk chunk in WorldData.Chunks)
 				{
 					chunksNode.AppendChild(chunk.GetXml(xml));
-					foreach (var clutter in chunk.Clutters) cluttersNode.AppendChild(clutter.GetXml(xml));
-					foreach (var lightSource in chunk.LightSources) lightSourcesNode.AppendChild(lightSource.Value.GetXml(xml));
-				}
-
-				//mobs
-				var mobsNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "Mobs", ""));
-				foreach (var mob in WorldData.Mobs.Values)
-				{
-					mobsNode.AppendChild(mob.GetXml(xml));
-				}
-
-				//game items
-				var gameItemsNode = xml.DocumentElement.AppendChild(xml.CreateNode(XmlNodeType.Element, "GameItems", ""));
-				foreach (var gameItem in WorldData.GameItems.Values)
-				{
-					if (gameItem.Type == GameItemType.BlockItem) gameItemsNode.AppendChild(gameItem.GetXml(xml));
 				}
 
 				return Encoding.UTF8.GetBytes(xml.OuterXml);
