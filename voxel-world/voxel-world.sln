@@ -1,45 +1,31 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voxel-world", "voxel-world.csproj", "{E8B6D193-DD20-4440-9A76-06DEF9CBF556}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorldRest", "..\TestWorldRest\TestWorldRest.csproj", "{1B238A37-3DDC-4BE3-B33B-4420D1054C27}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorldRest", "..\TestWorldRest\TestWorldRest.csproj", "{E2004AAD-31CB-460D-B09E-0E1A758592D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Debug|x86.ActiveCfg = Debug|x86
+		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Debug|x86.Build.0 = Debug|x86
+		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Release|x86.ActiveCfg = Release|x86
+		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Release|x86.Build.0 = Release|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|x86.ActiveCfg = Debug|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|x86.Build.0 = Debug|x86
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|Any CPU.ActiveCfg = Release|x86
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|Mixed Platforms.Build.0 = Release|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|x86.ActiveCfg = Release|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|x86.Build.0 = Release|x86
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|x86.ActiveCfg = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = voxel-world.csproj
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

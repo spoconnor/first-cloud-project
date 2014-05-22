@@ -1,11 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="app.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../TestWorldRest/Main.cs">
     <Files>
-      <File FileName="Main.cs" Line="13" Column="78" />
-      <File FileName="RestApi/IWorldService.cs" Line="8" Column="35" />
-      <File FileName="RestApi/WorldServiceImpl.cs" Line="5" Column="34" />
-      <File FileName="app.config" Line="6" Column="36" />
+      <File FileName="Main.cs" Line="13" Column="1" />
+      <File FileName="RestApi/IWorldService.cs" Line="7" Column="17" />
+      <File FileName="RestApi/WorldServiceImpl.cs" Line="5" Column="2" />
+      <File FileName="app.config" Line="4" Column="1" />
+      <File FileName="../TestWorldRest/Main.cs" Line="40" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
