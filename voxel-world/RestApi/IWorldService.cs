@@ -8,12 +8,12 @@ namespace voxelworld
     public interface IWorldService
     {
         [OperationContract]
-        [WebInvoke(
-            Method="GET", 
-            ResponseFormat=WebMessageFormat.Json, 
-            BodyStyle=WebMessageBodyStyle.Wrapped, 
-            UriTemplate="json/{id}")]
-        string HelloWorld(string id);
+//        [WebInvoke(
+//            Method="GET", 
+//            ResponseFormat=WebMessageFormat.Json, 
+//            BodyStyle=WebMessageBodyStyle.Wrapped, 
+//            UriTemplate="json/{id}")]
+        string HelloWorld();
     }
 }
 

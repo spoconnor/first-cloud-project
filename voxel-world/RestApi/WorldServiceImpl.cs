@@ -3,16 +3,17 @@ using System.ServiceModel;
 
 namespace voxelworld
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+   // [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class WorldServiceImpl : IWorldService
     {
         public WorldServiceImpl ()
         {
         }
 
-        public string HelloWorld(string id)
+        public string HelloWorld()
         {
-            return "Data " + id;
+            Console.WriteLine ("Received {0}");
+            return "Data ";// + id;
         }
     }
 }

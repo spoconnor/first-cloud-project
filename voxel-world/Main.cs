@@ -2,6 +2,7 @@ using System;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using voxelworld;
+using System.Configuration;
 
 namespace voxelworld
 {
@@ -11,24 +12,15 @@ namespace voxelworld
         {
             Console.WriteLine ("Hello World!");
 
-//            using (ServiceHost host = new ServiceHost(typeof(WorldServiceImpl)))
-//            {
-//                host.Open();
-//                Console.WriteLine("Server Started");
-//                Console.ReadLine();
-//                host.Close();
-//            }
-
-            Uri baseAddress = new Uri("http://localhost:8888/GettingStarted/");
-            ServiceHost selfHost = new ServiceHost(typeof(WorldServiceImpl), baseAddress);
+            ServiceHost selfHost = new ServiceHost(typeof(WorldServiceImpl));
 
             try
             {
-                selfHost.AddServiceEndpoint(typeof(IWorldService), new WebHttpBinding(), "WorldService");
-
-                ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
-                smb.HttpGetEnabled = true;
-                selfHost.Description.Behaviors.Add(smb);
+                //selfHost.AddServiceEndpoint(typeof(IWorldService), new WebHttpBinding(), "WorldService");
+                //
+                //ServiceMetadataBehavior smb = new ServiceMetadataBehavior();
+                //smb.HttpGetEnabled = true;
+                //selfHost.Description.Behaviors.Add(smb);
 
                 selfHost.Open();
                 Console.WriteLine("The service is ready.");
@@ -47,5 +39,7 @@ namespace voxelworld
                 selfHost.Abort();
             }
         }
+
+       
     }
 }
