@@ -1,7 +1,9 @@
 using System;
+using System.ServiceModel;
 
 namespace voxelworld
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class WorldServiceImpl : IWorldService
     {
         public WorldServiceImpl ()

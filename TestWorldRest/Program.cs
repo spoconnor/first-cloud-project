@@ -1,23 +1,17 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
-using System.ServiceModel.Description;
-using voxelworld;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace voxelworld
+namespace TestWorldRest
 {
-    class MainClass
+    class Program
     {
-        public static void Main (string[] args)
+        static void Main(string[] args)
         {
-            Console.WriteLine ("Hello World!");
-
-//            using (ServiceHost host = new ServiceHost(typeof(WorldServiceImpl)))
-//            {
-//                host.Open();
-//                Console.WriteLine("Server Started");
-//                Console.ReadLine();
-//                host.Close();
-//            }
+            Console.WriteLine("Hello World!");
 
             Uri baseAddress = new Uri("http://localhost:8888/GettingStarted/");
             ServiceHost selfHost = new ServiceHost(typeof(WorldServiceImpl), baseAddress);
