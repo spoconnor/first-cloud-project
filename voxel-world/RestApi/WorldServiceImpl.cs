@@ -12,7 +12,7 @@ namespace voxelworld
 
         public string HelloWorld()
         {
-            Console.WriteLine ("Received {0}");
+            Console.WriteLine ("Received msg");
             return "Data ";// + id;
         }
     }

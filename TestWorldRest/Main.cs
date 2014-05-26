@@ -1,5 +1,6 @@
 using System;
 using System.ServiceModel;
+using voxelworld;
 
 namespace TestWorldRest
 {
@@ -8,6 +9,12 @@ namespace TestWorldRest
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            //EndpointAddress address = new EndpointAddress(new Uri("net.tcp://localhost:2202/PatientService"));
+            //NetTcpBinding binding = new NetTcpBinding();
+            ChannelFactory<IWorldService> factory = new ChannelFactory<IWorldService>("HttpWorldEndpoint");
+            var service = factory.CreateChannel();
+            Console.WriteLine (service.HelloWorld());
 
             /*
             Uri baseAddress = new Uri("http://localhost:8888/GettingStarted/");

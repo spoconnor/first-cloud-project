@@ -5,7 +5,7 @@
       <File FileName="Main.cs" Line="15" Column="78" />
       <File FileName="RestApi/IWorldService.cs" Line="16" Column="27" />
       <File FileName="RestApi/WorldServiceImpl.cs" Line="16" Column="30" />
-      <File FileName="app.config" Line="11" Column="15" />
+      <File FileName="app.config" Line="58" Column="17" />
       <File FileName="../TestWorldRest/Main.cs" Line="21" Column="35" />
     </Files>
   </MonoDevelop.Ide.Workbench>
