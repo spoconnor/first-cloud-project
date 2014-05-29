@@ -5,12 +5,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voxel-world", "voxel-world.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorldRest", "..\TestWorldRest\TestWorldRest.csproj", "{E2004AAD-31CB-460D-B09E-0E1A758592D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorldRabbitMq", "..\TestWorldRabbitMq\TestWorldRabbitMq.csproj", "{AE1D4AE8-5130-4CB7-8D5F-C7F2C983FBC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE1D4AE8-5130-4CB7-8D5F-C7F2C983FBC2}.Debug|x86.ActiveCfg = Debug|x86
+		{AE1D4AE8-5130-4CB7-8D5F-C7F2C983FBC2}.Debug|x86.Build.0 = Debug|x86
+		{AE1D4AE8-5130-4CB7-8D5F-C7F2C983FBC2}.Release|x86.ActiveCfg = Release|x86
+		{AE1D4AE8-5130-4CB7-8D5F-C7F2C983FBC2}.Release|x86.Build.0 = Release|x86
 		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Debug|x86.ActiveCfg = Debug|x86
 		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Debug|x86.Build.0 = Debug|x86
 		{E2004AAD-31CB-460D-B09E-0E1A758592D6}.Release|x86.ActiveCfg = Release|x86

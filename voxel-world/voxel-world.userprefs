@@ -1,12 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="app.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../TestWorldRabbitMq/Main.cs">
     <Files>
-      <File FileName="Main.cs" Line="15" Column="78" />
-      <File FileName="RestApi/IWorldService.cs" Line="16" Column="27" />
-      <File FileName="RestApi/WorldServiceImpl.cs" Line="16" Column="30" />
-      <File FileName="app.config" Line="58" Column="17" />
-      <File FileName="../TestWorldRest/Main.cs" Line="21" Column="35" />
+      <File FileName="Main.cs" Line="89" Column="9" />
+      <File FileName="app.config" Line="64" Column="16" />
+      <File FileName="RestApi/IWorldService.cs" Line="8" Column="35" />
+      <File FileName="RabbitMqApi/RabbitMqService.cs" Line="18" Column="1" />
+      <File FileName="../TestWorldRabbitMq/Main.cs" Line="4" Column="16" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

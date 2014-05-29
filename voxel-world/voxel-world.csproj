@@ -41,6 +41,13 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Configuration" />
+    <Reference Include="RabbitMQ.Client">
+      <HintPath>..\deps\RabbitMQ\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.ServiceModel">
+      <HintPath>..\deps\RabbitMQ\RabbitMQ.ServiceModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -66,11 +73,14 @@
     <Compile Include="World\Chunks.cs" />
     <Compile Include="RestApi\IWorldService.cs" />
     <Compile Include="RestApi\WorldServiceImpl.cs" />
+    <Compile Include="RabbitMqApi\RabbitMqService.cs" />
+    <Compile Include="RabbitMqApi\IRabbitMqService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
   <ItemGroup>
     <Folder Include="RestApi\" />
+    <Folder Include="RabbitMqApi\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

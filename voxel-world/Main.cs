@@ -3,6 +3,9 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using voxelworld;
 using System.Configuration;
+using System.ServiceModel.Channels;
+using RabbitMQ.ServiceModel;
+using System.Threading;
 
 namespace voxelworld
 {
@@ -11,6 +14,10 @@ namespace voxelworld
         public static void Main (string[] args)
         {
             Console.WriteLine ("Hello World!");
+
+            StartRabbitMqService(GetBinding());
+
+
 
             ServiceHost selfHost = new ServiceHost(typeof(WorldServiceImpl));
 
@@ -38,8 +45,50 @@ namespace voxelworld
                 Console.ReadLine();
                 selfHost.Abort();
             }
+
+            StopRabbitMqService();
+
         }
 
-       
+
+        public static Binding GetBinding() {
+            //return new WSHttpBinding();
+            
+            return new RabbitMQBinding(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-hostname"],
+                                       int.Parse(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-port"]),
+                                       RabbitMQ.Client.Protocols.FromConfiguration("manual-test-broker-protocol"));
+        }
+
+
+        public static void StartRabbitMqService(Binding binding)
+        {
+            Console.Write("  Binding RabbitMq Service...");
+            m_host = new ServiceHost(typeof(RabbitMqService), new Uri("soap.amqp:///"));
+            ((RabbitMQBinding)binding).OneWayOnly = true;
+            //host = new ServiceHost(typeof(LogService), new Uri("http://localhost/"));
+            
+            m_host.AddServiceEndpoint(typeof(IRabbitMqService), binding, "RabbitMqService");
+            m_host.Open();
+            m_serviceStarted = true;
+            
+            Thread.Sleep(500);
+            Console.WriteLine("[DONE]");
+        }
+
+        public static void StopRabbitMqService()
+        {
+            Console.Write("  Stopping RabbitMq Service...");
+            if (m_serviceStarted)
+            {
+                m_host.Close();
+                m_serviceStarted = false;
+            }
+            
+            Console.WriteLine("[DONE]");
+        }
+        
+        private static ServiceHost m_host;
+        private static bool m_serviceStarted;
+
     }
 }
