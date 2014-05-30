@@ -15,9 +15,9 @@ namespace voxelworld
         {
             Console.WriteLine ("Hello World!");
 
-            StartRabbitMqService(GetBinding());
+            //StartRabbitMqService(GetBinding());
 
-
+			ServiceHost rabbitHost = new ServiceHost(typeof(RabbitMqService));
 
             ServiceHost selfHost = new ServiceHost(typeof(WorldServiceImpl));
 
@@ -30,6 +30,7 @@ namespace voxelworld
                 //selfHost.Description.Behaviors.Add(smb);
 
                 selfHost.Open();
+				rabbitHost.Open();
                 Console.WriteLine("The service is ready.");
                 Console.WriteLine("Press <ENTER> to terminate service.");
                 Console.WriteLine();
@@ -52,12 +53,11 @@ namespace voxelworld
 
 
         public static Binding GetBinding() {
-            //return new WSHttpBinding();
-            
-            return new RabbitMQBinding(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-hostname"],
-                                       int.Parse(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-port"]),
-                                       RabbitMQ.Client.Protocols.FromConfiguration("manual-test-broker-protocol"));
-        }
+            //return new WSHttpBinding();  
+			return new RabbitMQBinding(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-hostname"],
+                int.Parse(System.Configuration.ConfigurationManager.AppSettings["manual-test-broker-port"]),
+                RabbitMQ.Client.Protocols.DefaultProtocol);
+       }
 
 
         public static void StartRabbitMqService(Binding binding)
