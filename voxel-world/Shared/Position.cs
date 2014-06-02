@@ -47,10 +47,15 @@ namespace Sean.World
 		/// </summary>
 		internal bool IsValidBlockLocation
 		{
-			get { return X >= 0 && X < WorldData.SizeInBlocksX && Y >= 0 && Y < Chunk.CHUNK_HEIGHT && Z >= 0 && Z < WorldData.SizeInBlocksZ; }
+			get { return X >= 0 
+                //&& X < WorldData.SizeInBlocksX && Y >= 0      // TODO - re-enable
+                && Y < Chunk.CHUNK_HEIGHT && Z >= 0 
+                //&& Z < WorldData.SizeInBlocksZ                // TODO - re-enable
+                ; 
+            }
 		}
 
-		[Obsolete("If this is needed on a Position then you should be using Coords instead.")]
+        [Obsolete("If this is needed on a Position then you should be using Coords instead.")]
 		internal bool IsValidPlayerLocation
 		{
 			get { throw new NotSupportedException(); }
@@ -65,14 +70,27 @@ namespace Sean.World
 
 		public bool IsValidItemLocation
 		{
-			get { return WorldData.IsValidBlockLocation(X, 0, Z) && Y >= 0; }
+			get 
+            { 
+                // return WorldData.IsValidBlockLocation(X, 0, Z) && Y >= 0; // TODO - re-enable this line
+                return X >= 0 
+                    //&& X < WorldData.SizeInBlocksX && Y >= 0      // TODO - re-enable
+                    && Y < Chunk.CHUNK_HEIGHT && Z >= 0 
+                    //&& Z < WorldData.SizeInBlocksZ                // TODO - re-enable
+                    ; 
+            }
 		}
 
 		internal bool IsOnChunkBorder
 		{
-			get { return WorldData.IsOnChunkBorder(X, Z); }
+			get 
+            { 
+                //return WorldData.IsOnChunkBorder(X, Z); }
+                return X % Chunk.CHUNK_SIZE == 0 || Z % Chunk.CHUNK_SIZE == 0 || X % Chunk.CHUNK_SIZE == Chunk.CHUNK_SIZE - 1 || Z % Chunk.CHUNK_SIZE == Chunk.CHUNK_SIZE - 1;
+            }
 		}
 
+        /*
 		/// <summary>
 		/// Get a block using world coords. Looks up the chunk from the world chunks array and then the block in the chunk blocks array.
 		/// Therefore if you have a chunk and chunk relative xyz its faster to get the block straight from the chunk blocks array.
@@ -81,6 +99,7 @@ namespace Sean.World
 		{
 			return WorldData.Chunks[this].Blocks[this];
 		}
+        */
 
 		/// <summary>Get a List of the 6 directly adjacent positions. Exclude positions that are outside the world or on the base of the world.</summary>
 		public List<Position> AdjacentPositions

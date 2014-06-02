@@ -160,6 +160,7 @@ namespace Sean.World
 		}
 		#endregion
 
+        /*
 		#region Frustum
 		/// <summary>
 		/// Shortest face height. Used in frustum checks. Calculated while building vbo's.
@@ -280,5 +281,6 @@ namespace Sean.World
 			}
 		}
 		#endregion
+        */      
 	}
 }

@@ -41,21 +41,11 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Configuration" />
-    <Reference Include="RabbitMQ.Client">
-      <HintPath>..\deps\RabbitMQ\RabbitMQ.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="RabbitMQ.ServiceModel">
-      <HintPath>..\deps\RabbitMQ\RabbitMQ.ServiceModel.dll</HintPath>
-    </Reference>
     <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="World\Block.cs" />
-    <Compile Include="World\Blocks.cs" />
-    <Compile Include="World\Coords.cs" />
-    <Compile Include="World\Position.cs" />
     <Compile Include="World\WorldData.cs" />
     <Compile Include="World\WorldHost.cs" />
     <Compile Include="World\WorldSettings.cs" />
@@ -63,24 +53,26 @@
     <Compile Include="World\Generator\PerlinNoise.cs" />
     <Compile Include="World\Generator\TreeGenerator.cs" />
     <Compile Include="World\Render\TexCoordsShort.cs" />
-    <Compile Include="World\TextureType.cs" />
-    <Compile Include="World\Enums.cs" />
     <Compile Include="World\Game.cs" />
     <Compile Include="World\Settings.cs" />
     <Compile Include="World\Constants.cs" />
-    <Compile Include="World\Chunk.cs" />
-    <Compile Include="World\ChunkCoords.cs" />
     <Compile Include="World\Chunks.cs" />
     <Compile Include="RestApi\IWorldService.cs" />
     <Compile Include="RestApi\WorldServiceImpl.cs" />
-    <Compile Include="RabbitMqApi\RabbitMqService.cs" />
-    <Compile Include="RabbitMqApi\IRabbitMqService.cs" />
+    <Compile Include="Shared\Block.cs" />
+    <Compile Include="Shared\Blocks.cs" />
+    <Compile Include="Shared\Chunk.cs" />
+    <Compile Include="Shared\Position.cs" />
+    <Compile Include="Shared\TextureType.cs" />
+    <Compile Include="Shared\Enums.cs" />
+    <Compile Include="Shared\ChunkCoords.cs" />
+    <Compile Include="Shared\Coords.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
   <ItemGroup>
     <Folder Include="RestApi\" />
-    <Folder Include="RabbitMqApi\" />
+    <Folder Include="Shared\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

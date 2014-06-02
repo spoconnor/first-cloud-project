@@ -85,6 +85,11 @@ namespace Sean.World
 			return Chunks[coords].Blocks[coords];
 		}
 
+        internal static Block GetBlock(ref Position position)
+        {
+            return GetBlock(position.X, position.Y, position.Z);
+        }
+
 		/// <summary>Get a block using world x,y,z. Use this overload to avoid constructing coords when they arent needed.</summary>
 		/// <remarks>For example, this provided ~40% speed increase in the World.PropagateLight function compared to constructing coords and calling the above overload.</remarks>
 		internal static Block GetBlock(int x, int y, int z)
@@ -148,7 +153,8 @@ namespace Sean.World
 			}
 
 			var chunk = Chunks[position];
-			var block = position.GetBlock();
+            var block = WorldData.GetBlock(ref position);//position.GetBlock();
+
 			var oldType = block.Type;
 			block.Type = type; //assign the new type
 			var isTransparentBlock = Block.IsBlockTypeTransparent(type);
@@ -163,7 +169,7 @@ namespace Sean.World
 				below.Y--;
 				if (below.Y > 0)
 				{
-					if (below.GetBlock().Type == Block.BlockType.Grass || below.GetBlock().Type == Block.BlockType.Snow)
+                    if (GetBlock(ref below).Type == Block.BlockType.Grass || GetBlock(ref below).Type == Block.BlockType.Snow)
 					{
 						PlaceBlock(below, Block.BlockType.Dirt, true); //dont queue with this dirt block change, the source block changing takes care of it, prevents double queueing the chunk and playing sound twice
 					}

@@ -1,9 +1,13 @@
-﻿using Sean.Textures;
+﻿
+using Sean.Textures;
+using System.Runtime.Serialization.Json;
 
 namespace Sean.World
 {
 	public struct Block
 	{
+        public ushort BlockData;
+
 		public Block(BlockType type)
 		{
 			BlockData = (ushort)type;
@@ -13,8 +17,6 @@ namespace Sean.World
 		{
 			BlockData = blockData;
 		}
-
-		public ushort BlockData;
 
 		public BlockType Type
 		{
@@ -235,7 +237,7 @@ namespace Sean.World
 				case BlockType.Sand:
 					//this will prevent beaches in winter worlds; side effect is that any sand placed will instantly get snow on top
 					//might be nice to have a SandSnowSide texture to make it look better, however that would require another block type, so this is ok for now
-					if (WorldData.WorldType == WorldType.Winter && face == Face.Top) return BlockTextureType.Snow;
+// TODO					if (WorldData.WorldType == WorldType.Winter && face == Face.Top) return BlockTextureType.Snow;
 					return BlockTextureType.Sand;
 				case BlockType.SandDark:
 					return BlockTextureType.SandDark;

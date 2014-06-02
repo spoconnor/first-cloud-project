@@ -1,19 +1,75 @@
 using System;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
-namespace voxelworld
+namespace Sean.World.RestApi
 {
-    [ServiceContract]
+    [DataContract,Serializable]
+    public struct Block
+    {
+        public Block(ushort data)
+        {
+            Data = data;
+        }
+
+        [DataMember]
+        public ushort Data;
+    }
+
+    [DataContract,Serializable]
+    public struct Position
+    {
+        public Position(int x, int y, int z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+
+        [DataMember]
+        public int X;
+        [DataMember]
+        public int Y;
+        [DataMember]
+        public int Z;
+
+        public override string ToString()
+        {
+            return string.Format("(x={0}, y={1}, z={2})", X, Y, Z);
+        }
+    }
+
+    [ServiceContract(SessionMode=SessionMode.NotAllowed)] 
     public interface IWorldService
     {
+        [WebInvoke(
+            Method="GET",
+            RequestFormat=WebMessageFormat.Json,
+            ResponseFormat=WebMessageFormat.Json, 
+            BodyStyle=WebMessageBodyStyle.Wrapped, 
+            UriTemplate="hello/{msg}")] 
         [OperationContract]
-//        [WebInvoke(
-//            Method="GET", 
-//            ResponseFormat=WebMessageFormat.Json, 
-//            BodyStyle=WebMessageBodyStyle.Wrapped, 
-//            UriTemplate="json/{id}")]
-        string HelloWorld();
+        string HelloWorld(string msg);
+
+        [WebInvoke(
+            Method="GET",
+            RequestFormat=WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle=WebMessageBodyStyle.Wrapped, 
+            UriTemplate = "chunk/{x}/{y}/{z}")]
+        [OperationContract]
+        string GetChunkAddress(int x, int y, int z);
+
+        [WebInvoke(
+            Method="GET",
+            RequestFormat=WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle=WebMessageBodyStyle.Wrapped, 
+            UriTemplate = "setbloxk/{x}/{y}/{z}/{block}")]
+            [OperationContract]
+        bool SetBlock(int x, int y, int z, ushort block);
     }
 }
 
