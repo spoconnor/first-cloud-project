@@ -11,7 +11,6 @@ namespace Sean
     internal static class Settings
     {
         internal static Random Random = new Random();
-        internal static uint UpdateCounter;
 
         internal static Game Game { get; set; }
         

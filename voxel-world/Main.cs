@@ -10,6 +10,8 @@ namespace Sean.World
 {
     class MainClass
     {
+		public static WorldHost worldHost;
+
         public static void Main (string[] args)
         {
             Console.WriteLine ("Hello World!");
@@ -25,7 +27,9 @@ namespace Sean.World
             //                              RabbitMQ.Client.Protocols.AMQP_0_9_1),
             //                              "Rabbit");
 
-            ServiceHost selfHost = new ServiceHost(typeof(Sean.World.RestApi.WorldServiceImpl));
+			//worldHost = new WorldHost();
+
+			ServiceHost selfHost = new ServiceHost(typeof(Sean.World.RestApi.WorldServiceImpl));
 
             try
             {

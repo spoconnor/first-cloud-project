@@ -29,7 +29,7 @@ namespace Sean.World.RestApi
 
         public ShowMapSliceResponse ShowMapSlice(ShowMapSliceRequest request)
         {
-            return new ShowMapSliceRequest();
+            return new ShowMapSliceResponse();
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Sean
             Settings.Game = this;
 
 
-            WorldHost = new WorldHost();
+            //WorldHost = new WorldHost();
             
             CalculateProjectionMatrix ();
             UpdateFrustum ();

@@ -3,6 +3,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Collections.Generic;
 
 namespace Sean.World.RestApi
 {
