@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TestClient</RootNamespace>
+    <AssemblyName>TestClient</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>True</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="OpenTK">
+      <HintPath>..\deps\OpenTK\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="RestSharp">
+      <HintPath>..\deps\RestSharp\RestSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="..\voxel-world\Shared\Block.cs">
+      <Link>Shared\Block.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\Blocks.cs">
+      <Link>Shared\Blocks.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\Chunk.cs">
+      <Link>Shared\Chunk.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\ChunkCoords.cs">
+      <Link>Shared\ChunkCoords.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\Coords.cs">
+      <Link>Shared\Coords.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\Enums.cs">
+      <Link>Shared\Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\Position.cs">
+      <Link>Shared\Position.cs</Link>
+    </Compile>
+    <Compile Include="..\voxel-world\Shared\TextureType.cs">
+      <Link>Shared\TextureType.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="..\voxel-world\app.config">
+      <Link>app.config</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Shared\" />
+  </ItemGroup>
+</Project>

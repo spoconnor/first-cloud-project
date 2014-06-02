@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voxel-world", "voxel-world.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWorldRest", "..\TestWorldRest\TestWorldRest.csproj", "{E2004AAD-31CB-460D-B09E-0E1A758592D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "..\TestClient\TestClient.csproj", "{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -19,6 +21,10 @@ Global
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Debug|x86.Build.0 = Debug|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|x86.ActiveCfg = Release|x86
 		{E8B6D193-DD20-4440-9A76-06DEF9CBF556}.Release|x86.Build.0 = Release|x86
+		{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}.Debug|x86.ActiveCfg = Debug|x86
+		{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}.Debug|x86.Build.0 = Debug|x86
+		{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}.Release|x86.ActiveCfg = Release|x86
+		{FCFAA2BE-5C03-4249-A6D6-7CA0B3B5603C}.Release|x86.Build.0 = Release|x86
 		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{1B238A37-3DDC-4BE3-B33B-4420D1054C27}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
