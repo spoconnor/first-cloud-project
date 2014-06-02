@@ -67,9 +67,45 @@ namespace Sean.World.RestApi
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle=WebMessageBodyStyle.Wrapped, 
+            UriTemplate = "showmapslice")]
+            [OperationContract]
+        ShowMapSliceResponse ShowMapSlice(ShowMapSliceRequest request);
+
+        [WebInvoke(
+            Method="GET",
+            RequestFormat=WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle=WebMessageBodyStyle.Wrapped, 
             UriTemplate = "setbloxk/{x}/{y}/{z}/{block}")]
             [OperationContract]
         bool SetBlock(int x, int y, int z, ushort block);
     }
+
+
+    [DataContract,Serializable]
+    public class ShowMapSliceRequest 
+    {
+      [DataMember]
+      int x;
+      [DataMember]
+      int y;
+      [DataMember]
+      int z;
+      [DataMember]
+      int width;
+      [DataMember]
+      int height;
+    }
+    [DataContract,Serializable]
+    public class ShowMapSliceResponse 
+    {
+      [DataMember]
+      int width;
+      [DataMember]
+      int height;
+      [DataMember]
+      List<string> lines;
+    }
+
 }
 

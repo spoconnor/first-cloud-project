@@ -26,6 +26,11 @@ namespace Sean.World.RestApi
             Console.WriteLine ("SetBlock {0}", block);
             return true;
         }
+
+        public ShowMapSliceResponse ShowMapSlice(ShowMapSliceRequest request)
+        {
+            return new ShowMapSliceRequest();
+        }
     }
 }
 
