@@ -70,7 +70,7 @@ namespace Sean.World.RestApi
             BodyStyle=WebMessageBodyStyle.Wrapped, 
             UriTemplate = "showmapslice")]
             [OperationContract]
-        ShowMapSliceResponse ShowMapSlice(ShowMapSliceRequest request);
+        ShowChunkResponse ShowChunk(ShowChunkRequest request);
 
         [WebInvoke(
             Method="GET",
@@ -84,28 +84,24 @@ namespace Sean.World.RestApi
 
 
     [DataContract,Serializable]
-    public class ShowMapSliceRequest 
+    public class ShowChunkRequest 
     {
       [DataMember]
-      int x;
+      public int x;
       [DataMember]
-      int y;
+      public int y;
       [DataMember]
-      int z;
-      [DataMember]
-      int width;
-      [DataMember]
-      int height;
+      public int z;
     }
     [DataContract,Serializable]
-    public class ShowMapSliceResponse 
+    public class ShowChunkResponse 
     {
       [DataMember]
-      int width;
+      public int width;
       [DataMember]
-      int height;
+      public int height;
       [DataMember]
-      List<string> lines;
+      public List<string> lines;
     }
 
 }

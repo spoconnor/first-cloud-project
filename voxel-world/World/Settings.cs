@@ -1,7 +1,7 @@
 using System;
 using Sean.World;
 
-namespace Sean
+namespace Sean.World
 {
     /// <summary>
     /// Use Settings class for values that can be altered but not saved.
@@ -12,8 +12,6 @@ namespace Sean
     {
         internal static Random Random = new Random();
 
-        internal static Game Game { get; set; }
-        
         private static Version _version;
         /// <summary>Store the version here so the game window can still know what version we are running.</summary>
         internal static Version Version
@@ -64,45 +62,6 @@ namespace Sean
         
         /// <summary>Distance at which chunks will have their VBOs dropped. Leave a decent buffer from ZFarForChunkLoad so minor movements don't cause constant load/unload.</summary>
         internal static float ZFarForChunkUnload { get; private set; }
-        
-        private static float _fieldOfView = Constants.DEFAULT_FIELD_OF_VIEW;
-        internal static float FieldOfView
-        {
-            get { return _fieldOfView; }
-            set
-            {
-                if (value < 0.01f || value > 3.01) return;
-                _fieldOfView = value;
-                Game.CalculateProjectionMatrix();
-            }
-        }
-        
-        public static double MoveSpeed = Constants.MOVE_SPEED_DEFAULT;
-        public static float JumpSpeed = Constants.INITIAL_JUMP_VELOCITY;
-        
-        /// <summary>Short world name. Name of the file without any path info.</summary>
-//        public static string WorldName
-//        {
-//            get
-//            {
-//                if (string.IsNullOrEmpty(WorldFilePath)) return "unknown"; //gm: this will happen when connected to a server, may want to have the server tell the client eventually what the world is called?
-//                return WorldFilePath.Contains(System.IO.Path.DirectorySeparatorChar.ToString()) ? WorldFilePath.Substring(WorldFilePath.LastIndexOf(System.IO.Path.DirectorySeparatorChar.ToString()) + 1) : WorldFilePath;
-//            }
-//        }
-        
-//        private static string _worldFilePath;
-//        /// <summary>File path for the world. Full directory and file extension are added in the setter.</summary>
-//        public static string WorldFilePath
-//        {
-//            get { return _worldFilePath; }
-//            set
-//            {
-//                _worldFilePath = String.Format("{0}{1}{2}{3}", Config.SaveDirectory.FullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
-//                WorldFileTempPath = String.Format("{0}.temp", _worldFilePath);
-//            }
-//        }
-        
-        public static string WorldFileTempPath { get; private set; }
         
         /// <summary>Use for debugging. When true all chunk edges will highlight blocks on either side. The actual chunk edge line is the line between the 2 yellow block strips.</summary>
         internal static bool OutlineChunks;

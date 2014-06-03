@@ -12,7 +12,7 @@ namespace Sean.World
 		/// <summary>Load world settings from a byte array in XML format that comes from the zipped world save file or sent from the server in multiplayer.</summary>
 		/// <remarks>Remember XML xpaths are case sensitive.</remarks>
 		/// <param name="settings">xml byte array</param>
-		internal static void LoadSettings(byte[] settings)
+		internal static void LoadSettings()
 		{
 			Debug.WriteLine("Loading world settings...");
 			try

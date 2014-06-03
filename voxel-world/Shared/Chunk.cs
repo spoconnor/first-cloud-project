@@ -66,6 +66,44 @@ namespace Sean.World
 			/// <summary>Chunk is built.</summary>
 			Built
 		}
+
+        private volatile BuildState _chunkBuildState = BuildState.NotLoaded;
+        internal BuildState ChunkBuildState
+        {
+            get { return _chunkBuildState; }
+            set
+            {
+                _chunkBuildState = value;
+                switch (value)
+                {
+                    case BuildState.Queued:
+//                        WorldHost.ChangedChunkQueue.Enqueue(this);
+//                        WorldHost.BuildChunkHandle.Set();
+                        break;
+                    case BuildState.QueuedDayNight:
+                    case BuildState.QueuedFar:
+                    case BuildState.QueuedInitialFar:
+//                        WorldHost.FarChunkQueue.Enqueue(this);
+//                        WorldHost.BuildChunkHandle.Set();
+                        break;
+                    case BuildState.Built:
+                        if (ChunkBufferState == BufferState.VboBuffered) ChunkBufferState = BufferState.VboDirty;
+                        break;
+                    case BuildState.NotLoaded:
+                        ChunkBufferState = BufferState.VboNotBuffered;
+//                        UnloadData();
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+		/// The buffer state of this chunk. Refers to whether a vbo is created 'VboBuffered', needs to be created or recreated 'VboDirty' or has not yet been buffered 'VboNotBuffered'.
+		/// The reason the buffer state and build state are different enums is because the chunk needs to wait to be 'Built' before it can be buffered to a vbo.
+		/// </summary>
+		internal enum BufferState { VboNotBuffered, VboDirty, VboBuffered }
+
+	    internal volatile BufferState ChunkBufferState = BufferState.VboNotBuffered;
 		#endregion
 
 		#region Height Map

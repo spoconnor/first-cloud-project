@@ -27,9 +27,10 @@ namespace Sean.World.RestApi
             return true;
         }
 
-        public ShowMapSliceResponse ShowMapSlice(ShowMapSliceRequest request)
+        public ShowChunkResponse ShowChunk(ShowChunkRequest request)
         {
-            return new ShowMapSliceResponse();
+            int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
+            return new ShowChunkResponse();
         }
     }
 }

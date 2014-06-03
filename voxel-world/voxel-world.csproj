@@ -53,7 +53,6 @@
     <Compile Include="World\Generator\PerlinNoise.cs" />
     <Compile Include="World\Generator\TreeGenerator.cs" />
     <Compile Include="World\Render\TexCoordsShort.cs" />
-    <Compile Include="World\Game.cs" />
     <Compile Include="World\Settings.cs" />
     <Compile Include="World\Constants.cs" />
     <Compile Include="World\Chunks.cs" />
@@ -70,10 +69,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="RestApi\" />
-    <Folder Include="Shared\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>

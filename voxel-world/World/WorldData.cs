@@ -213,9 +213,10 @@ namespace Sean.World
 		/// </summary>
 		internal static void SaveToDisk()
 		{
-			if (File.Exists(Settings.WorldFileTempPath)) File.Delete(Settings.WorldFileTempPath);
+		    string WorldFileTempPath = "Saved";
+			if (File.Exists(WorldFileTempPath)) File.Delete(WorldFileTempPath);
 
-			var fstream = new FileStream(Settings.WorldFileTempPath, FileMode.Create);
+			var fstream = new FileStream(WorldFileTempPath, FileMode.Create);
 			var gzstream = new GZipStream(fstream, CompressionMode.Compress);
 			//GZipStream only applies compression during .Write, writing 2 bytes at a time ends up inflating it a lot. Adding this saves up to 99.3%
 			var buffstream = new BufferedStream(gzstream, 65536);

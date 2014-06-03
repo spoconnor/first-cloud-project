@@ -28,6 +28,8 @@ namespace Sean.World
             //                              "Rabbit");
 
 			//worldHost = new WorldHost();
+            WorldSettings.LoadSettings();
+            Generator.Generator.Generate();
 
 			ServiceHost selfHost = new ServiceHost(typeof(Sean.World.RestApi.WorldServiceImpl));
 

@@ -66,9 +66,9 @@ namespace Sean.World.Generator
 			Debug.WriteLine("World generation complete.");
 
 
-			Debug.WriteLine("New world saving...");
-			WorldData.SaveToDisk();
-			Debug.WriteLine("New world save complete.");
+//			Debug.WriteLine("New world saving...");
+//			WorldData.SaveToDisk();
+//			Debug.WriteLine("New world save complete.");
 		}
 
 		private static void GenerateChunk(Chunk chunk, int[][] heightMap, float[][] mineralMap)
