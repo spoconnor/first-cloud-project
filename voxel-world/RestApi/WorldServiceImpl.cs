@@ -12,7 +12,7 @@ namespace Sean.World.RestApi
         public string HelloWorld(string msg)
         {
             Console.WriteLine ("Received msg {0}", msg);
-            return "Data ";// + id;
+            return "Hey there!";// + id;
         }
 
         public string GetChunkAddress(int x, int y, int z)
@@ -26,11 +26,12 @@ namespace Sean.World.RestApi
             Console.WriteLine ("SetBlock {0}", block);
             return true;
         }
-
+         
         public ShowChunkResponse ShowChunk(ShowChunkRequest request)
         {
-            int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
-            return new ShowChunkResponse();
+            return new ShowChunkResponse() { height = 1, width = 2};
+          //  int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
+          //  return new ShowChunkResponse();
         }
     }
 }

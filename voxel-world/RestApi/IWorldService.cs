@@ -67,9 +67,10 @@ namespace Sean.World.RestApi
             Method="GET",
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle=WebMessageBodyStyle.Wrapped, 
-            UriTemplate = "showmapslice")]
-            [OperationContract]
+            BodyStyle=WebMessageBodyStyle.Bare,
+            //BodyStyle=WebMessageBodyStyle.Wrapped, 
+            UriTemplate = "showchunk")]
+        [OperationContract]
         ShowChunkResponse ShowChunk(ShowChunkRequest request);
 
         [WebInvoke(
@@ -77,8 +78,8 @@ namespace Sean.World.RestApi
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle=WebMessageBodyStyle.Wrapped, 
-            UriTemplate = "setbloxk/{x}/{y}/{z}/{block}")]
-            [OperationContract]
+            UriTemplate = "setblock/{x}/{y}/{z}/{block}")]
+        [OperationContract]
         bool SetBlock(int x, int y, int z, ushort block);
     }
 

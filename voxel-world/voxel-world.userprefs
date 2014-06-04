@@ -1,20 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Main.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RestApi/WorldServiceImpl.cs">
     <Files>
-      <File FileName="Main.cs" Line="31" Column="4" />
-      <File FileName="Shared/Block.cs" Line="3" Column="36" />
-      <File FileName="Shared/Chunk.cs" Line="12" Column="15" />
-      <File FileName="World/Game.cs" Line="27" Column="13" />
-      <File FileName="World/Settings.cs" Line="13" Column="11" />
-      <File FileName="World/WorldData.cs" Line="145" Column="7" />
-      <File FileName="World/WorldHost.cs" Line="43" Column="3" />
-      <File FileName="World/Chunks.cs" Line="23" Column="29" />
-      <File FileName="World/Generator/Generator.cs" Line="12" Column="16" />
+      <File FileName="Main.cs" Line="34" Column="1" />
+      <File FileName="RestApi/IWorldService.cs" Line="67" Column="24" />
+      <File FileName="RestApi/WorldServiceImpl.cs" Line="24" Column="63" />
+      <File FileName="app.config" Line="128" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/mnt/archive/Programming/Cloud/first-cloud-project/voxel-world/RestApi/WorldServiceImpl.cs" line="32" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
