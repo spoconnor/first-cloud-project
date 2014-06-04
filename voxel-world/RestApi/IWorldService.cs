@@ -55,16 +55,16 @@ namespace Sean.World.RestApi
         string HelloWorld(string msg);
 
         [WebInvoke(
-            Method="GET",
+            Method="POST",
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle=WebMessageBodyStyle.Wrapped, 
-            UriTemplate = "chunk/{x}/{y}/{z}")]
+            UriTemplate = "chunk")]
         [OperationContract]
         string GetChunkAddress(int x, int y, int z);
 
         [WebInvoke(
-            Method="GET",
+            Method = "POST",
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle=WebMessageBodyStyle.Bare,
@@ -74,11 +74,11 @@ namespace Sean.World.RestApi
         ShowChunkResponse ShowChunk(ShowChunkRequest request);
 
         [WebInvoke(
-            Method="GET",
+            Method = "POST",
             RequestFormat=WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle=WebMessageBodyStyle.Wrapped, 
-            UriTemplate = "setblock/{x}/{y}/{z}/{block}")]
+            UriTemplate = "setblock")]
         [OperationContract]
         bool SetBlock(int x, int y, int z, ushort block);
     }
