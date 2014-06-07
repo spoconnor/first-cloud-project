@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Sean.World.RestApi
 {
@@ -29,9 +30,27 @@ namespace Sean.World.RestApi
          
         public ShowChunkResponse ShowChunk(ShowChunkRequest request)
         {
-            return new ShowChunkResponse() { height = 1, width = 2};
-          //  int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
-          //  return new ShowChunkResponse();
+            if (request == null)
+            {
+                Console.WriteLine ("Nope :(");
+                return new ShowChunkResponse();
+            }
+            int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
+            var response = new ShowChunkResponse();
+            response.height = heightMap.GetLength(0);
+            response.width = heightMap.GetLength(1);
+            response.lines = new System.Collections.Generic.List<string>(response.height);
+
+            for (int x = 0; x<response.height; x++)
+            {
+                StringBuilder strline = new StringBuilder();
+                for (int y=0; y<response.width; y++)
+                {
+                    strline.Append(Convert.ToChar(heightMap[x,y] + ' '));
+                }
+                response.lines.Add(strline.ToString());
+            }
+            return response;
         }
     }
 }
