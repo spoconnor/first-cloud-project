@@ -35,10 +35,10 @@ namespace Sean.World.RestApi
                 Console.WriteLine ("Nope :(");
                 return new ShowChunkResponse();
             }
-            int[,] heightMap = WorldData.Chunks[request.x, request.z].HeightMap;
+            Blocks blocks = WorldData.Chunks[request.x, request.z].Blocks;
             var response = new ShowChunkResponse();
-            response.height = heightMap.GetLength(0);
-            response.width = heightMap.GetLength(1);
+            response.height = WorldData.SizeInChunksX;
+            response.width = WorldData.SizeInChunksZ;
             response.lines = new System.Collections.Generic.List<string>(response.height);
 
             for (int x = 0; x<response.height; x++)
@@ -46,7 +46,14 @@ namespace Sean.World.RestApi
                 StringBuilder strline = new StringBuilder();
                 for (int y=0; y<response.width; y++)
                 {
-                    strline.Append(Convert.ToChar(heightMap[x,y] + ' '));
+                    var block = blocks[x,request.h,y];
+                    char chr;
+                    if (block.BlockData > 55)
+                        chr = '?';
+                    else
+                        chr = UiTextGraphics.BlockTypeGraphic[block.BlockData];
+
+                    strline.Append(chr);
                 }
                 response.lines.Add(strline.ToString());
             }

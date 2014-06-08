@@ -66,6 +66,7 @@
     <Compile Include="Shared\Enums.cs" />
     <Compile Include="Shared\ChunkCoords.cs" />
     <Compile Include="Shared\Coords.cs" />
+    <Compile Include="Shared\UiTextGraphics.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

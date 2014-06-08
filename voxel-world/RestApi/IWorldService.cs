@@ -88,6 +88,8 @@ namespace Sean.World.RestApi
     public class ShowChunkRequest 
     {
       [DataMember]
+      public int h;
+      [DataMember]
       public int x;
       [DataMember]
       public int y;
