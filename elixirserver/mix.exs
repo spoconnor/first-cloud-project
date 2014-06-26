@@ -8,6 +8,11 @@ defmodule Elixirserver.Mixfile do
      deps: deps]
   end
 
+  def escript do
+    [main_module: Elixirserver.Server, 
+    embed_extra_apps: [:mix] ]
+  end
+
   # Configuration for the OTP application
   #
   # Type `mix help compile.app` for more information
