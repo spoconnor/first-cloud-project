@@ -5,11 +5,12 @@ defmodule Elixirserver.Mixfile do
     [app: :elixirserver,
      version: "0.0.1",
      elixir: "~> 0.14.2-dev",
+     escript: escript,
      deps: deps]
   end
 
   def escript do
-    [main_module: Elixirserver.Server, 
+    [main_module: Elixir.Server, 
     embed_extra_apps: [:mix] ]
   end
 
