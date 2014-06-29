@@ -16,10 +16,13 @@ defmodule GameMap do
       {sender, :del, object} ->
         IO.puts "Removing #{object}"
         roomContents(List.delete state, object)
+      {sender, :getcontents} ->
+        send(sender, {self(), state})
+        roomContents(state)
     end
   end
 
-  def createRooms( numRooms ) do
+  def createRooms( numRooms ) when is_integer(numRooms) do
     Enum.map 1..numRooms, fn(r) -> {r, newRoom} end
   end
 
@@ -40,6 +43,13 @@ defmodule GameMap do
 
   def examineRoom( rooms, room ) do
    send(findRoom( rooms, room), { self(), :examine} )
+  end
+
+  def getRoomContents( rooms, room ) do
+    send(findRoom( rooms, room ), { self(), :getcontents})
+    receive do
+      {sender, state} -> state
+    end
   end
 
   def removeFromRoom( rooms, room, object ) do
