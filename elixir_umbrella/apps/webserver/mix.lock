@@ -1,0 +1,5 @@
+%{"cowboy": {:git, "git://github.com/extend/cowboy.git", "af07e048e3b3dcda1c1b80e5b664b9939100a7dd", [tag: "0.6.1"]},
+  "cowlib": {:git, "git://github.com/extend/cowlib.git", "e2ffefe828b918486e2cd76e44c54ae9b62c616e", [ref: "0.6.2"]},
+  "goldrush": {:git, "git://github.com/DeadZen/goldrush.git", "71e63212f12c25827e0c1b4198d37d5d018a7fec", [tag: "0.1.6"]},
+  "lager": {:git, "git://github.com/basho/lager.git", "4d8291edb72a25ac0efde907e2ecaa115108ff90", []},
+  "ranch": {:git, "git://github.com/extend/ranch.git", "3189ef2d47843945efc96c224963380462c33d40", [ref: "0.10.0"]}}
