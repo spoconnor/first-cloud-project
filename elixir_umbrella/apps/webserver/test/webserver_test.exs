@@ -1,4 +1,4 @@
-defmodule ElixirwebserverTest do
+defmodule WebServerTest do
   use ExUnit.Case
 
   test "the truth" do

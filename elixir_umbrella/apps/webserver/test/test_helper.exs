@@ -1,2 +1,1 @@
-Example.start
-ExUnit.start
+ExUnit.start()

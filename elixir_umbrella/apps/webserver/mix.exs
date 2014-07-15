@@ -1,28 +1,22 @@
-defmodule Elixirwebserver.Mixfile do
+defmodule WebServer.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :elixirwebserver,
+    [app: :webserver,
      version: "0.0.1",
-     #elixir: "~> 0.14.2-dev",
-     escript: escript,
+     deps_path: "../../deps",
+     lockfile: "../../mix.lock",
+     elixir: "~> 0.14.2-dev",
      deps: deps]
-  end
-
-  def escript do
-    [main_module: Elixirwebserver,
-    embed_extra_apps: [:mix] ]
   end
 
   # Configuration for the OTP application
   #
   # Type `mix help compile.app` for more information
   def application do
-    [
-      { :erl_opts, [parse_transform: "lager_transform"] }
-    ]
+    [applications: [],
+     mod: {WebServer, []}]
   end
-
 
   # Dependencies can be hex.pm packages:
   #
@@ -32,13 +26,16 @@ defmodule Elixirwebserver.Mixfile do
   #
   #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1"}
   #
+  # To depend on another app inside the umbrella:
+  #
+  #   {:myapp, in_umbrella: true}
+  #
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      #{:cowboy, github: "extend/cowboy"},
-      #{:lager, github: "basho/lager" }
-      {:cowboy, path: "cowboy"},
-      {:lager, path: "lager" }
+      {:cowboy, github: "extend/cowboy"},
+      {:lager, github: "basho/lager" }
     ]
   end
+
 end
