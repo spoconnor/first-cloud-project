@@ -26,7 +26,8 @@ defmodule PhoenixWebserver.Mixfile do
   defp deps do
     [
       {:phoenix, "0.3.0"},
-      {:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
+      {:cowboy, github: "extend/cowboy"}
+      #{:cowboy, "~> 0.10.0", github: "extend/cowboy", optional: true}
     ]
   end
 end
