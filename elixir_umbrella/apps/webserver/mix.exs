@@ -17,7 +17,8 @@ defmodule WebServer.Mixfile do
     #[
     # { :erl_opts, [parse_transform: "lager_transform"]}
     #] 
-    [applications: [],
+    # Starting :inets and :crypto first, or it will not start cowboy
+    [applications: [:inets, :crypto],
      #mod: {WebServer, []}]
      mod: {Example, []}]
   end
