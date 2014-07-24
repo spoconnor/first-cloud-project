@@ -2,7 +2,7 @@ defmodule WebServer.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :webserver,
+    [app: :example,
      version: "0.0.1",
      deps_path: "../../deps",
      lockfile: "../../mix.lock",
@@ -14,8 +14,12 @@ defmodule WebServer.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
+    #[
+    # { :erl_opts, [parse_transform: "lager_transform"]}
+    #] 
     [applications: [],
-     mod: {WebServer, []}]
+     #mod: {WebServer, []}]
+     mod: {Example, []}]
   end
 
   # Dependencies can be hex.pm packages:

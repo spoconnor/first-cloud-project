@@ -6,8 +6,10 @@ defmodule Handlers.Status do
   end
 
   def handle(req, state) do
-    {:ok, data} = File.read "assets/index.html"
-    {:ok, req} = :cowboy_http_req.reply 200, [], data, req
+    IO.puts "Handlers.Status called!"
+    #{:ok, data} = File.read "assets/index.html"
+    #{:ok, req} = :cowboy_http_req.reply 200, [], data, req
+    {:ok, req} = :cowboy_http_req.reply 200,[{"content-type", "text/plain"}], "Hello World!", req
     {:ok, req, state}
   end
 
