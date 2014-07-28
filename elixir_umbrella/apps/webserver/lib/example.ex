@@ -55,7 +55,7 @@ defmodule Example do
 #          {:mimetypes, [{<<".html">>, [<<"text/html">>]}]},
 #       ]}
 
-        {"/[...]", Handlers.Status, []},
+        {"/[...]", :Handlers.Status, []},
      ]}
      # {:directory, {:priv_dir, :Handlers.Status, []}} ]}
 
@@ -67,7 +67,7 @@ defmodule Example do
     #:cowboy_tcp_transport, [{:port, 8080}],
     #:cowboy_http_protocol, [{:dispatch, dispatch}]
 
-    {:ok, _} = :cowboy.start_http(:http, 100, [port: 8080], [env: [dispatch: dispatch]])
+    {:ok, _} = :cowboy.start_http(:http, 100, [{:port, 8080}], [{:env, [{:dispatch, dispatch}]}] )
 
     ExampleSup.start_link 
 
