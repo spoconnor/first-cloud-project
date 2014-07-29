@@ -1,16 +1,21 @@
 defmodule Erlskeletor_cowboy_foobar_handler do
-#-include_lib("mixer/include/mixer.hrl").
 
-#-mixin([
-#        {Erlskeletor_cowboy_base,
-#         [
-#          init/3,
-#          allowed_methods/2,
-#          content_types_provided/2,
-#          is_authorized/2
-#         ]
-#        }
-#       ]).
+def init(_Transport, _Req, _Opts) do
+    {:upgrade, :protocol, :cowboy_rest}
+end
+
+def allowed_methods(Req, State) do
+    {["GET"], Req, State}
+end
+
+def content_types_provided(Req, State) do
+    {[{"application/json", :handle_get}], Req, State}
+end
+
+def is_authorized(Req, State) do
+    {:true, Req, State}
+end
+
 
 def handle_get(Req, State) do
     Body = :jiffy.encode({[{:foo, :bar}]})
@@ -18,3 +23,5 @@ def handle_get(Req, State) do
 end
 
 end
+
+

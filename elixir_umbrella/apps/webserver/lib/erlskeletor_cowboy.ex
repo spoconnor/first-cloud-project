@@ -17,6 +17,9 @@ end
 # @private
 def start(_StartType, _StartArgs) do
     Erlskeletor_cowboy_sup.start_link()
+
+    IO.gets "Press enter"
+    :ok
 end
 
 # @private

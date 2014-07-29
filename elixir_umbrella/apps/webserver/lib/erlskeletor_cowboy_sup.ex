@@ -9,11 +9,12 @@ end
 def start_listeners() do
     port = Application.get_env(:Erlskeletor_cowboy, :http_port)
     listenerCount = Application.get_env(:Erlskeletor_cowboy, :http_listener_count)
-    
+    IO.puts("Listening on port #{port}")
+
     dispatch =
         :cowboy_router.compile([
                                {
-                                 '_',
+                                 :_,
                                  [
                                   {"/", :cowboy_static, {:file, "src/index.html"}},
                                   {"/events", :Erlskeletor_cowboy_events_handler, []},
@@ -43,7 +44,7 @@ def init(_) do
     {:ok, { {:one_for_one, 5, 10},
            [ 
              # {ChildId, StartFunc, Restart, Shutdown, Type, Modules}
-             {Erlskeletor_cowboy_http, {:Erlskeletor_cowboy_sup, start_listeners, []}, :permanent, 1000, :worker, [:Erlskeletor_cowboy_sup]}
+             {:Erlskeletor_cowboy_http, {:Erlskeletor_cowboy_sup, :start_listeners, []}, :permanent, 1000, :worker, [:Erlskeletor_cowboy_sup]}
            ]}
     }
 end
