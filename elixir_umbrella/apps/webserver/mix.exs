@@ -2,7 +2,7 @@ defmodule WebServer.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :example,
+    [app: :Erlskeletor_cowboy,
      version: "0.0.1",
      deps_path: "../../deps",
      lockfile: "../../mix.lock",
@@ -14,13 +14,14 @@ defmodule WebServer.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    #[
-    # { :erl_opts, [parse_transform: "lager_transform"]}
-    #] 
     # Starting :inets and :crypto first, or it will not start cowboy
-    [applications: [:inets, :crypto],
-     #mod: {WebServer, []}]
-     mod: {Example, []}]
+    [applications: [:kernel, :stdlib, :lager, :cowboy, :jiffy, :ssl, :ibrowse, :inets, :crypto],
+     mod: {Erlskeletor_cowboy, []},
+     env:  [
+        http_port: 8080,
+        http_listener_count: 10
+      ],
+    ]
   end
 
   # Dependencies can be hex.pm packages:
@@ -39,7 +40,12 @@ defmodule WebServer.Mixfile do
   defp deps do
     [
       {:cowboy, github: "extend/cowboy"},
-      {:lager, github: "basho/lager" }
+      {:lager, github: "basho/lager" },
+      {:jiffy, github: "davisp/jiffy" },
+      {:ibrowse, github: "cmullaparthi/ibrowse" },
+      {:eper, github: "massemanet/eper" },
+      {:mixer, github: "opscode/mixer" },
+      {:sync, github: "rustyio/sync" }
     ]
   end
 
