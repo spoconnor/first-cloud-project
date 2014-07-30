@@ -4,12 +4,13 @@ use Supervisor
 # admin api
 def start_link() do
     IO.puts "Supervisor.start_link"
-    :supervisor.start_link(__MODULE__,[])
+    Supervisor.start_link(__MODULE__,:ok)
 end
 
 # behaviour callbacks
-def init([]) do
+def init(:ok) do
     IO.puts "Supervisor.init"
+    import Supervisor.Spec
 
     #{:ok, { {:one_for_one, 5, 10},
     #       [ 
@@ -19,10 +20,11 @@ def init([]) do
     #}
 
     children = [
-      worker(Erlskeletor_cowboy_worker, [], [restart: :permanent, shutdown: 1000])
+      worker(Erlskeletor_cowboy_worker, [[:ok]]) 
+      #, [restart: :permanent, shutdown: 1000])
     ]
 
-    Supervisor.start_link(children, :one_for_one)
+    supervise(children, strategy: :one_for_one)
 
 end
 

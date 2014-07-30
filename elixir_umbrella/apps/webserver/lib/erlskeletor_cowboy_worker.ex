@@ -1,7 +1,12 @@
 defmodule Erlskeletor_cowboy_worker do
-@Behaviour
+use GenServer
 
-def start(_type, _args) do
+def start_link(state) do
+  IO.puts "Starting worker link..."
+  GenServer.start_link(__MODULE__, state, [name: :Erlskeletor_cowboy_workder])
+end
+
+def init(_state) do
   IO.puts "Starting worker..."
   port = Application.get_env(:Erlskeletor_cowboy, :http_port)
   listenerCount = Application.get_env(:Erlskeletor_cowboy, :http_listener_count)
@@ -34,8 +39,9 @@ def start(_type, _args) do
   :cowboy.start_http(:Erlskeletor_cowboy_http, listenerCount, ranchOptions, cowboyOptions)
 end
 
-def stop(_state) do
-  :ok
-end
+#def stop(_state) do
+#  :ok
+#end
+
 
 end
