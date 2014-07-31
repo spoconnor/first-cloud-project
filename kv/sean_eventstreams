@@ -1,0 +1,11 @@
+iex> {:ok, manager} = GenEvent.start_link
+{:ok, #PID<0.83.0>}
+iex> spawn_link fn ->
+...>   for x <- GenEvent.stream(manager), do: IO.inspect(x)
+...> end
+:ok
+iex> GenEvent.notify(manager, {:hello, :world})
+{:hello, :world}
+:ok
+
+In the example above, we have created a GenEvent.stream(manager) that returns a stream (an enumerable) of events that are consumed as they come. Since consuming those events is a blocking action, we spawn a new process that will consume the events and print them to the terminal, and that is exactly the behaviour we see. Every time we call sync_notify/2 or notify/2, the event is printed to the terminal followed by :ok (which is just IEx printing the result returned by notify functions).

@@ -9,7 +9,8 @@ defmodule KV.Mixfile do
   end
 
   def application do
-    [applications: []]
+    [applications: [],
+     mod: {KV, []}]
   end
 
   defp deps do

@@ -42,7 +42,8 @@ defmodule KV.Bucket do
   #Agent.get_and_update(bucket, &HashDict.pop(&1, key))
   # Same as...
   Agent.get_and_update(bucket, fn dict-> 
-   HashDict.pop(&1, key))
+   HashDict.pop(dict, key)
+  end)
   # Note. Part inside the fn executed on the server
 
  end
