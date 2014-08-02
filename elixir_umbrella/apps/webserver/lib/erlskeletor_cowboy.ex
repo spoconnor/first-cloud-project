@@ -1,28 +1,51 @@
 defmodule Erlskeletor_cowboy do
 use Application
 
-# @doc Stops the application
-#def stop() do
-#    :application.stop(Erlskeletor_cowboy)
-#end
+@webworker Erlskeletor_cowboy_worker
 
-# behaviour
-# @private
-def start(_StartType, _StartArgs) do
-    IO.puts "Ensure all started"
-    :application.ensure_all_started(Erlskeletor_cowboy)
+def start(_startType, _startArgs) do
+  IO.puts "Ensure all started"
+  :application.ensure_all_started(Erlskeletor_cowboy)
 
-    IO.puts "Starting..."
-    Erlskeletor_cowboy_sup.start_link()
+  IO.puts "Starting cowboy..."
 
-    IO.gets "Press enter"
-    :ok
+  port = Application.get_env(:Erlskeletor_cowboy, :http_port)
+  listenerCount = Application.get_env(:Erlskeletor_cowboy, :http_listener_count)
+  IO.puts("Listening on port #{port}")
+
+  dispatch =
+    :cowboy_router.compile([
+       {
+         :_,
+         [
+            {"/", Erlskeletor_toppage_handler, []},
+            #{"/", :cowboy_static, {:file, "index.html"}},
+            {"/events", Erlskeletor_cowboy_events_handler, []},
+            {"/foobar", Erlskeletor_cowboy_foobar_handler, []}
+         ]
+       }
+    ])
+  ranchOptions =
+    [ 
+      {:port, port}
+    ]
+  cowboyOptions =
+    [ 
+      {:env, [
+         {:dispatch, dispatch}
+      ]},
+      {:compress,  true},
+      {:timeout,   12000}
+    ]
+    
+  {:ok, _} = :cowboy.start_http(:Erlskeletor_cowboy_http, listenerCount, ranchOptions, cowboyOptions)
+
+  {:ok, _pid} = Erlskeletor_cowboy_sup.start_link
+
+  IO.gets "Press enter"
+  :ok
 end
 
-# @private
-#defp stop(_State) do
-#    :ok
-#end
-
-
 end
+
+

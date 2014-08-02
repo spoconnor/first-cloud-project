@@ -2,15 +2,16 @@ defmodule Erlskeletor_cowboy_sup do
 use Supervisor
 
 # admin api
-def start_link() do
+def start_link do
     IO.puts "Supervisor.start_link"
     Supervisor.start_link(__MODULE__,:ok)
 end
 
+@worker Erlskeletor_cowboy_worker
+
 # behaviour callbacks
 def init(:ok) do
     IO.puts "Supervisor.init"
-    import Supervisor.Spec
 
     #{:ok, { {:one_for_one, 5, 10},
     #       [ 
@@ -20,7 +21,7 @@ def init(:ok) do
     #}
 
     children = [
-      worker(Erlskeletor_cowboy_worker, [[:ok]]) 
+      worker(Erlskeletor_cowboy_worker, [[name: @worker]]) 
       #, [restart: :permanent, shutdown: 1000])
     ]
 

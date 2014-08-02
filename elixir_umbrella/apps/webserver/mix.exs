@@ -15,7 +15,8 @@ defmodule WebServer.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     # Starting :inets and :crypto first, or it will not start cowboy
-    [applications: [:kernel, :stdlib, :lager, :cowboy, :jiffy, :ssl, :ibrowse, :inets, :crypto],
+    [applications:
+[:kernel, :stdlib, :lager, :ranch, :cowlib, :cowboy, :jiffy, :ssl, :ibrowse, :inets, :crypto],
      mod: {Erlskeletor_cowboy, []},
      env:  [
         http_port: 8080,

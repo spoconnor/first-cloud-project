@@ -1,27 +1,27 @@
 defmodule Erlskeletor_cowboy_foobar_handler do
 
-def init(_Transport, _Req, _Opts) do
+def init(_transport, _req, _opts) do
   IO.puts "foobar handler init"
   {:upgrade, :protocol, :cowboy_rest}
 end
 
-def allowed_methods(Req, State) do
-  {["GET"], Req, State}
+def allowed_methods(req, state) do
+  {["GET"], req, state}
 end
 
-def content_types_provided(Req, State) do
-  {[{"application/json", :handle_get}], Req, State}
+def content_types_provided(req, state) do
+  {[{"application/json", :handle_get}], req, state}
 end
 
-def is_authorized(Req, State) do
-  {:true, Req, State}
+def is_authorized(req, state) do
+  {:true, req, state}
 end
 
 
-def handle_get(Req, State) do
+def handle_get(req, state) do
   IO.puts "foobar handle get"
-  Body = :jiffy.encode({[{:foo, :bar}]})
-  {Body, Req, State}
+  body = :jiffy.encode({[{:foo, :bar}]})
+  {body, req, state}
 end
 
 end
