@@ -1,4 +1,0 @@
-Elixirserver
-============
-
-** TODO: Add description **
