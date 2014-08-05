@@ -1,0 +1,47 @@
+# Install Riak on Ubuntu:
+
+curl http://apt.basho.com/gpg/basho.apt.key | sudo apt-key add -
+
+sudo bash -c "echo deb http://apt.basho.com $(lsb_release -sc) main > /etc/apt/sources.list.d/basho.list"
+sudo apt-get update
+
+sudo apt-get install riak
+
+
+# Or from source
+git clone https://github.com/basho/riak.git
+#May need to change required OTP ver to '17' in rebar.config
+cd riak
+make rel
+
+# Start a node
+
+riak start
+
+# Start with an attached interactive erlang console
+
+riak console
+
+# Close console
+q()
+
+# Test running 
+riak ping
+
+# Open files limit, use
+ulimit -n
+
+# Test
+riak-admin test
+curl -v http://127.0.0.1:8098/riak/test
+
+# Basic config
+riak-admin diag
+
+# Put a file in riak
+curl -XPUT \
+  -H "Content-type: image/jpeg" \
+  --data-binary @image_name.jpg \
+  http://127.0.0.1:10018/buckets/images/keys/1.jpg
+
+
