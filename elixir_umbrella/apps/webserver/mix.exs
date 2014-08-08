@@ -13,7 +13,7 @@ defmodule Webserver.Mixfile do
   def application do
     # Starting :inets and :crypto first, or it will not start cowboy
     [applications:
-[:kernel, :stdlib, :lager, :ranch, :cowlib, :cowboy, :jiffy, :ssl, :ibrowse, :inets, :crypto],
+[:kernel, :stdlib, :lager, :ranch, :cowlib, :cowboy, :jiffy, :ssl, :ibrowse, :inets, :crypto, :riakc],
      mod: {Webserver, []},
      env:  [
         http_port: 8080,
@@ -28,6 +28,8 @@ defmodule Webserver.Mixfile do
       {:lager, github: "basho/lager" },
       {:jiffy, github: "davisp/jiffy" },
       {:ibrowse, github: "cmullaparthi/ibrowse" },
+      {:riakc, github: "basho/riak-erlang-client"},
+      #{:riakclient, github: "drewkerrigan/riak-elixir-client" },
       {:eper, github: "massemanet/eper" },
       {:mixer, github: "opscode/mixer" },
       {:sync, github: "rustyio/sync" }
