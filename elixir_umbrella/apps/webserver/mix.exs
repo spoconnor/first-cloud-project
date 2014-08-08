@@ -32,7 +32,9 @@ defmodule Webserver.Mixfile do
       #{:riakclient, github: "drewkerrigan/riak-elixir-client" },
       {:eper, github: "massemanet/eper" },
       {:mixer, github: "opscode/mixer" },
-      {:sync, github: "rustyio/sync" }
+      {:sync, github: "rustyio/sync" },
+      #{:'riak-elixir-client', github: "drewkerrigan/riak-elixir-client" }
+      {:riakc, github: "basho/riak-erlang-client" }
     ]
   end
 
