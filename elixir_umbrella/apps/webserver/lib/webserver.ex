@@ -19,9 +19,10 @@ def start(_startType, _startArgs) do
          :_,
          [
             {"/", :cowboy_static, {:file, "priv/index.html"}},
-            {"/api", Webserver.Toppage.Handler, []},
             {"/events", Webserver.Events.Handler, []},
-            {"/foobar", Webserver.Foobar.Handler, []}
+            {"/foobar", Webserver.Foobar.Handler, []},
+            {"/api", Webserver.Toppage.Handler, []},
+            {"/api/[:id]", [{:v1, :int}], Webserver.Toppage.Handler, []},
          ]
        }
     ])
