@@ -18,8 +18,8 @@ def start(_startType, _startArgs) do
        {
          :_,
          [
-            {"/", Webserver.Toppage.Handler, []},
-            #{"/", :cowboy_static, {:file, "index.html"}},
+            {"/", :cowboy_static, {:file, "priv/index.html"}},
+            {"/api", Webserver.Toppage.Handler, []},
             {"/events", Webserver.Events.Handler, []},
             {"/foobar", Webserver.Foobar.Handler, []}
          ]
