@@ -21,7 +21,7 @@ defmodule Riak do
 
   ## Basic CRUD operations
   Data is inserted into the database using the `put` function. The
-  inserted data needs to be an `RObj` created like this:
+  inserted data needs to be an `RObj` cred like this:
 
       iex> u = RObj.create(bucket: "user", key: "my_key", data: "Drew Kerrigan")
       iex> Riak.put u
@@ -51,6 +51,7 @@ defmodule Riak do
   use Riak.Client
 
   def start() do
+    IO.puts "Riak 
     Riak.Supervisor.start_link()
   end
 

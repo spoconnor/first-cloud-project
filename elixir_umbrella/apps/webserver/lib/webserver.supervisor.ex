@@ -7,7 +7,8 @@ def start_link do
     Supervisor.start_link(__MODULE__,:ok)
 end
 
-@worker Webserver.Worker
+@riakworker Riak
+@webworker Webserver.Worker
 
 # behaviour callbacks
 def init(:ok) do
@@ -21,7 +22,8 @@ def init(:ok) do
     #}
 
     children = [
-      worker(Webserver.Worker, [[name: @worker]]) 
+      worker(Riak.Supervisor, []),
+      worker(Webserver.Worker, [[name: @webworker]]) 
       #, [restart: :permanent, shutdown: 1000])
     ]
 
