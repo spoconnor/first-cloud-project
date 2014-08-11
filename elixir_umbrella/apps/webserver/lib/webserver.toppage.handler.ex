@@ -3,18 +3,104 @@ defmodule Webserver.Toppage.Handler do
 def init(_transport, _req, []) do
 	# For the random number generator:
   :random.seed(:erlang.now)
-	{:upgrade, :protocol, :cowboy_rest}
+
+  # Specify handler based on request method
+  case :cowboy_req.method(req) do
+    {"POST", _} ->
+	    {:upgrade, :protocol, :cowboy_rest}
+    {"GET", req1} ->
+      handle_get(req1)
+  end
 end
 
 def allowed_methods(req, state) do
-  {["GET", "POST"], req, state}
+  #{["GET", "POST"], req, state}
+  # Only allow Post requests
+  {["POST"], req, state}
 end
 
 def content_types_accepted(req, state) do
 	{
-   [ {{"application", "x-www-form-urlencoded", []}, :create_paste} ], Req, State
+   #[ {{"application", "x-www-form-urlencoded", []}, :create_paste} ], Req, State
+   # Only application/json is accepted
+   # parsed using handle_post/2
+   [ {{"application", "json", []}, :handle_post} ], Req, State
   }
 end
+
+# Resource exists defaults to true so we need to change it
+# since every POST should create a new event
+def resource_exists(req, state) do
+  {:false, req, state}
+end
+
+def handle_post(req, state) do
+  # Get the request body
+  {:ok, body, req1} = :cowboy_req.body(req)
+
+  # Decode it as JSON
+  case json_decode(body) do
+    {params} ->
+      # Extract known properties, using defaults if needed
+      title = :proplists.get_value("title", params, "news")
+      content = :proplists.get_value("content", params, "")
+
+      # Save it to database
+      #data = db....
+
+      # Send notification to listeners
+      notify(data)
+
+      # Return 204 no content
+      {:true, req1, state}
+
+    {:bad_json, reason} ->
+      # return 400 with the json encoded error
+      {:ok, req2} = :cowboy_req.reply(400, [], :jiffy.encode(reason), req1)
+      {:halt, req2, state}
+  end
+end
+
+def notify(data) do
+  lists.foreach(
+    fun(listener) ->
+      listener ! {:data, data}
+    end
+    pg2.get_members(data_listeners))
+end
+
+def handle_get(req) do
+  # set the response encoding properly for SSE
+  {:ok, req1} = :cowboy_req.chunked_reply(
+    200, 
+    [{"content-type", "text/event-stream"}], req)
+
+  # get latest data from database
+  datalist = {"blah...", "test", "wibble"}
+
+  # send each in the response
+  lists.foreach(
+    fun(data) ->
+      send_data(data, req1)
+    end, datalist)
+
+  # Add to listeners group
+  :ok = pg2.join(data_listeners, self())
+
+  # Instruct cowboy to start looping and hibernate until a message is recv
+  {:loop, req1, :undefined, :hibernate}
+end
+
+# called on every message received by hadler
+def info({:data, data}, req, state} do
+  # send data to listener
+  send_data(:data, req)
+  # keep looping
+  {:loop, req, state, :hibernate}
+end
+
+
+##### not needed...
 
 def content_types_provided(req, state) do
   IO.puts "Toppage.Handler called"
@@ -29,7 +115,7 @@ def create_paste(req, state) do
 	pasteID = new_paste_id()
 	{:ok, [{"paste", paste}], req3} = :cowboy_req.body_qs(req)
 #	:ok = file.write_file(full_path(pasteID), paste)
-#	case :cowboy_req.method(req3) of
+#	case :cowboy_req.method(req3) do
 #		{"POST", req4} ->
 #			{{:true, <<$/, PasteID/binary>>}, req4, state};
 #		{_, Req4} ->
