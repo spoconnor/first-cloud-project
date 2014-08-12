@@ -51,7 +51,7 @@ defmodule Riak do
   use Riak.Client
 
   def start() do
-    IO.puts "Riak 
+    IO.puts "Riak Client starting"
     Riak.Supervisor.start_link()
   end
 

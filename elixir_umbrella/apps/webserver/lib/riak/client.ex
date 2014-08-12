@@ -5,6 +5,7 @@ defmodule Riak.Client do
   use GenServer
 
   def start_link() do
+    IO.puts("Riak Client starting")
     :gen_server.start_link({ :local, :riak }, __MODULE__, nil, [])
   end
 

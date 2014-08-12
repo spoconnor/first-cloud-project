@@ -22,7 +22,7 @@ def init(:ok) do
     #}
 
     children = [
-      worker(Riak.Supervisor, []),
+      worker(Riak.Client, []),
       worker(Webserver.Worker, [[name: @webworker]]) 
       #, [restart: :permanent, shutdown: 1000])
     ]
