@@ -1,8 +1,3 @@
-defmodule State do
-  defstruct socket_pid: nil
-end
-
-
 defmodule Riak do
   @moduledoc """
   A Client for Riak.
@@ -13,7 +8,7 @@ defmodule Riak do
   the protobuf link with your Riak cluster.
 
       iex> Riak.start
-      iex> Riak.configure(host: '127.0.0.1', port: 8087)
+      iex> Riak.configure([host: '127.0.0.1', port: 8087])
 
   The client supports secondary indexes. Remember to use a storage
   backend that support secondary indexes (such as *leveldb*), in
@@ -23,7 +18,7 @@ defmodule Riak do
   Data is inserted into the database using the `put` function. The
   inserted data needs to be an `RObj` cred like this:
 
-      iex> u = RObj.create(bucket: "user", key: "my_key", data: "Drew Kerrigan")
+      iex> u = RObj.create("bucket", "key", "data")
       iex> Riak.put u
 
   To get a data entry out of the database, use the `find` function.
@@ -47,6 +42,7 @@ defmodule Riak do
   """
 
   use Application
+
 
   use Riak.Client
 

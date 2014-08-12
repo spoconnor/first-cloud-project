@@ -1,6 +1,6 @@
-#defmodule State do
-#  defstruct socket_pid: nil
-#end
+defmodule State do
+  defstruct socket_pid: nil
+end
 
 defmodule Riak.Client do
   @moduledoc """
@@ -140,7 +140,7 @@ defmodule Riak.Client do
   # Start Link to Riak
   def handle_call({ :configure, host, port }, _from, _state) do
     {:ok, pid} = :riakc_pb_socket.start_link(host, port)
-    new_state = Riak.State.new(socket_pid: pid)
+    new_state = %State{socket_pid: pid}
     { :reply, {:ok, pid}, new_state }
   end
 

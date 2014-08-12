@@ -83,13 +83,13 @@ defmodule RObj do
   use Riak.Object
 
   def from_robj(robj) do
-    RObj.new(
+    %RObj{
       bucket: :riakc_obj.bucket(robj),
       key: :riakc_obj.key(robj),
       data: :riakc_obj.get_update_value(robj),
       metadata: :riakc_obj.get_update_metadata(robj),
       vclock: :riakc_obj.vclock(robj),
-      content_type: :riakc_obj.get_update_content_type(robj))
+      content_type: :riakc_obj.get_update_content_type(robj)}
   end
 
   def to_robj(obj) do
@@ -107,10 +107,10 @@ defmodule RObj do
     robj
   end
   
-  def create(), do: RObj.new()
+  def create(), do: %RObj{}
 
-  def create(args) do
-    obj = RObj.new(args)
+  def create(bucket, key, data) do
+    obj = %RObj{bucket: bucket, key: key, data: data}
     from_robj(to_robj(obj))
   end
 
