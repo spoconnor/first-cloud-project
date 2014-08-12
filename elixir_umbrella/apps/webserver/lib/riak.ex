@@ -58,4 +58,14 @@ defmodule Riak do
   def start(_type, _state) do
     Riak.Supervisor.start_link()
   end
+
+  def start_link() do
+    IO.puts("Riak Client starting")
+    :gen_server.start_link({ :local, :riak }, __MODULE__, nil, [])
+  end
+
+  def init() do
+    { :ok, nil }
+  end
+
 end

@@ -1,3 +1,7 @@
+#defmodule State do
+#  defstruct socket_pid: nil
+#end
+
 defmodule Riak.Client do
   @moduledoc """
   Riak Client
@@ -15,6 +19,7 @@ defmodule Riak.Client do
 
   defmacro __using__(_opts) do
     quote do
+
       # Client level functions
       def configure(opts) do
         :gen_server.call(:riak, {:configure, Keyword.fetch!(opts, :host), Keyword.fetch!(opts, :port)})
