@@ -109,8 +109,8 @@ defmodule RObj do
   
   def create(), do: %RObj{}
 
-  def create(bucket, key, data) do
-    obj = %RObj{bucket: bucket, key: key, data: data}
+  def create(args) do
+    obj = %RObj{bucket: Keyword.fetch!(args, :bucket), key: Keyword.fetch!(args, :key), data: Keyword.fetch!(args, :data)}
     from_robj(to_robj(obj))
   end
 

@@ -18,7 +18,7 @@ defmodule Riak do
   Data is inserted into the database using the `put` function. The
   inserted data needs to be an `RObj` cred like this:
 
-      iex> u = RObj.create("bucket", "key", "data")
+      iex> u = RObj.create([bucket: "bucket", key: "key", data: "data"])
       iex> Riak.put u
 
   To get a data entry out of the database, use the `find` function.
