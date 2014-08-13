@@ -2,7 +2,7 @@ defmodule Webserver.Database do
 
 # Save a value
 def saveData(bucket, key, data) do
-  u = RObj.create(bucket: bucket, key: key, data: data)
+  u = RObj.create([bucket: bucket, key: key, data: data])
     |> Riak.put
 end
 

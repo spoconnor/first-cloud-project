@@ -94,7 +94,6 @@ defmodule RObj do
 
   def to_robj(obj) do
     unless obj.key, do: obj = obj.key(:undefined)
-
     robj = :riakc_obj.new(
       obj.bucket, 
       obj.key, 

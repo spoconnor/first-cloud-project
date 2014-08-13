@@ -2,16 +2,16 @@ defmodule Webserver.RestApi.Handler do
 
 #POST
 #
-#curl -vX POST http://localhost:8080/news \
+#curl -vX POST http://localhost:8080/api \
 #-H"Content-Type:application/json" \
-#-d'{ "title": "The Title", "content": "The Content" }'
+#-d'{ "key": "The Title", "data": "The Content" }'
 #
 #GET
 #
-#curl -vX GET http://localhost:8080/news
+#curl -vX GET http://localhost:8080/api
 
 def init(_transport, req, []) do
-	# For the random number generator:
+  # For the random number generator:
   :random.seed(:erlang.now)
 
   # Specify handler based on request method
@@ -30,7 +30,7 @@ def allowed_methods(req, state) do
 end
 
 def content_types_accepted(req, state) do
-	{
+  {
    #[ {{"application", "x-www-form-urlencoded", []}, :create_paste} ], Req, State
    # Only application/json is accepted
    # parsed using handle_post/2
@@ -45,6 +45,7 @@ def resource_exists(req, state) do
 end
 
 def handle_post(req, state) do
+  IO.puts "Handling post..."
   # Get the request body
   {:ok, body, req1} = :cowboy_req.body(req)
 
@@ -52,11 +53,11 @@ def handle_post(req, state) do
   case :jiffy.json_decode(body) do
     {params} ->
       # Extract known properties, using defaults if needed
-      title = :proplists.get_value("title", params, "news")
-      content = :proplists.get_value("content", params, "")
+      key = :proplists.get_value("key", params, "default")
+      data = :proplists.get_value("data", params, "")
 
       # Save it to database
-      #data = db....
+      Webserver.Database.saveData("bucket", key, data)
 
       # Send notification to listeners
       #notify(data)
