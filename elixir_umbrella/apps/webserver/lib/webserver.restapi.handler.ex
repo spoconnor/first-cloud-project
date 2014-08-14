@@ -2,9 +2,7 @@ defmodule Webserver.RestApi.Handler do
 
 #POST
 #
-#curl -vX POST http://localhost:8080/api \
-#-H"Content-Type:application/json" \
-#-d'{ "key": "The Title", "data": "The Content" }'
+#curl -vX POST http://localhost:8080/api -H"content-type:application/json" -d'{ "key": "The Title", "data": "The Content" }'
 #
 #GET
 #
@@ -31,10 +29,10 @@ end
 
 def content_types_accepted(req, state) do
   {
-   #[ {{"application", "x-www-form-urlencoded", []}, :create_paste} ], Req, State
+   #[ {{"application", "x-www-form-urlencoded", []}, :create_paste} ], req, state
    # Only application/json is accepted
    # parsed using handle_post/2
-   [ {{"application", "json", []}, :handle_post} ], Req, State
+   [ {{"application", "json", []}, :handle_post} ], req, state
   }
 end
 
@@ -50,7 +48,7 @@ def handle_post(req, state) do
   {:ok, body, req1} = :cowboy_req.body(req)
 
   # Decode it as JSON
-  case :jiffy.json_decode(body) do
+  case :jiffy.decode(body) do
     {params} ->
       # Extract known properties, using defaults if needed
       key = :proplists.get_value("key", params, "default")
@@ -134,7 +132,7 @@ def create_paste(req, state) do
 #	case :cowboy_req.method(req3) do
 #		{"POST", req4} ->
 #			{{:true, <<$/, PasteID/binary>>}, req4, state};
-#		{_, Req4} ->
+#		{_, req4} ->
 #			{:true, req4, state}
 #	end
 end
