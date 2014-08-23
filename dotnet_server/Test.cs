@@ -19,13 +19,6 @@ namespace dotnet_server
         {
             System.Console.Out.WriteLine("Otp test...");
 
-            string cookie = OtpNode.defaultCookie;
-            string host = System.Net.Dns.GetHostName();
-            string remote = (args[0].IndexOf('@') < 0) ? args[0] + "@" + host : args[0];
-            string nodename = Environment.UserName + "123@" + host;
-
-            AbstractConnection.traceLevel = OtpTrace.Type.sendThreshold;
-
             if (args.Length < 1)
             {
                 System.Console.Out.WriteLine(
@@ -38,7 +31,15 @@ namespace dotnet_server
                     Environment.GetCommandLineArgs()[0]);
                 return;
             }
-            else if (args.Length > 1 && args[1][0] != '-')
+
+            string cookie = OtpNode.defaultCookie;
+            string host = System.Net.Dns.GetHostName();
+            string remote = (args[0].IndexOf('@') < 0) ? args[0] + "@" + host : args[0];
+            string nodename = Environment.UserName + "123@" + host;
+
+            AbstractConnection.traceLevel = OtpTrace.Type.sendThreshold;
+
+            if (args.Length > 1 && args[1][0] != '-')
             {
                 cookie = args[1].ToString();
             }
@@ -62,13 +63,13 @@ namespace dotnet_server
 
             OtpCookedConnection.ConnectTimeout = 2000;
             OtpCookedConnection conn = node.connection(remote);
-            conn.OnReadWrite += OnReadWrite;
 
             if (conn == null)
             {
-                Console.WriteLine("Can't connect to node " + remote);
-                return;
+               Console.WriteLine("Can't connect to node " + remote);
+              return;
             }
+            conn.OnReadWrite += OnReadWrite;
 
             // If using short names or IP address as the host part of the node name,
             // get the short name of the peer.

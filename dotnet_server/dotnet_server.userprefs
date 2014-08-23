@@ -1,8 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Test.cs">
+    <Files>
+      <File FileName="Main.cs" Line="10" Column="1" />
+      <File FileName="Test.cs" Line="87" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/mnt/archive/Programming/Cloud/first-cloud-project/dotnet_server/Test.cs" line="69" />
+      <Breakpoint file="/mnt/archive/Programming/Cloud/first-cloud-project/dotnet_server/Test.cs" line="87" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

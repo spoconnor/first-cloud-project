@@ -1,0 +1,8 @@
+message ServerInfoRequest {
+  required string clientname = 1;
+  optional int32 number = 2;
+}
+
+message ServerInfoResponse {
+  required string servername = 1;
+}
