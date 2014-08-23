@@ -1,144 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Otp;
+using Google.ProtocolBuffers.Examples.AddressBook;
 
 namespace dotnet_server
 {
     class Test
     {
-        private static void OnReadWrite(AbstractConnection con, AbstractConnection.Operation op,
-            long lastBytes, long totalBytes, long totalMsgs)
+        static void Run()
         {
-            System.Console.WriteLine(String.Format("{0} {1} bytes (total: {2} bytes, {3} msgs)",
-                (op == AbstractConnection.Operation.Read ? "Read " : "Written "),
-                lastBytes, totalBytes, totalMsgs));
+            byte[] bytes;
+            //Create a builder to start building a message
+            Person.Builder newContact = Person.CreateBuilder();
+            //Set the primitive properties
+            newContact.SetId(1)
+                      .SetName("Foo")
+                      .SetEmail("foo@bar");
+            //Now add an item to a list (repeating) field
+            newContact.AddPhone(
+                //Create the child message inline
+                Person.Types.PhoneNumber.CreateBuilder().SetNumber("555-1212").Build()
+                );
+            //Now build the final message:
+            Person person = newContact.Build();
+            //The builder is no longer valid (at least not now, scheduled for 2.4):
+            newContact = null;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                //Save the person to a stream
+                person.WriteTo(stream);
+                bytes = stream.ToArray();
+            }
+            //Create another builder, merge the byte[], and build the message:
+            Person copy = Person.CreateBuilder().MergeFrom(bytes).Build();
+
+            //A more streamlined approach might look like this:
+            bytes = AddressBook.CreateBuilder().AddPerson(copy).Build().ToByteArray();
+            //And read the address book back again
+            AddressBook restored = AddressBook.CreateBuilder().MergeFrom(bytes).Build();
+            //The message performs a deep-comparison on equality:
+            if (restored.PersonCount != 1 || !person.Equals(restored.PersonList[0]))
+                throw new ApplicationException("There is a bad person in here!");
         }
-
-		static public void Run(String[] args)
-        {
-            System.Console.Out.WriteLine("Otp test...");
-
-            if (args.Length < 1)
-            {
-                System.Console.Out.WriteLine(
-                    "Usage: {0} remotenode [cookie] [-notrace]\n" +
-                    "    nodename  - is the name of the remote Erlang node\n" +
-                    "    cookie    - is the optional cookie string to use\n" +
-                    "    -name     - this node name\n" +
-                    "    -wire     - wire-level tracing\n" +
-                    "    -notrace  - disable debug trace\n",
-                    Environment.GetCommandLineArgs()[0]);
-                return;
-            }
-
-            string cookie = OtpNode.defaultCookie;
-            string host = System.Net.Dns.GetHostName();
-            string remote = (args[0].IndexOf('@') < 0) ? args[0] + "@" + host : args[0];
-            string nodename = Environment.UserName + "123@" + host;
-
-            AbstractConnection.traceLevel = OtpTrace.Type.sendThreshold;
-
-            if (args.Length > 1 && args[1][0] != '-')
-            {
-                cookie = args[1].ToString();
-            }
-
-            for (int i = 0; i < args.Length; i++) {
-                if (args[i].Equals("-wire"))
-                    AbstractConnection.traceLevel = OtpTrace.Type.wireThreshold;
-                else if (args[i].Equals("-notrace"))
-                    AbstractConnection.traceLevel = OtpTrace.Type.defaultLevel;
-                else if (args[i].Equals("-name") && i+1 < args.Length) {
-                    nodename = args[i++ + 1];
-                    if (nodename.IndexOf('@') < 0)
-                        nodename += '@' + host;
-                }
-            }
-
-            OtpNode node = new OtpNode(false, nodename, cookie, true);
-
-            System.Console.Out.WriteLine("This node is called {0} and is using cookie='{1}'.",
-                node.node(), node.cookie());
-
-            OtpCookedConnection.ConnectTimeout = 2000;
-            OtpCookedConnection conn = node.connection(remote);
-
-            if (conn == null)
-            {
-               Console.WriteLine("Can't connect to node " + remote);
-              return;
-            }
-            conn.OnReadWrite += OnReadWrite;
-
-            // If using short names or IP address as the host part of the node name,
-            // get the short name of the peer.
-            remote = conn.peer.node();
-
-            System.Console.Out.WriteLine("   successfully connected to node " + remote + "\n");
-
-            OtpMbox mbox = null;
-
-            try
-            {
-                mbox = node.createMbox();
-
-                {
-                    Otp.Erlang.Object reply = mbox.rpcCall(
-                        remote, "lists", "reverse", new Otp.Erlang.List("Abcdef!"));
-                    System.Console.Out.WriteLine("<= [REPLY1]:" + (reply == null ? "null" : reply.ToString()));
-                }
-
-                {
-                    Otp.Erlang.Object reply = mbox.rpcCall(
-                        remote, "global", "register_name",
-                        new Otp.Erlang.List(new Otp.Erlang.Atom("me"), mbox.self()));
-
-                    System.Console.Out.WriteLine("<= [REPLY2]:" + (reply == null ? "null" : reply.ToString()));
-                }
-
-                {
-                    Otp.Erlang.Object reply = mbox.rpcCall(
-                        remote, "global", "register_name", new Otp.Erlang.List(new Otp.Erlang.Atom("me"), mbox.self()), 5000);
-                    System.Console.Out.WriteLine("<= [REPLY3]:" + (reply == null ? "null" : reply.ToString()));
-                }
-
-                {
-                    Otp.Erlang.Object reply = mbox.rpcCall(
-                        remote, "io", "format",
-                        new Otp.Erlang.List(
-                            "Test: ~w -> ~w\n",
-                            new Otp.Erlang.List(mbox.self(), new Otp.Erlang.Atom("ok"))
-                        ));
-
-                    System.Console.Out.WriteLine("<= [REPLY4]:" + (reply == null ? "null" : reply.ToString()));
-                }
-
-                while (true)
-                {
-                    Otp.Erlang.Object msg = mbox.receive();
-                    if (msg is Otp.Erlang.Tuple)
-                    {
-                        Otp.Erlang.Tuple m = msg as Otp.Erlang.Tuple;
-                        if (m.arity() == 2 && m.elementAt(0) is Otp.Erlang.Pid)
-                        {
-                            mbox.send(m.elementAt(0) as Otp.Erlang.Pid, m.elementAt(1));
-                        }
-                    }
-                    System.Console.Out.WriteLine("IN msg: " + msg.ToString() + "\n");
-                }
-
-            }
-            catch (System.Exception e)
-            {
-                System.Console.Out.WriteLine("Error: " + e.ToString());
-            }
-            finally
-            {
-                node.closeMbox(mbox);
-            }
-
-            node.close();
-        }
-	}
+    }
 }

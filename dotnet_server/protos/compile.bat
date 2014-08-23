@@ -1,0 +1,1 @@
+tools\ProtoGen.exe info.proto google\protobuf\csharp_options.proto google\protobuf\descriptor.proto --proto_path=.

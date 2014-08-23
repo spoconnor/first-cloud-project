@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -32,15 +32,24 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="otp">
-      <HintPath>deps\Otp.net\otp.dll</HintPath>
+    <Reference Include="Google.ProtocolBuffers">
+      <HintPath>deps\GoogleProtoBufs\Google.ProtocolBuffers.dll</HintPath>
     </Reference>
+    <Reference Include="Google.ProtocolBuffers.Serialization">
+      <HintPath>deps\GoogleProtoBufs\Google.ProtocolBuffers.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="protos\AddressBookProtos.cs" />
+    <Compile Include="protos\CSharpOptions.cs" />
+    <Compile Include="protos\DescriptorProtoFile.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="protos\info.proto" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
