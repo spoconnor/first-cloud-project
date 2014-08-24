@@ -9,7 +9,7 @@ namespace dotnet_server
 {
     class Test
     {
-        static void Run()
+        static public void Run()
         {
             byte[] bytes;
             //Create a builder to start building a message

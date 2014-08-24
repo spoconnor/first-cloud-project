@@ -39,6 +39,9 @@
       <HintPath>deps\GoogleProtoBufs\Google.ProtocolBuffers.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ServiceModel.Routing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="protos\AddressBookProtos.cs" />
@@ -47,6 +50,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="RestServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="protos\info.proto" />

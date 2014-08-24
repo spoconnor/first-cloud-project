@@ -7,7 +7,11 @@ namespace dotnet_server
         public static void Main (string[] args)
         {
             Console.WriteLine ("Hello World!");
-            Test.Run();
+            var restServer = new RestServer();
+            restServer.Start();
+
+            Console.ReadKey();
+            restServer.Stop();
         }
     }
 }
