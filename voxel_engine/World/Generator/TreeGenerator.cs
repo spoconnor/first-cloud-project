@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sean.World.Generator
+namespace Sean.World
 {
 	internal static class TreeGenerator
 	{

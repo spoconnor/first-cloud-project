@@ -109,12 +109,12 @@ namespace Sean.World
 			return bytes;
 		}
 
-        /*
+
 		public bool IsValidBlockLocation
 		{
 			get { return WorldData.IsValidBlockLocation(Xblock, Yblock, Zblock); }
 		}
-
+ 
 		public bool IsValidPlayerLocation
 		{
 			get
@@ -138,7 +138,7 @@ namespace Sean.World
 		{
 			get { return WorldData.IsOnChunkBorder(Xblock, Zblock); }
 		}
-        */
+     
 
 		/// <summary>Get a List of the 6 directly adjacent positions. Exclude positions that are outside the world or on the base of the world.</summary>
 		public List<Position> AdjacentPositions

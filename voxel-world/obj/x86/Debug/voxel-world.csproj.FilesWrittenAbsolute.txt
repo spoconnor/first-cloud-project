@@ -1,2 +1,0 @@
-/mnt/archive/Programming/Cloud/first-cloud-project/voxel-world/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.cs
-/mnt/archive/Programming/Cloud/first-cloud-project/voxel-world/bin/Debug/OpenTK.dll

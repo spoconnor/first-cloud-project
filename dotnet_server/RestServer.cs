@@ -1,5 +1,4 @@
 using System;
-using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.ServiceModel.Activation;
@@ -22,11 +21,8 @@ namespace dotnet_server
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, 
         ConcurrencyMode = ConcurrencyMode.Single, IncludeExceptionDetailInFaults = true)]
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-    [RoutePrefix("demo")]
     public class RestDemoServices:IRESTDemoServices
     {
-        [HttpGet]
-        [Route("client/{id}")]
         public string GetClientNameById(string id)
         {
             Random r = new Random();
@@ -45,10 +41,12 @@ namespace dotnet_server
         {
         }
 
+        private WebServiceHost _serviceHost;
+
         public void Start()
         {
             RestDemoServices DemoServices = new RestDemoServices();
-            WebServiceHost _serviceHost = new WebServiceHost(DemoServices, 
+            _serviceHost = new WebServiceHost(DemoServices, 
                  new Uri("http://localhost:8000/DEMOService"));
             _serviceHost.Open();
         }

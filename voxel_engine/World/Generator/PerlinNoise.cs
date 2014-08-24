@@ -1,4 +1,4 @@
-﻿namespace Sean.World.Generator
+﻿namespace Sean.World
 {
 	internal class PerlinNoise
 	{

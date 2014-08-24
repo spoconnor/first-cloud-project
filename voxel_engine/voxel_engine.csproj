@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1B87D5BD-6CE2-467C-A30C-736D63055CDA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>voxel_engine</RootNamespace>
+    <AssemblyName>voxel_engine</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="OpenTK">
+      <HintPath>deps\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Shared\Block.cs" />
+    <Compile Include="Shared\Blocks.cs" />
+    <Compile Include="Shared\Chunk.cs" />
+    <Compile Include="Shared\ChunkCoords.cs" />
+    <Compile Include="Shared\Coords.cs" />
+    <Compile Include="Shared\Enums.cs" />
+    <Compile Include="Shared\Position.cs" />
+    <Compile Include="Shared\TextureType.cs" />
+    <Compile Include="Shared\UiTextGraphics.cs" />
+    <Compile Include="World\Chunks.cs" />
+    <Compile Include="World\Constants.cs" />
+    <Compile Include="World\Settings.cs" />
+    <Compile Include="World\WorldData.cs" />
+    <Compile Include="World\WorldHost.cs" />
+    <Compile Include="World\WorldSettings.cs" />
+    <Compile Include="World\Generator\Generator.cs" />
+    <Compile Include="World\Generator\PerlinNoise.cs" />
+    <Compile Include="World\Generator\TreeGenerator.cs" />
+    <Compile Include="World\Render\TexCoordsShort.cs" />
+    <Compile Include="Shared\Lighting.cs" />
+    <Compile Include="Shared\LightSource.cs" />
+    <Compile Include="Shared\GameItemStatic.cs" />
+    <Compile Include="Shared\GameObject.cs" />
+    <Compile Include="Shared\GameItemDynamic.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Shared\" />
+    <Folder Include="World\" />
+  </ItemGroup>
+</Project>
