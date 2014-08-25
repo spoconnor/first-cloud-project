@@ -96,22 +96,6 @@ namespace Sean.World
 			return Chunks[x / Chunk.CHUNK_SIZE, z / Chunk.CHUNK_SIZE].Blocks[x % Chunk.CHUNK_SIZE, y, z % Chunk.CHUNK_SIZE];
 		}
 
-		/// <summary>Get light color of a block location by looking up its light strength and returning the color from the LightTable.</summary>
-		/// <returns>0-255 color value</returns>
-		internal static byte GetBlockLightColor(int x, int y, int z)
-		{
-			if (!IsValidBlockLocation(x, y, z)) return Lighting.LightTable[SkyHost.SunLightStrength]; //give full light coming from outside edge of the world
-			return Lighting.LightTable[Math.Max(SkyLightMap[x, y, z] - (SkyHost.BRIGHTEST_SKYLIGHT_STRENGTH - SkyHost.SunLightStrength), ItemLightMap[x, y, z])];
-		}
-
-		/// <summary>Get light strength of a block location.</summary>
-		/// <returns>0-15 strength value</returns>
-		internal static byte GetBlockLightStrength(int x, int y, int z)
-		{
-			if (!IsValidBlockLocation(x, y, z)) return SkyHost.SunLightStrength; //give full light coming from outside edge of the world
-			return (byte)Math.Max(SkyLightMap[x, y, z] - (SkyHost.BRIGHTEST_SKYLIGHT_STRENGTH - SkyHost.SunLightStrength), ItemLightMap[x, y, z]);
-		}
-
 		/// <summary>
 		/// Is this position a valid block location. Includes blocks on the base of the world even though they cannot be removed.
 		/// This is because the cursor can still point at them, they can still receive light, etc.
@@ -145,13 +129,13 @@ namespace Sean.World
 		{
 			if (!IsValidBlockLocation(position.X, position.Y, position.Z))
 			{
-				Game.UiHost.AddChatMessage(new ChatMessage(ChatMessageType.Error, string.Format("Invalid item position.")));
+                Debug.WriteLine("Error, Invalid item position.");
 				return false;
 			}
 			var chunk = Chunks[position];
 			if (chunk.LightSources.Any(lightSource => position.IsOnBlock(ref lightSource.Value.Coords)) || chunk.Clutters.Any(clutter => position.IsOnBlock(ref clutter.Coords)))
 			{
-				Game.UiHost.AddChatMessage(new ChatMessage(ChatMessageType.Error, string.Format("Item already exists on selected block.")));
+                Debug.WriteLine("Error, Item already exists on selected block.");
 				return false;
 			}
 			return true;
@@ -169,7 +153,7 @@ namespace Sean.World
 
 			//this was a multiple block placement, prevent placing blocks on yourself and getting stuck; used to be able to place cuboids on yourself and get stuck
 			//only check in single player for now because in multiplayer this could allow the blocks on different clients to get out of sync and placements of multiple blocks in multiplayer will be rare
-			if (Config.IsSinglePlayer && isMultipleBlockPlacement && (position.IsOnBlock(ref Game.Player.Coords) || position == Game.Player.CoordsHead.ToPosition())) return;
+			//if (Config.IsSinglePlayer && isMultipleBlockPlacement && (position.IsOnBlock(ref Game.Player.Coords) || position == Game.Player.CoordsHead.ToPosition())) return;
 
 			if (type == Block.BlockType.Air)
 			{
@@ -302,12 +286,6 @@ namespace Sean.World
 					}
 				}
 			}
-
-			if (!Config.IsServer && !isMultipleBlockPlacement)
-			{
-				Debug.WriteLineIf(type == Block.BlockType.Ice && oldType == Block.BlockType.Water, "Growth change Water->Ice; Multiple lightbox updates and chunk queues are possible");
-				ModifyLightAndQueueChunksForBlockChange(position, isTransparentOldBlock != isTransparentBlock, type);
-			}
 		}
 
 		/// <summary>Place multiple blocks in the world of the same type.</summary>
@@ -327,7 +305,6 @@ namespace Sean.World
 					}
 				}
 			}
-			if (!Config.IsServer && !isMultipleCuboidPlacement) ModifyLightAndQueueChunksForCuboidChange(startPosition, endPosition);
 		}
 		#endregion
 
@@ -407,7 +384,6 @@ namespace Sean.World
 			{
 				for (var z = 0; z < SizeInChunksZ; z++)
 				{
-					if (Config.IsSinglePlayer) Settings.Launcher.UpdateProgressInvokable(string.Format("Loading Chunks: {0} / {1}", chunkCount, chunkTotal), chunkCount, chunkTotal);
 					var chunkBytes = new byte[Chunk.SIZE_IN_BYTES];
 					bytesRead = 0;
 					while (bytesRead < chunkBytes.Length)
@@ -448,92 +424,6 @@ namespace Sean.World
 		/// <summary>Item lightmap of the entire world. Stored separately because item light is not affected by the sky.</summary>
 		internal static byte[, ,] ItemLightMap;
 
-		/// <summary>
-		/// Build light maps for every chunk. Done after all chunks have loaded and had their height maps already built. Does not need to be done for servers.
-		/// Calculates a light map for each chunk in separate tasks to greatly improve performance. When all chunk light map tasks have finished, then "pull"
-		/// light across chunk borders by looking at every block on a chunk border.
-		/// </summary>
-		/// <remarks>note: changing the tasks from queue to an array showed no performance benefit in this case</remarks>
-		internal static void InitializeAllLightMaps()
-		{
-			if (Config.IsServer) return; //servers have no reason to build and store light maps
-			
-			var stopwatch = new Stopwatch();
-			stopwatch.Start();
-
-			SkyLightMap = new byte[SizeInBlocksX, Chunk.CHUNK_HEIGHT, SizeInBlocksZ];
-			ItemLightMap = new byte[SizeInBlocksX, Chunk.CHUNK_HEIGHT, SizeInBlocksZ];
-
-			var tasks = new Queue<Task>();
-			foreach (Chunk chunk in Chunks)
-			{
-				Chunk c = chunk;
-				tasks.Enqueue(Task.Factory.StartNew(() => Lighting.InitializeLightMap(c)));
-			}
-			Task.WaitAll(tasks.ToArray());
-
-			//cross chunk light pulling
-			tasks.Clear();
-			Settings.Launcher.UpdateProgressInvokable("Pulling light across Chunks...", 0, 0);
-			foreach (Chunk chunk in Chunks)
-			{
-				Chunk c = chunk;
-				tasks.Enqueue(Task.Factory.StartNew(() => Lighting.InitializeCrossChunkPulling(c)));
-			}
-			Task.WaitAll(tasks.ToArray());
-
-			//after this theres no need to still have the lightmap data on the chunk (cant null it until cross chunk pulling is done because it can still get accessed by an adjacent chunk)
-			Task.Factory.StartNew(Chunks.ClearInitialLightMaps); //no need to wait for this
-
-			Debug.WriteLine("Light Maps initialize time: {0}ms", stopwatch.ElapsedMilliseconds);
-		}
-
-		/// <summary>
-		/// Update the applicable light box and queue the chunks that were affected. Skip light update if the changing block is transparent as it would have no effect on light.
-		/// Light box update is done in a task which queues the affected chunks only after the light box update is finished.
-		/// </summary>
-		/// <param name="position">Position the light change is originating at (the block that is changing).</param>
-		/// <param name="changeInTransparency">Lighting only needs to be recalculated if we are replacing a solid with a transparent or vice versa</param>
-		/// <param name="blockType">New block type being placed. Will be Air for block remove.</param>
-		private static void ModifyLightAndQueueChunksForBlockChange(Position position, bool changeInTransparency, Block.BlockType blockType)
-		{
-			if (!changeInTransparency) //transparency did not change; no effect on lighting
-			{
-				if (position.IsOnChunkBorder)
-				{
-					var chunks = new Queue<Chunk>();
-					chunks.Enqueue(Chunks[position]); //queue this chunk first
-					foreach (Chunk chunk in position.BorderChunks) chunks.Enqueue(chunk); //now queue 1 adjacent chunk as well when on chunk border or 2 adjacent chunks when on chunk corner
-					Debug.WriteLine("Growth change on chunk border {0}:{1}; Lighting not affected; Queueing {2} chunks", blockType, position, chunks.Count);
-					QueueAffectedChunks(chunks);
-				}
-				else //not on a chunk border, queue this chunk only
-				{
-					Debug.WriteLine("Growth change {0}:{1}; Lighting not affected; Queue local chunk only", blockType, position);
-					Chunks[position].QueueImmediate();
-				}
-			}
-			else
-			{
-				Task<Queue<Chunk>>.Factory.StartNew(() => Lighting.UpdateLightBox(ref position, null, true, blockType == Block.BlockType.Air)).ContinueWith(task => QueueAffectedChunks(task.Result));
-			}
-		}
-
-		/// <summary>
-		/// Update the applicable light box and queue the chunks that were affected. No optimizations are made for transparent blocks because every block in the cuboid would need to be checked.
-		/// Light box update is done in a task which queues the affected chunks only after the light box update is finished.
-		/// </summary>
-		/// <param name="position1">First corner of the cuboid.</param>
-		/// <param name="position2">Diagonal corner of the cuboid.</param>
-		internal static void ModifyLightAndQueueChunksForCuboidChange(Position position1, Position position2)
-		{
-			Task<Queue<Chunk>>.Factory.StartNew(() => Lighting.UpdateLightBox(ref position1, position2, true, false)).ContinueWith(task => QueueAffectedChunks(task.Result));
-		}
-
-		internal static void QueueAffectedChunks(IEnumerable<Chunk> chunks)
-		{
-			foreach (var chunk in chunks) chunk.QueueImmediate();
-		}
 		#endregion
 	}
 }

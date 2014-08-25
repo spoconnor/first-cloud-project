@@ -83,9 +83,9 @@ namespace Sean.World
             Debug.WriteLine ("Initial chunk frustum load time: {0}ms ({1} chunks)", stopwatch.ElapsedMilliseconds, immediateChunkTasks.Count);
      
             //now sort by distance and queue so nearby chunks are built first
-            chunksByDist.Sort ((c1, c2) => Math.Sqrt (Math.Pow (Game.Player.Coords.Xblock - c1.Coords.WorldCoordsX, 2) + Math.Pow (Game.Player.Coords.Zblock - c1.Coords.WorldCoordsZ, 2)).CompareTo (Math.Sqrt (Math.Pow (Game.Player.Coords.Xblock - c2.Coords.WorldCoordsX, 2) + Math.Pow (Game.Player.Coords.Zblock - c2.Coords.WorldCoordsZ, 2))));
-            chunksByDist.ForEach (c => {
-                c.ChunkBuildState = Chunk.BuildState.QueuedInitialFar; });
+            //chunksByDist.Sort ((c1, c2) => Math.Sqrt (Math.Pow (Game.Player.Coords.Xblock - c1.Coords.WorldCoordsX, 2) + Math.Pow (Game.Player.Coords.Zblock - c1.Coords.WorldCoordsZ, 2)).CompareTo (Math.Sqrt (Math.Pow (Game.Player.Coords.Xblock - c2.Coords.WorldCoordsX, 2) + Math.Pow (Game.Player.Coords.Zblock - c2.Coords.WorldCoordsZ, 2))));
+            //chunksByDist.ForEach (c => {
+            //    c.ChunkBuildState = Chunk.BuildState.QueuedInitialFar; });
 
             //reset the LastUpdate on all items so they don't go flying
             foreach (var gameItem in WorldData.GameItems.Values)
@@ -98,12 +98,12 @@ namespace Sean.World
    #region Render
         private static void UpdateCharacters_OnHalfSecondElapsed (FrameEventArgs e)
         {
-            foreach (var character in Game.Characters)
-            {
-                //Game.scriptDriver.Execute(character);
-                character.UpdateKnownMap ();
-                character.DoTasks (e);
-            }
+            //foreach (var character in Game.Characters)
+            //{
+            //    //Game.scriptDriver.Execute(character);
+            //    character.UpdateKnownMap ();
+            //    character.DoTasks (e);
+            //}
         }
 
    #endregion

@@ -41,7 +41,7 @@ namespace Sean.World
 			var chunkCount = 1;
 			foreach (Chunk chunk in WorldData.Chunks)
 			{
-				Settings.Launcher.UpdateProgressInvokable(string.Format("Generating Chunks {0} / {1}", chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ), chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ);
+                Debug.WriteLine(string.Format("Generating Chunks {0} / {1}", chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ), chunkCount, WorldData.SizeInChunksX * WorldData.SizeInChunksZ);
 				
 				//bm: we can't run this in parallel or the results will not be deterministic based on our seed.
 				GenerateChunk(WorldData.Chunks[chunk.Coords.X, chunk.Coords.Z], heightMap, mineralMap);
@@ -51,7 +51,7 @@ namespace Sean.World
 
 			//loop through chunks again for actions that require the neighboring chunks to be built
 			Debug.WriteLine("Completing growth in chunks and building heightmaps...");
-			Settings.Launcher.UpdateProgressInvokable("Completing growth in chunks...", 0, 0);
+            Debug.WriteLine("Completing growth in chunks...", 0, 0);
 			foreach (Chunk chunk in WorldData.Chunks)
 			{
 				//build heightmap here only so we know where to place trees/clutter (it will get built again on world load anyway)

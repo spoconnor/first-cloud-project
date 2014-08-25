@@ -108,12 +108,11 @@ namespace Sean.World
 
 		internal void Update(FrameEventArgs e)
 		{
-			base.Update(e);
-			if (!_queuedForDecay && (Config.IsSinglePlayer || Config.IsServer || Type == GameItemType.Projectile) && !IsMoving && (DateTime.Now - LastUpdate).TotalSeconds >= DecaySeconds)
-			{
-				_queuedForDecay = true;
-				DecayQueue.Enqueue(this);
-			}
+			//if (!_queuedForDecay && (Config.IsSinglePlayer || Config.IsServer || Type == GameItemType.Projectile) && !IsMoving && (DateTime.Now - LastUpdate).TotalSeconds >= DecaySeconds)
+			//{
+			//	_queuedForDecay = true;
+			//	DecayQueue.Enqueue(this);
+			//}
 
 			if (!IsMoving) return;
 

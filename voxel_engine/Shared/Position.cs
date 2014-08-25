@@ -68,20 +68,6 @@ namespace Sean.World
 			get { return WorldData.IsValidBlockLocation(X, 0, Z) && Y >= 0; }
 		}
 
-		/// <summary>Get the light color corresponding to the block at this position. Uses the light strength table to get the color value.</summary>
-		/// <returns>byte color value 0-255</returns>
-		internal byte LightColor
-		{
-			get { return WorldData.GetBlockLightColor(X, Y, Z); }
-		}
-
-		/// <summary>Get the light strength corresponding to the block at this position.</summary>
-		/// <returns>byte strength value 0-15</returns>
-		internal byte LightStrength
-		{
-			get { return WorldData.GetBlockLightStrength(X, Y, Z); }
-		}
-
 		internal bool IsOnChunkBorder
 		{
 			get { return WorldData.IsOnChunkBorder(X, Z); }
