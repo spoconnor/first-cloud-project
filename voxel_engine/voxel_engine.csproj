@@ -61,6 +61,8 @@
     <Compile Include="Shared\GameItemStatic.cs" />
     <Compile Include="Shared\GameObject.cs" />
     <Compile Include="Shared\GameItemDynamic.cs" />
+    <Compile Include="Shared\AddBlock.cs" />
+    <Compile Include="Shared\GameAction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

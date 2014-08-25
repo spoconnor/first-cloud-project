@@ -125,21 +125,6 @@ namespace Sean.World
 			       (z > 0 && GetHeightMapLevel(x, z - 1) <= y);
 		}
 
-		internal static bool IsValidStaticItemPosition(Position position) //cannot accept position by ref here
-		{
-			if (!IsValidBlockLocation(position.X, position.Y, position.Z))
-			{
-                Debug.WriteLine("Error, Invalid item position.");
-				return false;
-			}
-			var chunk = Chunks[position];
-			if (chunk.LightSources.Any(lightSource => position.IsOnBlock(ref lightSource.Value.Coords)) || chunk.Clutters.Any(clutter => position.IsOnBlock(ref clutter.Coords)))
-			{
-                Debug.WriteLine("Error, Item already exists on selected block.");
-				return false;
-			}
-			return true;
-		}
 		#endregion
 
 		#region Block Place
@@ -354,8 +339,6 @@ namespace Sean.World
 		/// </summary>
 		internal static void LoadFromDisk()
 		{
-			if (Config.Mode == ModeType.JoinServer) throw new Exception("World should not be loaded from disk when joining a server.");
-
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 

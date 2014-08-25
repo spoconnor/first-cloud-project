@@ -10,19 +10,19 @@ using OpenTK.Graphics.OpenGL;
 
 namespace Sean.World
 {
-    internal class WorldHost
+    class WorldHost
     {
    #region Constructors
-        internal WorldHost ()
+        public WorldHost ()
         {
             //PerformanceHost.OnHalfSecondElapsed += PerformanceHost_OnHalfSecondElapsed;
             //PerformanceHost.OnHalfSecondElapsed += UpdateCharacters_OnHalfSecondElapsed;
 
-            for (var i = 0; i < Math.Max(1, Environment.ProcessorCount / 2); i++)
-            {
-                var buildChunkThread = new Thread (BuildChunksThread) { IsBackground = true, Priority = ThreadPriority.Lowest, Name = "Chunk Builder " + i}; //Lowest priority makes it noticeably less choppy when working through the queue (startup)
-                buildChunkThread.Start ();
-            }
+            //for (var i = 0; i < Math.Max(1, Environment.ProcessorCount / 2); i++)
+            //{
+            //    var buildChunkThread = new Thread (BuildChunksThread) { IsBackground = true, Priority = ThreadPriority.Lowest, Name = "Chunk Builder " + i}; //Lowest priority makes it noticeably less choppy when working through the queue (startup)
+            //    buildChunkThread.Start ();
+            //}
 
             //FogColorUnderWater = new ColorRgb (51, 128, 204);
         }
@@ -36,14 +36,6 @@ namespace Sean.World
    #endregion
 
    #region Properties
-        /// <summary>Chunks that load/unload in the distance are placed on this queue. Queue so that chunks appear/disappear in the distance in the order they were received.</summary>
-        internal static readonly ConcurrentQueue<Chunk> FarChunkQueue = new ConcurrentQueue<Chunk> ();
-
-        /// <summary>Chunks that have changed are placed on this queue to be first rebuilt and then rebuffered.</summary>
-        internal static readonly ConcurrentQueue<Chunk> ChangedChunkQueue = new ConcurrentQueue<Chunk> ();
-
-        //internal static ColorRgb FogColorUnderWater { get; private set; }
-
         internal static int RotationCounter;
         /// <summary>Current water texture id for the water animation cycle. Incremented in the performance host.</summary>
         internal static int WaterCycleTextureId = (int)Textures.BlockTextureType.Water;

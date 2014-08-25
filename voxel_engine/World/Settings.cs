@@ -69,5 +69,19 @@ namespace Sean.World
         #region Threads
         internal static System.Threading.Thread SaveToDiskEveryMinuteThread;
 #endregion
+
+        private static string _worldFilePath;
+        /// <summary>File path for the world. Full directory and file extension are added in the setter.</summary>
+        public static string WorldFilePath
+        {
+            get { return _worldFilePath; }
+            set
+            {
+                _worldFilePath = String.Format("{0}{1}{2}{3}", Config.SaveDirectory.FullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
+                WorldFileTempPath = String.Format("{0}.temp", _worldFilePath);
+            }
+        }
+        
+        public static string WorldFileTempPath { get; private set; }
     }
 }

@@ -74,7 +74,6 @@ namespace Sean.World
 			//SkyHost.SunLightStrength = SkyHost.BRIGHTEST_SKYLIGHT_STRENGTH;
 
 			Debug.WriteLine("New world saving...");
-			Settings.Launcher.UpdateProgressInvokable("New world saving...", 0, 0);
 			WorldData.SaveToDisk();
 			Debug.WriteLine("New world save complete.");
 		}
