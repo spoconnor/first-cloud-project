@@ -48,10 +48,13 @@ namespace Sean.World
 			//if (ConnectedPlayer.Inventory[(int)BlockType] <= 0) return;
 			//ConnectedPlayer.Inventory[(int)BlockType] -= 1;
 
+            // TODO - send to all players
+            /*
 			foreach (var player in Server.Controller.Players.Values)
 			{
 				new AddBlock(ref Position, BlockType) { ConnectedPlayer = player }.Send();
 			}
+            */         
 		}
 	}
 }

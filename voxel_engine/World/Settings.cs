@@ -64,7 +64,7 @@ namespace Sean.World
         internal static float ZFarForChunkUnload { get; private set; }
         
         /// <summary>Use for debugging. When true all chunk edges will highlight blocks on either side. The actual chunk edge line is the line between the 2 yellow block strips.</summary>
-        internal static bool OutlineChunks;
+        //internal static bool OutlineChunks;
         
         #region Threads
         internal static System.Threading.Thread SaveToDiskEveryMinuteThread;
@@ -77,11 +77,11 @@ namespace Sean.World
             get { return _worldFilePath; }
             set
             {
-                _worldFilePath = String.Format("{0}{1}{2}{3}", Config.SaveDirectory.FullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
+                _worldFilePath = String.Format("{0}{1}{2}{3}", SaveDirectoryFullName, System.IO.Path.DirectorySeparatorChar, value, Constants.WORLD_FILE_EXTENSION); //use System.IO.Path.DirectorySeparatorChar to play nice with linux
                 WorldFileTempPath = String.Format("{0}.temp", _worldFilePath);
             }
         }
-        
+        private const string SaveDirectoryFullName = ".";
         public static string WorldFileTempPath { get; private set; }
     }
 }

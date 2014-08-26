@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1B87D5BD-6CE2-467C-A30C-736D63055CDA}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>voxel_engine</RootNamespace>
+    <RootNamespace>Sean.World</RootNamespace>
     <AssemblyName>voxel_engine</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -63,6 +63,7 @@
     <Compile Include="Shared\GameItemDynamic.cs" />
     <Compile Include="Shared\AddBlock.cs" />
     <Compile Include="Shared\GameAction.cs" />
+    <Compile Include="VoxelEngine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

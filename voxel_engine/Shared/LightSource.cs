@@ -85,6 +85,7 @@ namespace Sean.World
 			get { return StaticItemType.LightSource; }
 		}
 
+
 		private LightSourceType _type;
 		internal LightSourceType Type
 		{
@@ -94,12 +95,14 @@ namespace Sean.World
 				_type = value;
 				switch (_type)
 				{
+                    // TODO
 					//case LightSourceType.PlaceholderTorch: _textureType = ItemTextureType.Torch; break;
-					case LightSourceType.Lantern: _textureType = ItemTextureType.Lantern; break;
+					//case LightSourceType.Lantern: _textureType = ItemTextureType.Lantern; break;
 					default: throw new Exception("Item texture not found for item type: " + Type);
 				}
 			}
 		}
+
 
 		//private ItemTextureType _textureType;
 

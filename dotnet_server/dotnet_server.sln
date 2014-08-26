@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet_server", "dotnet_server.csproj", "{E3F8A830-47F3-4FD9-A21E-020B9D5ECF63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "voxel_engine", "..\voxel_engine\voxel_engine.csproj", "{1B87D5BD-6CE2-467C-A30C-736D63055CDA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoxelEngine", "..\voxel_engine\VoxelEngine.csproj", "{1B87D5BD-6CE2-467C-A30C-736D63055CDA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

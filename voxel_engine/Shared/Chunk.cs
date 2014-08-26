@@ -416,18 +416,21 @@ namespace Sean.World
 
 			if (addBlocks.Count > 0)
 			{
+// TODO - send to all players
+/*
 				foreach (var player in Server.Controller.Players.Values)
 				{
 					var addBlockMulti = new AddBlockMulti {ConnectedPlayer = player};
 					addBlockMulti.Blocks.AddRange(addBlocks);
 					addBlockMulti.Send();
 				}
+*/
 			}
 		}
 
 		internal bool GrassGrowing { get; set; }
 		private const int GRASS_UPDATE_INTERVAL = UPDATES_PER_SECOND * 75 / CHUNK_UPDATE_INTERVAL; //75s
-		private readonly int _grassOffset = Settings.Random.Next(0, GRASS_UPDATE_INTERVAL); //stagger grass growth randomly for each chunk
+		//private readonly int _grassOffset = Settings.Random.Next(0, GRASS_UPDATE_INTERVAL); //stagger grass growth randomly for each chunk
 		/// <summary>Only called for SinglePlayer and Servers.</summary>
 		private void GrassGrow()
 		{
@@ -581,12 +584,15 @@ namespace Sean.World
 			//send updates to multiplayer clients
 			if (addBlocks.Count > 0)
 			{
+// TODO - send to all players
+/*
 				foreach (var player in Server.Controller.Players.Values)
 				{
 					var addBlockMulti = new AddBlockMulti {ConnectedPlayer = player};
 					addBlockMulti.Blocks.AddRange(addBlocks);
 					addBlockMulti.Send();
 				}
+*/
 			}
 
 			if (changesMade == possibleChanges.Count)

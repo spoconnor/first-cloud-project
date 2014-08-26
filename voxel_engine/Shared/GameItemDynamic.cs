@@ -79,7 +79,7 @@ namespace Sean.World
 		}
 
 		internal DateTime LastUpdate;
-		private bool _queuedForDecay;
+		//private bool _queuedForDecay;
 		internal Vector3 Velocity = new Vector3((float)Settings.Random.NextDouble(), 5f, (float)Settings.Random.NextDouble());
 		/// <summary>
 		/// Items decay from the world when the item has not been updated for longer than the decay seconds.
@@ -222,7 +222,8 @@ namespace Sean.World
 				switch (decayItem.Type)
 				{
 					case GameItemType.BlockItem:
-						new GameActions.RemoveBlockItem(decayItem.Id, true).Receive();
+                        // TODO
+						//new GameActions.RemoveBlockItem(decayItem.Id, true).Receive();
 						break;
 					case GameItemType.Projectile:
 						var chunk = WorldData.Chunks[decayItem.Coords];

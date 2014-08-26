@@ -36,7 +36,7 @@ namespace Sean.World
    #endregion
 
    #region Properties
-        internal static int RotationCounter;
+        //internal static int RotationCounter;
         /// <summary>Current water texture id for the water animation cycle. Incremented in the performance host.</summary>
         internal static int WaterCycleTextureId = (int)Textures.BlockTextureType.Water;
    #endregion
@@ -48,12 +48,13 @@ namespace Sean.World
             var stopwatch = new Stopwatch ();
             stopwatch.Start ();
 
-            var chunksByDist = new List<Chunk> ();
+            //var chunksByDist = new List<Chunk> ();
 
             //immediately render up to INITIAL_CHUNK_RENDER_DISTANCE chunks away within the initial view frustum
             var immediateChunkTasks = new List<Task> ();
             foreach (Chunk chunk in WorldData.Chunks)
             {
+/*
                 var dist = chunk.DistanceFromPlayer ();
                 if (dist <= INITIAL_CHUNK_RENDER_DISTANCE * Chunk.CHUNK_SIZE && chunk.IsInFrustum)
                 {
@@ -69,6 +70,7 @@ namespace Sean.World
                     if (dist < Settings.ZFarForChunkLoad)
                         chunksByDist.Add (chunk);
                 }
+*/
             }
             Task.WaitAll (immediateChunkTasks.ToArray ()); //wait for initial chunks to finish building before we continue
             stopwatch.Stop ();

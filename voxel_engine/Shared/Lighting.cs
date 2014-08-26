@@ -262,6 +262,7 @@ namespace Sean.World
 			}
 			#endregion
 
+            /*
 			//at this point the lighting in this chunk is finished, so add to gigantic world light map
 			//-couldnt do it before now because lighting isnt finalized until the cross chunk pulling is done
 			//-this is essentially a copy of an array into a larger array
@@ -278,6 +279,7 @@ namespace Sean.World
 					}
 				}
 			}
+            */
 		}
 	}
 }

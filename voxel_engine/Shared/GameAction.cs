@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Sockets;
 using OpenTK;
+using System.Diagnostics;
 
 namespace Sean.World
 {
@@ -50,7 +51,7 @@ namespace Sean.World
 				if (Config.IsServer) TcpClient = _connectedPlayer.TcpClient;
 			}
 		}*/
-		internal bool IsAdmin { get { return _connectedPlayer.IsAdmin; } }
+		//internal bool IsAdmin { get { return _connectedPlayer.IsAdmin; } }
 		public TcpClient TcpClient { get; protected set; }
 		internal abstract ActionType ActionType { get; }
 		public abstract override string ToString();
@@ -70,7 +71,7 @@ namespace Sean.World
 			Write(BitConverter.GetBytes(DataLength), sizeof(int));
 		}
 
-		internal bool Immediate;
+		//internal bool Immediate;
 		internal virtual void Send()
 		{
 			if (!_isQueued)
@@ -78,10 +79,11 @@ namespace Sean.World
 				Queue();
 				if (_byteQueueIndex != _byteQueue.Length) throw new Exception(string.Format("{0} DataLength {1} + {2} but queued {3}", ActionType, sizeof(ushort) + sizeof(int), DataLength, _byteQueueIndex));
 
-				if (!Immediate)
+				//if (!Immediate)
 				{
 					_isQueued = true;
-					ConnectedPlayer.SendQueue.Enqueue(this);
+// TODO
+//					ConnectedPlayer.SendQueue.Enqueue(this);
 					return;
 				}
 			}

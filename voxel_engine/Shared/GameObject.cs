@@ -14,7 +14,8 @@ namespace Sean.World
 
 		protected GameObject(ref Coords coords, int id = -1)
 		{
-			if (!(this is Player) && !coords.IsValidItemLocation) throw new Exception(string.Format("Invalid item location: {0}", coords));
+			if (//!(this is Player) && 
+                !coords.IsValidItemLocation) throw new Exception(string.Format("Invalid item location: {0}", coords));
 			Id = WorldData.NextGameObjectId; //if this is a server we need to select our own IDs, ignore what the client said
 			Coords = coords;
 		}
@@ -40,7 +41,7 @@ namespace Sean.World
 		protected virtual bool IsAffectedByLight { get { return true; } }
 
 		/// <summary>Statically track the currently set game object color so we only make the GL call to change color when needed (ie: the color will be 255 a large percent of the time for game objects in sunlight)</summary>
-		private static byte? _currentLightColor;
+		//private static byte? _currentLightColor;
 
 		/// <summary>Reset GL color and currently set game object color so it does not interfere with the next set of game objects rendered.</summary>
 		

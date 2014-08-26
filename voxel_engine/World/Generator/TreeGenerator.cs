@@ -59,7 +59,8 @@ namespace Sean.World
 							if (leafX == 0 && leafZ == 0) continue; //dont replace the trunk
 							if (Math.Sqrt(leafX * leafX + leafZ * leafZ + Math.Pow(treeHeight - leafRadius - yTrunkLevel + 1, 2)) > leafRadius) continue;
 							var leafPosition = new Position(xProposedInWorld + leafX, yProposed + yTrunkLevel, zProposedInWorld + leafZ);
-                            if (leafPosition.IsValidBlockLocation && WorldData.GetBlock(ref leafPosition).Type == Block.BlockType.Air)
+                            var leafCoords = leafPosition.ToCoords();
+                            if (leafPosition.IsValidBlockLocation && WorldData.GetBlock(ref leafCoords).Type == Block.BlockType.Air)
 							{
 								//need to get the chunk because this block could be expanding into an adjacent chunk
 								WorldData.Chunks[leafPosition].Blocks[leafPosition] = new Block(WorldData.WorldType == WorldType.Winter ? Block.BlockType.SnowLeaves : Block.BlockType.Leaves);

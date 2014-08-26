@@ -20,7 +20,7 @@ namespace Sean.World
 		Desert = 3
 	}
 
-	internal static class WorldData
+	internal class WorldData
 	{
 		static WorldData()
 		{
@@ -240,12 +240,14 @@ namespace Sean.World
 			}
 			else //destroying block
 			{
-				lock (chunk.Clutters) //lock because clutter is stored in a HashSet
+				/*
+                lock (chunk.Clutters) //lock because clutter is stored in a HashSet
 				{
 					//if theres clutter on top of this block then remove it as well (FirstOrDefault returns null if no match is found)
 					var clutterToRemove = chunk.Clutters.FirstOrDefault(clutter => clutter.Coords.Xblock == position.X && clutter.Coords.Yblock == position.Y + 1 && clutter.Coords.Zblock == position.Z); //add one to Y to look on the block above
 					if (clutterToRemove != null) chunk.Clutters.Remove(clutterToRemove);
 				}
+                */            
 
 				//look on ALL 6 adjacent blocks for static items, and those only get destroyed if its on the matching opposite attached to face
 				var adjacentPositions = position.AdjacentPositionFaces;
@@ -358,7 +360,8 @@ namespace Sean.World
 			{
 				bytesRead += gzstream.Read(worldSettingsBytes, bytesRead, worldSettingsBytes.Length - bytesRead);
 			}
-			WorldSettings.LoadSettings(worldSettingsBytes);
+            // TODO . load settings
+			//WorldSettings.LoadSettings(worldSettingsBytes);
 
 			var chunkTotal = SizeInChunksX * SizeInChunksZ;
 			var chunkCount = 1;
@@ -386,7 +389,7 @@ namespace Sean.World
 			stopwatch.Stop();
 			Debug.WriteLine("World load from disk time: {0}ms", stopwatch.ElapsedMilliseconds);
 
-			InitializeAllLightMaps();
+			//InitializeAllLightMaps();
 		}
 
 		internal static void LoadChunk(Chunk chunk, byte[] bytes)
@@ -402,10 +405,10 @@ namespace Sean.World
 		/// -could become a circular array down the road if we want even bigger worlds.
 		/// -could also hold both sky light and item light by using bit operations, both values 0-15 can fit in one byte
 		/// </remarks>
-		internal static byte[, ,] SkyLightMap;
+		//internal static byte[, ,] SkyLightMap
 
 		/// <summary>Item lightmap of the entire world. Stored separately because item light is not affected by the sky.</summary>
-		internal static byte[, ,] ItemLightMap;
+		//internal static byte[, ,] ItemLightMap;
 
 		#endregion
 	}

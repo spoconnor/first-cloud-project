@@ -39,7 +39,7 @@ namespace Sean.World
 			private set { _chunks[x, z] = value; }
 		}
 
-		internal uint UpdateCounter;
+		//internal uint UpdateCounter;
 
 		public IEnumerator GetEnumerator()
 		{
