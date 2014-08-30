@@ -51,6 +51,8 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="RestServer.cs" />
+    <Compile Include="MapService.cs" />
+    <Compile Include="IMapService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="protos\info.proto" />

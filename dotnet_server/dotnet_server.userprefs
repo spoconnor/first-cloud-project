@@ -1,23 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../voxel_engine/World/Generator/Generator.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="IMapService.cs">
     <Files>
       <File FileName="../voxel_engine/World/WorldHost.cs" Line="39" Column="11" />
-      <File FileName="../voxel_engine/World/WorldData.cs" Line="82" Column="3" />
-      <File FileName="../voxel_engine/Shared/Chunk.cs" Line="239" Column="39" />
-      <File FileName="../voxel_engine/VoxelEngine.cs" Line="19" Column="13" />
-      <File FileName="../voxel_engine/World/Settings.cs" Line="70" Column="49" />
-      <File FileName="../voxel_engine/Shared/Lighting.cs" Line="282" Column="15" />
-      <File FileName="../voxel_engine/Shared/LightSource.cs" Line="100" Column="36" />
-      <File FileName="../voxel_engine/Shared/GameObject.cs" Line="44" Column="5" />
-      <File FileName="../voxel_engine/Shared/AddBlock.cs" Line="57" Column="13" />
-      <File FileName="../voxel_engine/World/Generator/TreeGenerator.cs" Line="62" Column="70" />
-      <File FileName="../voxel_engine/Shared/GameAction.cs" Line="74" Column="5" />
-      <File FileName="../voxel_engine/Shared/GameItemDynamic.cs" Line="82" Column="5" />
-      <File FileName="../voxel_engine/World/WorldSettings.cs" Line="15" Column="3" />
       <File FileName="../voxel_engine/Shared/Coords.cs" Line="125" Column="55" />
-      <File FileName="../voxel_engine/World/Chunks.cs" Line="42" Column="5" />
       <File FileName="../voxel_engine/World/Generator/Generator.cs" Line="62" Column="21" />
+      <File FileName="RestServer.cs" Line="10" Column="60" />
+      <File FileName="MapService.cs" Line="7" Column="1" />
+      <File FileName="IMapService.cs" Line="13" Column="12" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
