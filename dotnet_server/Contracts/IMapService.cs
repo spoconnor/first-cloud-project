@@ -1,4 +1,6 @@
 using System;
+using System.ServiceModel;
+using System.ServiceModel.Web;
 
 namespace dotnet_server
 {
@@ -7,20 +9,20 @@ namespace dotnet_server
     {
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/Initialize", RequestFormat = WebMessageFormat.Json)]
-        string InitializeMap();
+        void InitializeMap(InitializeMapRequest initializeMapRequest);
 
         [OperationContract]
         // WebGet => Method = "POST",
         [WebGet(UriTemplate = "/Chunks", ResponseFormat = WebMessageFormat.Json)]
-        string ListMapChunks();
+        ListMapChunksResponse ListMapChunks();
 
         [OperationContract]
-        [WebGet(UriTemplate = "/Chunks/{id}", ResponseFormat = WebMessageFormat.Json)]
-        string GetMapChunk(int id);
+        [WebGet(UriTemplate = "/Chunks/{x}/{y}", ResponseFormat = WebMessageFormat.Json)]
+        GetMapChunkResponse GetMapChunk(int id);
 
         [OperationContract]
         [WebInvoke(Method = "POST", UriTemplate = "/Chunks/{x}/{y}", RequestFormat = WebMessageFormat.Json)]
-        string GenerateMapChunk(int x, int y);
+        void GenerateMapChunk(int x, int y);
     }
 }
 

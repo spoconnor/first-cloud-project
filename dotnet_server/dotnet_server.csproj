@@ -42,6 +42,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.ServiceModel.Routing" />
+    <Reference Include="System.Runtime.Serialization" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="protos\AddressBookProtos.cs" />
@@ -52,10 +53,16 @@
     <Compile Include="Test.cs" />
     <Compile Include="RestServer.cs" />
     <Compile Include="MapService.cs" />
-    <Compile Include="IMapService.cs" />
+    <Compile Include="Contracts\IMapService.cs" />
+    <Compile Include="Contracts\GetMapChunkResponse.cs" />
+    <Compile Include="Contracts\ListMapChunksResponse.cs" />
+    <Compile Include="Contracts\InitializeMapRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="protos\info.proto" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
 </Project>
