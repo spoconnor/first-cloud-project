@@ -65,10 +65,6 @@ namespace Sean.World
         
         /// <summary>Use for debugging. When true all chunk edges will highlight blocks on either side. The actual chunk edge line is the line between the 2 yellow block strips.</summary>
         //internal static bool OutlineChunks;
-        
-        #region Threads
-        internal static System.Threading.Thread SaveToDiskEveryMinuteThread;
-#endregion
 
         private static string _worldFilePath;
         /// <summary>File path for the world. Full directory and file extension are added in the setter.</summary>

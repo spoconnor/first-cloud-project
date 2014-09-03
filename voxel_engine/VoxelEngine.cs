@@ -2,22 +2,18 @@ using System;
 
 namespace Sean.World
 {
-    public class VoxelEngine
+    public static class VoxelEngine
     {
-        private VoxelEngine ()
+        static VoxelEngine ()
         {
         }
 
-        public static VoxelEngine Instance
+        public static void Start()
         {
-            get { return _instance; }
+            WorldData.Initialize();
         }
-        private static VoxelEngine _instance;
 
-        public void Start()
-        {
 
-        }
 
     }
 }

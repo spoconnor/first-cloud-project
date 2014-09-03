@@ -35,8 +35,8 @@ namespace Sean.World
 
 			const int MIN_SURFACE_HEIGHT = Chunk.CHUNK_HEIGHT / 2 - 40; //max amount below half
 			const int MAX_SURFACE_HEIGHT = Chunk.CHUNK_HEIGHT / 2 + 8; //max amount above half
-			var heightMap = PerlinNoise.GetIntMap(MIN_SURFACE_HEIGHT, MAX_SURFACE_HEIGHT, 8);
-			var mineralMap = PerlinNoise.GetFloatMap(1, MAX_SURFACE_HEIGHT - 5, 2);
+			var heightMap = PerlinNoise.GetIntMap(WorldData.SizeInBlocksX, WorldData.SizeInBlocksZ, MIN_SURFACE_HEIGHT, MAX_SURFACE_HEIGHT, 8);
+            var mineralMap = PerlinNoise.GetFloatMap(WorldData.SizeInBlocksX, WorldData.SizeInBlocksZ, 1, MAX_SURFACE_HEIGHT - 5, 2);
 
 			var chunkCount = 1;
 			foreach (Chunk chunk in WorldData.Chunks)

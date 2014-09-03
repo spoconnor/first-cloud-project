@@ -230,14 +230,6 @@ namespace Sean.World
 		#endregion
 
 		#region Frustum
-		/// <summary>
-		/// Shortest face height. Used in frustum checks. Calculated while building vbo's.
-		/// Use for frustum logic instead of DeepestTransparentLevel because this will also account for faces drawn below the
-		/// DeepestTransparentLevel to be visible from adjacent chunks.
-		/// </summary>
-		private int _shortestFaceHeight;
-		private int _shortestFaceHeightTemp;
-
 		/// <summary>Is this chunk in the players view frustum.</summary>
 		/// <seealso cref="http://www.crownandcutlass.com/features/technicaldetails/frustum.html"/>
         internal bool IsInFrustum(Vector4d nearFrustum, Vector4d farFrustum, Vector4d leftFrustum, Vector4d rightFrustum, Vector4d topFrustum, Vector4d bottomFrustum)

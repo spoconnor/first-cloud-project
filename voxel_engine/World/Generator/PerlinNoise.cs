@@ -152,16 +152,16 @@
 			return perlinNoise;
 		}
 
-		public static int[][] GetIntMap(int minY, int maxY, int octaveCount)
+		public static int[][] GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
 		{
-			float[][] baseNoise = GenerateWhiteNoise(WorldData.SizeInBlocksX, WorldData.SizeInBlocksZ);
+            float[][] baseNoise = GenerateWhiteNoise(width, height);
 			float[][] perlinNoise = GeneratePerlinNoise(baseNoise, octaveCount);
 			return MapInts(minY, maxY, perlinNoise);
 		}
 
-		public static float[][] GetFloatMap(float minY, float maxY, int octaveCount)
+        public static float[][] GetFloatMap(int width, int height, float minY, float maxY, int octaveCount)
 		{
-			float[][] baseNoise = GenerateWhiteNoise(WorldData.SizeInBlocksX, WorldData.SizeInBlocksZ);
+            float[][] baseNoise = GenerateWhiteNoise(width, height);
 			float[][] perlinNoise = GeneratePerlinNoise(baseNoise, octaveCount);
 			return MapFloats(minY, maxY, perlinNoise);
 		}

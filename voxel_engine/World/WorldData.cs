@@ -20,30 +20,35 @@ namespace Sean.World
 		Desert = 3
 	}
 
-	internal class WorldData
+	internal static class WorldData
 	{
-		static WorldData()
+        static WorldData()
 		{
 			//Mobs = new ConcurrentDictionary<int, Mob>();
 			GameItems = new ConcurrentDictionary<int, GameItemDynamic>();
 		}
 
-		#region Properties (Saved)
-		internal static WorldType WorldType { get; set; }
-		/// <summary>Original Raw Seed used to generate this world. Blank if no seed was used.</summary>
-		internal static string RawSeed { get; set; }
-		/// <summary>Original program version used when this world was generated.</summary>
-		internal static string GeneratorVersion { get; set; }
+        internal static void Initialize()
+        {
 
-		internal static int GameObjectIdSeq;
-		internal static int NextGameObjectId
+        }
+
+		#region Properties (Saved)
+        internal static WorldType WorldType { get; set; }
+		/// <summary>Original Raw Seed used to generate this world. Blank if no seed was used.</summary>
+        internal static string RawSeed { get; set; }
+		/// <summary>Original program version used when this world was generated.</summary>
+        internal static string GeneratorVersion { get; set; }
+
+        internal static int GameObjectIdSeq;
+        internal static int NextGameObjectId
 		{
 			get { return System.Threading.Interlocked.Increment(ref GameObjectIdSeq); }
 		}
 
-		private static int _sizeInChunksX;
+        private static int _sizeInChunksX;
 		/// <summary>Number of chunks in X direction that make up the world.</summary>
-		internal static int SizeInChunksX
+        internal static int SizeInChunksX
 		{
 			get { return _sizeInChunksX; }
 			set
@@ -53,9 +58,9 @@ namespace Sean.World
 			}
 		}
 
-		private static int _sizeInChunksZ;
+        private static int _sizeInChunksZ;
 		/// <summary>Number of chunks in Z direction that make up the world.</summary>
-		internal static int SizeInChunksZ
+        internal static int SizeInChunksZ
 		{
 			get { return _sizeInChunksZ; }
 			set
@@ -66,32 +71,32 @@ namespace Sean.World
 		}
 
 		/// <summary>Number of blocks in X direction that make up the world.</summary>
-		internal static int SizeInBlocksX { get; private set; }
+        internal static int SizeInBlocksX { get; private set; }
 
 		/// <summary>Number of blocks in Z direction that make up the world.</summary>
-		internal static int SizeInBlocksZ { get; private set; }
+        internal static int SizeInBlocksZ { get; private set; }
 
-		//internal static ConcurrentDictionary<int, Mob> Mobs { get; private set; }
-		internal static ConcurrentDictionary<int, GameItemDynamic> GameItems { get; private set; }
+		//internal ConcurrentDictionary<int, Mob> Mobs { get; private set; }
+        internal static ConcurrentDictionary<int, GameItemDynamic> GameItems { get; private set; }
 		#endregion
 
 		#region Properties (Dynamic)
 		/// <summary>True when the world has been completely loaded from disk for server and single player or when world has been completely received in multiplayer.</summary>
-		public static bool IsLoaded { get; set; }
-		public static Chunks Chunks;
-		public static bool GenerateWithTrees;
+        public static bool IsLoaded { get; set; }
+        public static Chunks Chunks;
+		public bool GenerateWithTrees;
 		#endregion
 
 		#region Lookup Functions
 		/// <summary>Get a block using world coords.</summary>
-		internal static Block GetBlock(ref Coords coords)
+        internal static Block GetBlock(ref Coords coords)
 		{
 			return Chunks[coords].Blocks[coords];
 		}
 
 		/// <summary>Get a block using world x,y,z. Use this overload to avoid constructing coords when they arent needed.</summary>
 		/// <remarks>For example, this provided ~40% speed increase in the World.PropagateLight function compared to constructing coords and calling the above overload.</remarks>
-		internal static Block GetBlock(int x, int y, int z)
+        internal static Block GetBlock(int x, int y, int z)
 		{
 			return Chunks[x / Chunk.CHUNK_SIZE, z / Chunk.CHUNK_SIZE].Blocks[x % Chunk.CHUNK_SIZE, y, z % Chunk.CHUNK_SIZE];
 		}
@@ -101,23 +106,23 @@ namespace Sean.World
 		/// This is because the cursor can still point at them, they can still receive light, etc.
 		/// Coords/Position structs have the same method. Use this one to avoid contructing coords/position when they arent needed. Large performance boost in some cases.
 		/// </summary>
-		internal static bool IsValidBlockLocation(int x, int y, int z)
+        internal static bool IsValidBlockLocation(int x, int y, int z)
 		{
 			return x >= 0 && x < SizeInBlocksX && y >= 0 && y < Chunk.CHUNK_HEIGHT && z >= 0 && z < SizeInBlocksZ;
 		}
 
-		internal static bool IsOnChunkBorder(int x, int z)
+        internal static bool IsOnChunkBorder(int x, int z)
 		{
 			return x % Chunk.CHUNK_SIZE == 0 || z % Chunk.CHUNK_SIZE == 0 || x % Chunk.CHUNK_SIZE == Chunk.CHUNK_SIZE - 1 || z % Chunk.CHUNK_SIZE == Chunk.CHUNK_SIZE - 1;
 		}
 
-		internal static int GetHeightMapLevel(int x, int z)
+        internal static int GetHeightMapLevel(int x, int z)
 		{
 			return Chunks[x / Chunk.CHUNK_SIZE, z / Chunk.CHUNK_SIZE].HeightMap[x % Chunk.CHUNK_SIZE, z % Chunk.CHUNK_SIZE];
 		}
 
 		/// <summary>Check if any of 4 directly adjacent blocks receive direct sunlight. Uses the heightmap so that the server can also use this method. If the server stored light info then it could be used instead.</summary>
-		internal static bool HasAdjacentBlockReceivingDirectSunlight(int x, int y, int z)
+        internal static bool HasAdjacentBlockReceivingDirectSunlight(int x, int y, int z)
 		{
 			return (x < SizeInBlocksX - 1 && GetHeightMapLevel(x + 1, z) <= y) ||
 			       (x > 0 && GetHeightMapLevel(x - 1, z) <= y) ||
@@ -132,7 +137,7 @@ namespace Sean.World
 		/// <param name="position">position to place the block at</param>
 		/// <param name="type">type of block to place</param>
 		/// <param name="isMultipleBlockPlacement">Use this when placing multiple blocks at once so lighting and chunk queueing only happens once.</param>
-		internal static void PlaceBlock(Position position, Block.BlockType type, bool isMultipleBlockPlacement = false)
+        internal static void PlaceBlock(Position position, Block.BlockType type, bool isMultipleBlockPlacement = false)
 		{
 			if (!position.IsValidBlockLocation || position.Y <= 0) return;
 
@@ -280,7 +285,7 @@ namespace Sean.World
 		/// <param name="endPosition">stop placing blocks at</param>
 		/// <param name="type">type of block to place</param>
 		/// <param name="isMultipleCuboidPlacement">Use this when placing multiple cuboids at once so lighting and chunk queueing only happens once.</param>
-		internal static void PlaceCuboid(Position startPosition, Position endPosition, Block.BlockType type, bool isMultipleCuboidPlacement = false)
+        internal static void PlaceCuboid(Position startPosition, Position endPosition, Block.BlockType type, bool isMultipleCuboidPlacement = false)
 		{
 			for (var x = Math.Min(startPosition.X, endPosition.X); x <= Math.Max(startPosition.X, endPosition.X); x++)
 			{
@@ -300,8 +305,9 @@ namespace Sean.World
 		/// Save the world to disk. Let the caller decide if this should be in a thread because in some situations it shouldnt (ie: when loading a newly generated world the file has to be saved first).
 		/// This is only called by a standalone server or a server thread running in single player. In single player the user can also manually initiate a save in which case this will be called using a Task.
 		/// </summary>
-		internal static void SaveToDisk()
+        internal static void SaveToDisk()
 		{
+/*
 			if (File.Exists(Settings.WorldFileTempPath)) File.Delete(Settings.WorldFileTempPath);
 
 			var fstream = new FileStream(Settings.WorldFileTempPath, FileMode.Create);
@@ -333,6 +339,7 @@ namespace Sean.World
 
 			File.Copy(Settings.WorldFileTempPath, Settings.WorldFilePath, true);
 			File.Delete(Settings.WorldFileTempPath);
+*/
 		}
 
 		/// <summary>
@@ -341,6 +348,7 @@ namespace Sean.World
 		/// </summary>
 		internal static void LoadFromDisk()
 		{
+/*
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
 
@@ -390,9 +398,10 @@ namespace Sean.World
 			Debug.WriteLine("World load from disk time: {0}ms", stopwatch.ElapsedMilliseconds);
 
 			//InitializeAllLightMaps();
+*/         
 		}
 
-		internal static void LoadChunk(Chunk chunk, byte[] bytes)
+        internal static void LoadChunk(Chunk chunk, byte[] bytes)
 		{
 			Buffer.BlockCopy(bytes, 0, chunk.Blocks.Array, 0, bytes.Length);
 			chunk.BuildHeightMap();
@@ -405,10 +414,10 @@ namespace Sean.World
 		/// -could become a circular array down the road if we want even bigger worlds.
 		/// -could also hold both sky light and item light by using bit operations, both values 0-15 can fit in one byte
 		/// </remarks>
-		//internal static byte[, ,] SkyLightMap
+		//internal byte[, ,] SkyLightMap
 
 		/// <summary>Item lightmap of the entire world. Stored separately because item light is not affected by the sky.</summary>
-		//internal static byte[, ,] ItemLightMap;
+		//internal byte[, ,] ItemLightMap;
 
 		#endregion
 	}
