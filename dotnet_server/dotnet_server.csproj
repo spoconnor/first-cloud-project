@@ -57,6 +57,8 @@
     <Compile Include="Contracts\GetMapChunkResponse.cs" />
     <Compile Include="Contracts\ListMapChunksResponse.cs" />
     <Compile Include="Contracts\InitializeMapRequest.cs" />
+    <Compile Include="Contracts\IActorService.cs" />
+    <Compile Include="ActorService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="protos\info.proto" />

@@ -1,6 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../voxel_engine/World/Generator/Generator.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ActorService.cs">
     <Files>
       <File FileName="../voxel_engine/World/WorldHost.cs" Line="39" Column="11" />
       <File FileName="../voxel_engine/Shared/Coords.cs" Line="139" Column="17" />
@@ -12,7 +12,12 @@
       <File FileName="../voxel_engine/Shared/Position.cs" Line="125" Column="4" />
       <File FileName="../voxel_engine/World/WorldData.cs" Line="86" Column="11" />
       <File FileName="../voxel_engine/VoxelEngine.cs" Line="13" Column="36" />
-      <File FileName="../voxel_engine/World/Generator/PerlinNoise.cs" Line="157" Column="48" />
+      <File FileName="../voxel_engine/World/Generator/PerlinNoise.cs" Line="143" Column="13" />
+      <File FileName="Contracts/IMapService.cs" Line="12" Column="38" />
+      <File FileName="Contracts/IActorService.cs" Line="42" Column="22" />
+      <File FileName="ActorService.cs" Line="13" Column="1" />
+      <File FileName="Contracts/InitializeMapRequest.cs" Line="6" Column="1" />
+      <File FileName="MapService.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
