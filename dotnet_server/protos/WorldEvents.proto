@@ -3,7 +3,7 @@ package tutorial;
 import "google/protobuf/csharp_options.proto";
 
 option (google.protobuf.csharp_file_options).namespace = "Google.ProtocolBuffers.Examples.AddressBook";
-option (google.protobuf.csharp_file_options).umbrella_classname = "WorldEventsProtos";
+option (google.protobuf.csharp_file_options).umbrella_classname = "AddressBookProtos";
 
 option optimize_for = SPEED;
 
@@ -41,7 +41,6 @@ message ServerInfoResponse {
   required string servername = 1;
 }
 
-service WorldEventsService {
-  rpc RegisterActor (RegisterActorRequest) returns (RegisterActorResponse);
-  
+service ServerInfoService {
+  rpc Info (ServerInfoRequest) returns (ServerInfoResponse);
 }

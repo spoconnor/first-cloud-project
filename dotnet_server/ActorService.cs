@@ -12,10 +12,6 @@ namespace dotnet_server
         {
         }
         
-        ListPathsResponse ListPaths(ListPathsRequest request)
-        {
-        }
-        
         MoveToResponse MoveTo(MoveToRequest request)
         {
         }
@@ -23,6 +19,11 @@ namespace dotnet_server
         DoActionResponse DoAction(DoActionRequest request)
         {
         }
+
+        GetEventsResponse GetEvents(GetEventsRequest request)
+        {
+        }
+
     }
 }
 

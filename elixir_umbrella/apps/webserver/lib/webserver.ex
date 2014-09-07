@@ -15,6 +15,10 @@ def start(_startType, _startArgs) do
 
 end
 
+def stop(_state) do
+  ok
+end
+
 end
 
 
