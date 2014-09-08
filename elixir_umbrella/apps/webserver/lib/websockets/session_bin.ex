@@ -1,4 +1,4 @@
-defmodule session_bin do
+defmodule Websocket.SessionBin do
 
 %This code can parse the PHP Session. For now, I'm just using it to see if the session exists
 %in order to authenticate a particular name. Authenticated names will show up in a different
@@ -8,12 +8,12 @@ defmodule session_bin do
 def session(Session1) do
   Session = re:replace(Session1,<<"[^a-z0-9]+">>,<<"">>,[global,{return,binary}]),
 
-  case byte_size(Session) of
+  case byte_size(Session) do
     26 -> void;
     _ -> throw("invalid session"),u:trace("Invalid Session")
   end,
 
-  case file:read_file(["/var/lib/php5/sess_",binary_to_list(Session1)]) of
+  case file:read_file(["/var/lib/php5/sess_",binary_to_list(Session1)]) do
     {ok,Bin} -> parse(Bin);
     {error,_} -> throw("Could Not Load File")
   end
@@ -40,7 +40,7 @@ def parseType(<<>>,_,_) do
   fail
 end
 def parseType(<<C,S/binary>>,Key,List) do
-  case C of
+  case C do
     $i ->
       <<_,S1/binary>> = S,
       parseInt(S1,Key,<<>>,List);

@@ -16,7 +16,7 @@ def start(_startType, _startArgs) do
 end
 
 def stop(_state) do
-  ok
+  :ok
 end
 
 end

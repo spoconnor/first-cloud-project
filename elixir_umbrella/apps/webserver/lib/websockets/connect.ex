@@ -1,4 +1,4 @@
-defmodule connect do
+defmodule Websocket.Connect do
 
 define(TIMEOUT,30*1000)
 define(IDLE,60*10*1000)
@@ -18,13 +18,14 @@ def step2(ClientS) do
   receive {tcp,_,Bin1} ->
     ["register",User,Sprite,X,Y] = string:tokens(binary_to_list(binary:part(Bin1,1,byte_size(Bin1)-2)),"||")
     if (length(User)>25) -> websockets:die("Name too long"); true -> void end
-    Test = lists:any(fun(E) when E=:=$ ;E=:=$<;E=:=$> -> true;(_)->false end,User)
-    case Test of true -> websockets:die("Bad characters in username.'"); false -> void end
+    Test = lists:any(fun(E) when E===$ ;E===$<;E===$> -> true;(_)->false end,User)
+    case Test do
+      true -> websockets:die("Bad characters in username.'"); false -> void end
     {ok,{IP,_}} = inet:peername(ClientS)
-    State = #user{user=User,sprite=Sprite,sock=ClientS,x=X,y=Y,ip=IP,pid=self()}
-    case es_websock:checkUser(State) of
+    State = user{user=User,sprite=Sprite,sock=ClientS,x=X,y=Y,ip=IP,pid=self()}
+    case es_websock:checkUser(State) do
       fail -> websockets:die(ClientS,"Already Connected");
-      ID -> client(#simple{id=ID,sock=ClientS})
+      ID -> client(simple{id=ID,sock=ClientS})
     end
   after ?TIMEOUT ->
     websockets:die(ClientS,"Timeout on Handshake")
@@ -51,15 +52,15 @@ end
 
 def logoutAndDie(State,MSG) do
     es_websock:logout(State),
-    websockets:die(State#simple.sock,MSG)
+    websockets:die(State simple.sock,MSG)
 end
     
 def actions(State,Data) do
-    case Data of
+    case Data do
         ["move",X,Y]  -> es_websock:move(State,X,Y);
         ["say",Message] -> es_websock:say(State,Message);
         ["nick",Name] -> es_websock:nick(State,Name);
-        ["sprite",Sprite] when Sprite=:="0";Sprite=:="1" -> es_websock:sprite(State,Sprite);
+        ["sprite",Sprite] when Sprite==="0";Sprite==="1" -> es_websock:sprite(State,Sprite);
         ["challenge",User]  -> es_websock:challenge(State,User);
         _ -> u:trace("Unidentified Message",Data)
     end

@@ -1,16 +1,16 @@
 defmodule(u) do
 
 def say(X) do
-  spawn(fun() -> io:format("~s~n",[X]) end)
+  spawn(fun() -> :io.format("~s~n",[X]) end)
 end
 def trace(X) do
-  spawn(fun() -> io:format("~p~n",[X]) end)
+  spawn(fun() -> :io.format("~p~n",[X]) end)
 end
 def trace(X,Y) do
-  spawn(fun() -> io:format("~s: ~p~n",[X,Y]) end)
+  spawn(fun() -> :io.format("~s: ~p~n",[X,Y]) end)
 end
 def traceBinary(X) do
-  spawn(fun() -> io:format("~p~n",[b2h(X)]) end)
+  spawn(fun() -> :io.format("~p~n",[b2h(X)]) end)
 end
 def for(Max, Max, F) do
   [F(Max)]
@@ -19,13 +19,13 @@ def for(I, Max, F) do
   [F(I)|for(I+1, Max, F)]
 end
 def b2h(Bin) do
-  lists:flatten([io_lib:format("~2.16.0B", [X]) || X <- binary_to_list(Bin)])
+  lists:flatten([:io_lib.format("~2.16.0B", [X]) || X <- binary_to_list(Bin)])
 end
 def h2b(String) do
   << << (erlang:list_to_integer([Char], 16)):4/integer >> || Char <- String >>
 end
 def txt(Bin) do
-  [X || <<X>> <= Bin,X > 32, X < 127, X =/= 45]
+  [X || <<X>> <= Bin,X > 32, X < 127, X !== 45]
 end
 def b2s(Bin) do
   b2s1(binary_to_list(Bin),[])
@@ -34,7 +34,7 @@ def b2s1([],Str) do
   lists:reverse(Str)
 end
 def b2s1([H|T],Str) do
-  case H > 32 andalso H < 127 andalso H =/= 45 of
+  case H > 32 andalso H < 127 andalso H !== 45 do
   	true -> b2s1(T,[H,$.|Str]);
   	false -> b2s1(T,[46,46|Str])
   end
@@ -49,14 +49,14 @@ def timer(Time,Fun) do
 end
 
 def signSubtract(A,B) do
-  case A<0 of
+  case A<0 do
     true -> (erlang:abs(A)-erlang:abs(B))*-1;
     false -> (erlang:abs(A)-erlang:abs(B))
   end
 end
 
 def signSubtract1(A,B) do
-    case A<0 of
+    case A<0 do
         true -> (erlang:abs(A)-B)*-1;
         _ -> (erlang:abs(A)-B)
     end
@@ -64,7 +64,7 @@ end
 
 def floor(X) when X < 0 do
   T = trunc(X),
-  case (X - T) =:= 0 of
+  case (X - T) === 0 do
     true -> T;
     false -> T - 1
   end

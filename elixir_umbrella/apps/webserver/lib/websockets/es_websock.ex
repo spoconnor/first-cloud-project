@@ -1,4 +1,4 @@
-defmodule es_websock do
+defmodule Websocket.EsWebsock do
 use GenServer
 
 %This code uses erlang OTP's gen_server to handle incoming data like movements, messages and registration
@@ -16,10 +16,10 @@ end
 def init([]) do
   process_flag(:trap_exit, :true)
   %443
-  case gen_tcp:listen(844, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) of
+  case gen_tcp:listen(844, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) do
     {:ok, S} -> 
       spawn(fun() -> connect:accept_connections(S) :end)
-      {:ok,#state{sock=S}}
+      {:ok,state{sock=S}}
     Err -> 
       u:trace("Accept connections failed")
       throw(Err)
@@ -44,8 +44,8 @@ end
 
 
 def sendToAll(Dict,You,Message) do
-  dict:map(fun(ID,_) when ID=:=You -> void
-    (_,Record) -> gen_tcp:send(Record#user.sock,[0,Message,255])
+  dict:map(fun(ID,_) when ID===You -> void
+    (_,Record) -> gen_tcp:send(Record user.sock,[0,Message,255])
     end,Dict)
 end
 
@@ -72,7 +72,7 @@ def handle_call(getState, _From, State) do
   {reply,State,State}
 end
 def handle_call(debug, _From, State) do
-  #state{lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP,maps=Maps} = State
+  state{lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP,maps=Maps} = State
   u:trace(dict:to_list(array:get(0,Maps)))
   u:trace(gb_trees:to_list(LBName))
   u:trace(gb_trees:to_list(LBIP))
@@ -80,7 +80,7 @@ def handle_call(debug, _From, State) do
   {reply,:ok,State}
 end
 def handle_call(resetState, _From, _State) do
-  {reply,:ok,#state{}}
+  {reply,:ok,state{}}
 end
 def handle_call(die, _From, State) do
   {stop, normal, State}
@@ -90,7 +90,7 @@ def handle_call(_Request, _From, State) do
   {reply, :ok, State}
 end
 
-def handle_cast({say,Simple,Message}, State) when Message=/=""  do
+def handle_cast({say,Simple,Message}, State) when Message!==""  do
   say:say(Simple,Message,State)
 end
 
@@ -112,7 +112,7 @@ def handle_info(_Info, State) do
   {noreply, State}
 end
 
-def terminate(_Reason, #state{sock=Sock} = State) do
+def terminate(_Reason, state{sock=Sock} = State) do
   gen_tcp:close(Sock)
   u:trace("gen_server:terminate()",{_Reason,State})
   :ok
