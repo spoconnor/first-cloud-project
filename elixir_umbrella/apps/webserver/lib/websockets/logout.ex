@@ -4,7 +4,7 @@ def logout(simple{id=ID,map=Map},State = state{maps=Maps,lookupByID=LBID,lookupB
   MapDict=array:get(Map,Maps)
   case dict:find(ID,MapDict) do
     {ok, user{user=User,pid=Pid,ip=IP}} ->
-        Pid ! {die,"Disconnected"}
+        send Pid, {die,"Disconnected"}
         es_websock:sendToAll(MapDict,ID,["logout @@@ ",User]),
         LBID1=dict:erase(ID,LBID)
         LBIP1=gb_trees:delete_any(IP,LBIP)

@@ -6,10 +6,11 @@ define(IDLE,60*10*1000)
 def accept_connections(S) do
   {ok, ClientS} = gen_tcp:accept(S)
   spawn(fun() -> accept_connections(S) end)
-  receive {tcp,_,Bin} ->
-    gen_tcp:send(ClientS, websockets:handshake(Bin))
+  receive do
+  {tcp,_,Bin}:
+      gen_tcp:send(ClientS, websockets:handshake(Bin))
       step2(ClientS)
-  after ?TIMEOUT ->
+  after: ?TIMEOUT 
       websockets:die(ClientS,"Timeout on Handshake")
   end
 end

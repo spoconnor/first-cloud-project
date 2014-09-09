@@ -21,7 +21,7 @@ defmodule User do
     map:  0,
     lastMessage:  :u.munixtime()-3000,
     lastAction:  :u.munixtime()-3000,
-    floodTest:  [ 4000,4000,4000,4000,4000,4000 ], # How to do this?
+    floodTest:  [ for x <- 1..6 do 4000 end ], 
     sprite:  "0",
     ip:  nil,
     auth:  "0",

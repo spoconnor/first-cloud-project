@@ -1,106 +1,114 @@
-defmodule(u) do
+defmodule(U) do
 
-def say(X) do
-  spawn(fun() -> :io.format("~s~n",[X]) end)
+def say(x) do
+  spawn(fn() -> :io.format("~s~n",[x]) end)
 end
-def trace(X) do
-  spawn(fun() -> :io.format("~p~n",[X]) end)
+def trace(x) do
+  spawn(fn() -> :io.format("~p~n",[x]) end)
 end
-def trace(X,Y) do
-  spawn(fun() -> :io.format("~s: ~p~n",[X,Y]) end)
+def trace(x,y) do
+  spawn(fn() -> :io.format("~s: ~p~n",[x,y]) end)
 end
-def traceBinary(X) do
-  spawn(fun() -> :io.format("~p~n",[b2h(X)]) end)
+#def traceBinary(x) do
+#  spawn(fn() -> :io.format("~p~n",[b2h(x)]) end)
+#end
+#def for(max, max, f) do
+#  [f(max)]
+#end
+#def for(i, max, f) do
+#  [f(i)|for(i+1, max, f)]
+#end
+#def b2h(bin) do
+#  :lists.flatten([:io_lib.format("~2.16.0B", [x]) || x <- binary_to_list(bin)])
+#end
+#def h2b(string) do
+#  << << (:erlang.list_to_integer([char], 16)):4/integer >> || char <- string >>
+#end
+#def txt(bin) do
+#  [x || <<x>> <= bin,x > 32, x < 127, x !== 45]
+#end
+#def b2s(bin) do
+#  b2s1(binary_to_list(bin),[])
+#end
+#def b2s1([],str) do
+#  :lists.reverse(str)
+#end
+#def b2s1([h|t],str) do
+#  case h > 32 and h < 127 and h !== 45 do
+#  	:true -> b2s1(t,[h,$.|str])
+#  	:false -> b2s1(t,[46,46|str])
+#  end
+#end
+
+#def pmap(f, l, parent) do
+#  [for pid <- [for x <- l do spawn(fn() -> send parent, {self(), f.(x)} end) end]
+#    do receive do {pid, res}: res end]
+#end
+
+def timer(time,fun) do
+  spawn(fn() ->
+    receive do 
+    after
+      time -> fun.() 
+    end
+  end)
 end
-def for(Max, Max, F) do
-  [F(Max)]
-end
-def for(I, Max, F) do
-  [F(I)|for(I+1, Max, F)]
-end
-def b2h(Bin) do
-  lists:flatten([:io_lib.format("~2.16.0B", [X]) || X <- binary_to_list(Bin)])
-end
-def h2b(String) do
-  << << (erlang:list_to_integer([Char], 16)):4/integer >> || Char <- String >>
-end
-def txt(Bin) do
-  [X || <<X>> <= Bin,X > 32, X < 127, X !== 45]
-end
-def b2s(Bin) do
-  b2s1(binary_to_list(Bin),[])
-end
-def b2s1([],Str) do
-  lists:reverse(Str)
-end
-def b2s1([H|T],Str) do
-  case H > 32 andalso H < 127 andalso H !== 45 do
-  	true -> b2s1(T,[H,$.|Str]);
-  	false -> b2s1(T,[46,46|Str])
+
+def signSubtract(a,b) do
+  case a<0 do
+    :true -> (:erlang.abs(a)-:erlang.abs(b))*-1
+    :false -> (:erlang.abs(a)-:erlang.abs(b))
   end
 end
 
-def pmap(F, L,Parent) do
-  [receive {Pid, Res} -> Res end || Pid <- [spawn(fun() -> Parent ! {self(), F(X)} end) || X <- L]]
-end
-
-def timer(Time,Fun) do
-  spawn(fun() -> receive after Time -> ?MODULE:Fun() end end)
-end
-
-def signSubtract(A,B) do
-  case A<0 do
-    true -> (erlang:abs(A)-erlang:abs(B))*-1;
-    false -> (erlang:abs(A)-erlang:abs(B))
-  end
-end
-
-def signSubtract1(A,B) do
-    case A<0 do
-        true -> (erlang:abs(A)-B)*-1;
-        _ -> (erlang:abs(A)-B)
+def signSubtract1(a,b) do
+    case a<0 do
+        :true -> (:erlang.abs(a)-b)*-1;
+        _ -> (:erlang.abs(a)-b)
     end
 end
 
-def floor(X) when X < 0 do
-  T = trunc(X),
-  case (X - T) === 0 do
-    true -> T;
-    false -> T - 1
+def floor(x) when x < 0 do
+  t = trunc(x)
+  case (x - t) === 0 do
+    :true -> t;
+    :false -> t - 1
   end
 end
-def floor(X) do
-  trunc(X)
+def floor(x) do
+  trunc(x)
 end
 
-def addLen(Bin) do
-  Len=erlang:size(Bin)+2,
-  <<Len:16,Bin/binary>>
-end
+#def addLen(bin) do
+#  len=:erlang.size(bin)+2,
+#  <<len:16,bin/binary>>
+#end
 
-def datetime_to_unixtime({{_Year, _Month, _Day},{_Hour, _Min, _Sec}}=Datetime) do
-  UnixZero = calendar:datetime_to_gregorian_seconds({{1970,1,1}, {0,0,0}}),
-  Seconds = calendar:datetime_to_gregorian_seconds(Datetime),
-  Seconds - UnixZero
+def datetime_to_unixtime({{_year, _month, _day},{_hour, _min, _sec}}=datetime) do
+  unixZero = :calendar.datetime_to_gregorian_seconds({{1970,1,1}, {0,0,0}})
+  seconds = :calendar.datetime_to_gregorian_seconds(Datetime)
+  seconds - unixZero
 end
 
 def unixtime() do
-  {MegaSecs, Secs, _MicroSecs} = erlang:now(),
-  MegaSecs * 1000000 + Secs
+  {megaSecs, secs, _microSecs} = :erlang.now()
+  megaSecs * 1000000 + secs
 end
 
 def munixtime() do
-  {MegaSecs, Secs, MicroSecs} = erlang:now(),
-  MegaSecs * 1000000000 + Secs*1000 + (MicroSecs div 1000)
+  {megaSecs, secs, microSecs} = :erlang.now()
+  megaSecs * 1000000000 + secs*1000 + (microSecs / 1000)
 end
 
-def unique(N) do
-  unique(N,[])
+def unique(n) do
+  unique(n,[])
 end
-def unique(0,L) do
-  L
+def unique(0,l) do
+  l
 end
-def unique(N,L) do
-  Arr = [$a,$b,$c,$d,$e,$f,$g,$h,$i,$j,$k,$l,$m,$n,$o,$p,$q,$r,$s,$t,$u,$v,$w,$x,$y,$z,$A,$B,$C,$D,$E,$F,$G,$H,$I,$J,$K,$L,$M,$N,$O,$P,$Q,$R,$S,$T,$U,$V,$W,$X,$Y,$Z,$0,$1,$2,$3,$4,$5,$6,$7,$8,$9,$-,$_],
-  unique(N-1,[lists:nth(random:uniform(64),Arr)|L])
+def unique(n,l) do
+  arr = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9','-','_']
+  unique(n-1,[:lists.nth(:random.uniform(64),arr)|l])
+end
+
 end

@@ -91,8 +91,7 @@ def parseKeys([<<"GET ",Request/binary>>|T],Websock) do
   parseKeys(T,Websock websock{request = Request1})
 end
 def parseKeys([],W) when 
-  W websock.origin!==undefined andalso
-  W websock.host!==undefined
+  W websock.origin!==undefined and W websock.host!==undefined
     ->
 
   case  W websock.allowed do
@@ -123,7 +122,7 @@ def parseKeys([_|T],Websock) do
   parseKeys(T,Websock)
 end
 
-def genKey(<<X:8,Rest/binary>>,Numbers,Spaces) when X>47 andalso X<58 do
+def genKey(<<X:8,Rest/binary>>,Numbers,Spaces) when X>47 and X<58 do
   genKey(Rest,[X|Numbers],Spaces)
 end
 def genKey(<<>>,Numbers,Spaces) do

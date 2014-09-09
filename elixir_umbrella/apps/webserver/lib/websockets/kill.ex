@@ -6,7 +6,7 @@ def kill(State,ID,Message) do
   MapDict=array:get(Map,Maps)
   {ok, user{ip=IP,user=Username,pid=Pid,sock=Sock}} = dict:find(ID,MapDict)
   websockets:alert(Sock,Message)
-  Pid ! {kill,Message}
+  send Pid, {kill,Message}
   array:foldl(fun(_,Dict,_) -> es_websock:sendToAll(Dict,ID,["logout @@@ ",Username]),0 end,0,Maps)
   Maps1=array:set(Map,dict:erase(ID,MapDict),Maps)
   LBID1=dict:erase(ID,LBID)

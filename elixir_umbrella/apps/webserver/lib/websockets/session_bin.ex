@@ -79,7 +79,7 @@ end
 def binary_to_integer(<<>>,Acc) do
   Acc
 end
-def binary_to_integer(<<Num:8,Rest/binary>>,Acc) when Num >= 48 andalso Num < 58 do
+def binary_to_integer(<<Num:8,Rest/binary>>,Acc) when Num >= 48 and Num < 58 do
  binary_to_integer(Rest, Acc*10 + (Num-48))
 end
 def binary_to_integer(_,Acc) do
