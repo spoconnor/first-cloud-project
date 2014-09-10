@@ -3,7 +3,7 @@ defmodule Websocket.Logout do
 def logout(simple{id=ID,map=Map},State = state{maps=Maps,lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP}) do
   MapDict=array:get(Map,Maps)
   case dict:find(ID,MapDict) do
-    {ok, user{user=User,pid=Pid,ip=IP}} ->
+    {ok, %User{user=User,pid=Pid,ip=IP}} ->
         send Pid, {die,"Disconnected"}
         es_websock:sendToAll(MapDict,ID,["logout @@@ ",User]),
         LBID1=dict:erase(ID,LBID)

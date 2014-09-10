@@ -23,8 +23,8 @@ def init(:ok) do
 
     children = [
       #worker(Riak.Client, []),
-      worker(Webserver.Worker, [[name: @webworker]]) ,
-      worker(Websocket.EsWebsock, []), 
+      worker(Webserver.Worker, [[name: @webworker]]),
+      worker(Websocket.EsWebsock, [[name: @es_websock]]), 
       #, [restart: :permanent, shutdown: 1000])
     ]
 

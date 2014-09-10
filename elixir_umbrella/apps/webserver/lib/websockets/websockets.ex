@@ -1,94 +1,106 @@
+defmodule Websock
+  defstruct(
+    key1:,
+    key2:,
+    allowed:,
+    origin:,
+    host:,
+    request:,
+    port:,
+    callback:,
+    callbackData: []
+  )
+end
+
 defmodule Websockets.Websockets do
 
-defrecord(websock,{key1,key2,allowed,origin,host,request,port,callback,callbackData=[]})
+# TODO
+def allowedOrigin do
+  [ "rp.eliteskills.com",
+    "jimmyr.com",
+    "localhost",
+    "76.74.253.61.844"
+  ])
 end
 
-define(AllowedOrigin,
-        [ <<"rp.eliteskills.com">>
-              , <<"jimmyr.com">>
-              , <<"localhost">>
-              , <<"76.74.253.61.844">>
-        ])
-end
-
-%You give it a websockets handshake and it returns a proper response. Accepts a Fun as callback
-%in order to parse things like cookies or protocol.
+# You give it a websockets handshake and it returns a proper response. Accepts a Fun as callback
+# in order to parse things like cookies or protocol.
  
-def handshake(Bin) do
-  handshake(Bin,false)
+def handshake(bin) do
+  handshake(bin,false)
 end
-def handshake(Bin,Callback) do
-    case binary:split(Bin,<<16#0d0a0d0a:32>>) do
-        [HttpRequest|[Data]] -> void;
-        [HttpRequest] -> Data = void
+def handshake(bin,callback) do
+    case binary:split(bin,<<16#0d0a0d0a:32>>) do
+        [httpRequest|[data]] -> void;
+        [httpRequest] -> data = void
     end
-    Fields = binary:split(HttpRequest,<<16#0d0a:16>>,[global]),
+    Fields = binary:split(httpRequest,<<16#0d0a:16>>,[global]),
     websock{
-                key1=Key1
-              , key2=Key2
-              , origin=Origin
-              , request=Request
-              , host=Host
-              , port=Port
-            } = parseKeys(Fields,websock{allowed=?AllowedOrigin,callback=Callback})
+                key1=key1
+              , key2=key2
+              , origin=origin
+              , request=request
+              , host=host
+              , port=port
+            } = parseKeys(fields,websock{allowed=?allowedOrigin,callback=callback})
 
-     case (Key1===undefined orelse Key2===undefined) do
-         false -> NewWay=true;
-         true -> NewWay=false
+     case (key1===undefined orelse key2===undefined) do
+         false -> newWay=true;
+         true -> newWay=false
      end
-    ["HTTP/1.1 101 ",case NewWay do true-> "WebSocket"; false-> "Web Socket" end," Protocol Handshake\r\n",
+    ["HTTP/1.1 101 ",case newWay do true-> "WebSocket"; false-> "Web Socket" end," Protocol Handshake\r\n",
      "Upgrade: WebSocket\r\n",
      "Connection: Upgrade\r\n",
-     case NewWay do
+     case newWay do
          true ->
-             ["Sec-WebSocket-Origin: ",Origin,"\r\n",
-              "Sec-WebSocket-Location: ws://",Host,":",integer_to_list(Port),Request,"\r\n",
+             ["Sec-WebSocket-Origin: ",origin,"\r\n",
+              "Sec-WebSocket-Location: ws://",host,":",integer_to_list(port),request,"\r\n",
               "Sec-WebSocket-Protocol: sample\r\n\r\n",
               erlang:md5(<<Key1:32, Key2:32,Data/binary>>)
              ];
          false ->
              ["WebSocket-Origin: ",Origin,"\r\n",
-              "WebSocket-Location: ws://",Host,":",integer_to_list(Port),Request,"\r\n\r\n"
+              "WebSocket-Location: ws://",host,":",integer_to_list(port),request,"\r\n\r\n"
              ]
      end
     ]
 end
 
-def alert(ClientS,MSG) do
-  msg(ClientS,"alert",MSG)
+def alert(clientS,msg) do
+  msg(clientS,"alert",msg)
 end
-def msg(ClientS,MSG) do
-  gen_tcp:send(ClientS,[0,MSG,255])
+def msg(clientS,msg) do
+  gen_tcp:send(clientS,[0,msg,255])
 end
-def msg(ClientS,Type,MSG) do
-  gen_tcp:send(ClientS,[0,Type,<<" @@@ ">>,MSG,255])
+def msg(clientS,type,msg) do
+  gen_tcp:send(clientS,[0,type,<<" @@@ ">>,msg,255])
 end
 
-def die(ClientS,MSG) do
-  alert(ClientS,MSG)
-  gen_tcp:send(ClientS,[255,0])
-  gen_tcp:send(ClientS,[0,0,0,0,0,0,0,0,0])
-  gen_tcp:close(ClientS)
+def die(clientS,msg) do
+  alert(clientS,msg)
+  gen_tcp:send(clientS,[255,0])
+  gen_tcp:send(clientS,[0,0,0,0,0,0,0,0,0])
+  gen_tcp:close(clientS)
   u:trace(MSG)
 end
 
-def parseKeys([<<"Sec-WebSocket-Key1: ",Key/binary>>|T],Websock) 
-  parseKeys(T,Websock websock{key1=genKey(Key,[],0)})
+def parseKeys([<<"Sec-WebSocket-Key1: ",key/binary>>|t],websock) 
+  parseKeys(t,websock websock{key1=genKey(key,[],0)})
 end
-def parseKeys([<<"Sec-WebSocket-Key2: ",Key/binary>>|T],Websock) ->
-  parseKeys(T,Websock websock{key2=genKey(Key,[],0)})
+def parseKeys([<<"Sec-WebSocket-Key2: ",key/binary>>|t],websock) ->
+  parseKeys(t,websock websock{key2=genKey(key,[],0)})
 end
-def parseKeys([<<"Origin: ",Origin/binary>>|T],Websock) do
-  parseKeys(T,Websock websock{origin=Origin})
+def parseKeys([<<"Origin: ",origin/binary>>|t],websock) do
+  parseKeys(t,websock websock{origin=origin})
 end
-def parseKeys([<<"Host: ",Host/binary>>|T],Websock) ->
-  [Host1,Port] = binary:split(Host,<<$:>>),
-  parseKeys(T,Websock websock{host=Host1,port=list_to_integer(binary_to_list(Port))})
+def parseKeys([<<"Host: ",host/binary>>|t],websock) ->
+  [host1,port] = binary:split(host,<<$:>>),
+  parseKeys(t,websock websock{host=host1,port=list_to_integer(binary_to_list(port))})
 end
-def parseKeys([<<"GET ",Request/binary>>|T],Websock) do
-  Size = byte_size(Request)-9,
-  <<Request1:Size/binary,_/binary>> = Request,
-  parseKeys(T,Websock websock{request = Request1})
+def parseKeys([<<"GET ",Request/binary>>|t],websock) do
+  size = byte_size(request)-9,
+  <<request1:size/binary,_/binary>> = request,
+  parseKeys(t,websock websock{request = request1})
 end
 def parseKeys([],W) when 
   W websock.origin!==undefined and W websock.host!==undefined
@@ -96,44 +108,44 @@ def parseKeys([],W) when
 
   case  W websock.allowed do
     any ->
-      Test=true;
+      test=true;
     Allowed ->
       [_|Origin] = re:replace(W websock.origin,"http://(www\.)?","",[caseless]),
-      Test = lists:any(fun(Host) when Host===Origin -> true; (_) -> false end,Allowed)
+      test = lists:any(fun(Host) when Host===Origin -> true; (_) -> false end,Allowed)
   end
 
-  case Test do
+  case test do
     true -> W;
     false ->
-      u:trace(W),
+      Lib.trace(W),
       throw("No matching allowed hosts")
   end
 end
 
-def parseKeys([],W) do
-  u:trace(W)
+def parseKeys([],w) do
+  u:trace(w)
   throw("Missing Information")
 end
-def parseKeys([_|T],W) when W websock.callback!==false do
-  F=W websock.callback
-  parseKeys(T,W websock{callbackData=F()})
+def parseKeys([_|t],w) when w websock.callback!==false do
+  f=W websock.callback
+  parseKeys(t,w websock{callbackData=f()})
 end
-def parseKeys([_|T],Websock) do
-  parseKeys(T,Websock)
-end
-
-def genKey(<<X:8,Rest/binary>>,Numbers,Spaces) when X>47 and X<58 do
-  genKey(Rest,[X|Numbers],Spaces)
-end
-def genKey(<<>>,Numbers,Spaces) do
-%    u:trace("Key: ",Numbers)
-  list_to_integer(lists:reverse(Numbers)) div Spaces
-end
-def genKey(<<$ :8,Rest/binary>>,Numbers,Spaces) do
-  genKey(Rest,Numbers,Spaces+1)
-end
-def genKey(<<_:8,Bin/binary>>,Numbers,Spaces) do
-  genKey(Bin,Numbers,Spaces)
+def parseKeys([_|t],websock) do
+  parseKeys(t,websock)
 end
 
+def genKey(<<x:8,Rest/binary>>,numbers,spaces) when x>47 and x<58 do
+  genKey(rest,[x|numbers],spaces)
+end
+def genKey(<<>>,numbers,spaces) do
+%    u:trace("Key: ",numbers)
+  list_to_integer(lists:reverse(numbers)) div spaces
+end
+def genKey(<<$ :8,rest/binary>>,numbers,spaces) do
+  genKey(rest,numbers,spaces+1)
+end
+def genKey(<<_:8,bin/binary>>,numbers,spaces) do
+  genKey(bin,numbers,spaces)
+end
 
+end

@@ -7,7 +7,7 @@ def say(simple{id=ID,map=Map},Message,State = state{maps=Maps}) do
   say1({ID,Map,MapDict,Message,Maps},dict:find(ID,MapDict),State).
 
 def say1({ID,Map,MapDict,Message,Maps},{ok, Record},State) do
-  user{lastMessage=LastMessage,floodTest=[_|FloodTest],user=User,sock=Sock} = Record,
+  %User{lastMessage=LastMessage,floodTest=[_|FloodTest],user=User,sock=Sock} = Record,
   Unix=u:munixtime(),
   Waited=Unix-LastMessage,
   Difference=Waited-?FLOOD,
@@ -23,12 +23,12 @@ def say1({ID,Map,MapDict,Message,Maps},{ok, Record},State) do
 %  u:trace("Flood Test",Test),
   case Test<1000 do
     false ->
-      NewDict=dict:store(ID,Record user{floodTest=FloodTest1,lastMessage=Unix,lastAction=Unix},MapDict),
+      NewDict=dict:store(ID,%User{floodTest=FloodTest1,lastMessage=Unix,lastAction=Unix},MapDict),
       NewMap=array:set(Map,NewDict,Maps),
       {noreply,State state{maps=NewMap}};
     true ->
       state{banned=Banned} = State,
-      user{ip=IP} = Record,
+      %User{ip=IP} = Record,
       NewState=State state{banned=[IP|Banned]},
       kill:kill(NewState,ID,"Excess Flooding, you have been banned")
   end;
