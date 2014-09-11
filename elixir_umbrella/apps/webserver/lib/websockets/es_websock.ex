@@ -91,15 +91,15 @@ def handle_call(_request, _from, state) do
 end
 
 def handle_cast({say,simple,message}, state) when message!==""  do
-  Say:say(simple,message,state)
+  Say.say(simple,message,state)
 end
 
 handle_cast({move,simple,x,y}, state) do
-  Move:move(simple,x,y,state)
+  Move.move(simple,x,y,state)
 end
 
 def handle_cast({logout,simple}, state) do
-  Logout:logout(simple,state)
+  Logout.logout(simple,state)
 end
 
 def handle_cast(_msg, state) do

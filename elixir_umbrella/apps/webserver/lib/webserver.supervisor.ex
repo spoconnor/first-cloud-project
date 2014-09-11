@@ -9,6 +9,7 @@ end
 
 @riakworker Riak
 @webworker Webserver.Worker
+@es_websock Websocket.Worker
 
 # behaviour callbacks
 def init(:ok) do
