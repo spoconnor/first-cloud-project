@@ -1,40 +1,44 @@
 defmodule Websocket.Say do
 
-define(FLOOD, 2000)
+def flood do
+  2000
+end
 
-def say(simple{id=ID,map=Map},Message,State = state{maps=Maps}) do
-  MapDict=array:get(Map,Maps),
-  say1({ID,Map,MapDict,Message,Maps},dict:find(ID,MapDict),State).
+def say(%Simple{id: id, map: map},message,state = %State{maps: maps}) do
+  mapDict=:array.get(map,maps)
+  say1({id,map,mapDict,message,maps}, :dict.find(id,mapDict),state)
+end
 
-def say1({ID,Map,MapDict,Message,Maps},{ok, Record},State) do
-  %User{lastMessage=LastMessage,floodTest=[_|FloodTest],user=User,sock=Sock} = Record,
-  Unix=u:munixtime(),
-  Waited=Unix-LastMessage,
-  Difference=Waited-?FLOOD,
-  case Waited > ?FLOOD do 
-    true ->
-      es_websock:sendToAll(MapDict,ID,["say @@@ ",User,"||",Message]);
-    false ->
-      websockets:alert(Sock,["Error: Flooding, message not sent, wait ",?FLOOD - Difference," more seconds."])
-  end,
-  FloodTest1=FloodTest ++ [Difference],
-  {Len,Sum} = lists:foldl(fun(X,{Len,Sum}) -> {Len+1,Sum+X} end,{0,0},FloodTest1),
-  Test = Sum div Len,
-%  u:trace("Flood Test",Test),
-  case Test<1000 do
-    false ->
-      NewDict=dict:store(ID,%User{floodTest=FloodTest1,lastMessage=Unix,lastAction=Unix},MapDict),
-      NewMap=array:set(Map,NewDict,Maps),
-      {noreply,State state{maps=NewMap}};
-    true ->
-      state{banned=Banned} = State,
-      %User{ip=IP} = Record,
-      NewState=State state{banned=[IP|Banned]},
-      kill:kill(NewState,ID,"Excess Flooding, you have been banned")
-  end;
-def say1(_,_,State) do
-  State
+def say1({id,map,mapDict,message,maps},{:ok, record},state) do
+  %User{lastMessage: lastMessage, floodTest: [_|floodTest], user: user, sock: sock} = record
+  unix=Lib.munixtime()
+  waited=unix - lastMessage
+  difference=waited - flood
+  case waited > flood do 
+    :true ->
+      EsWebsock.sendToAll(mapDict,id,["say @@@ ",user,"||",message]);
+    :false ->
+      :websockets.alert(sock,["Error: Flooding, message not sent, wait ",flood - difference," more seconds."])
+  end
+  floodTest1=floodTest ++ [difference]
+  {len,sum} = :lists.foldl(fun(x,{len,sum}) do {len+1,sum+x} end,{0,0},floodTest1)
+  test = sum / len
+#  Lib.trace("Flood Test",test)
+  case test<1000 do
+    :false ->
+      newDict=:dict.store(id,%User{floodTest: floodTest1, lastMessage: unix, lastAction: unix},mapDict)
+      newMap=:array.set(map,newDict,maps)
+      {noreply,%State{maps: newMap}}
+    :true ->
+      %State{banned: banned} = state
+      %User{ip: ip} = record
+      newState=%State{banned: [ip|banned]}
+      kill.kill(newState,id,"Excess Flooding, you have been banned")
+  end
+end
+
+def say1(_,_,state) do
+  state
 end
 
 end
-    

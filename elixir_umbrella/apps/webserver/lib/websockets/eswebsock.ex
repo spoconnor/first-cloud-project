@@ -72,7 +72,7 @@ def handle_call(:getState, _from, state) do
   {reply,state,state}
 end
 def handle_call(:debug, _from, state) do
-  %State{lookupByID: lbid,lookupByName: lbName,lookupByIP: lbip,maps: maps} = state
+  %State{ lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip, maps: maps} = state
   Lib.trace(:dict.to_list(:array.get(0,maps)))
   Lib.trace(:gb_trees.to_list(lbName))
   Lib.trace(:gb_trees.to_list(lbip))
@@ -94,7 +94,7 @@ def handle_cast({say,simple,message}, state) when message!==""  do
   Say.say(simple,message,state)
 end
 
-handle_cast({move,simple,x,y}, state) do
+def handle_cast({move,simple,x,y}, state) do
   Move.move(simple,x,y,state)
 end
 
