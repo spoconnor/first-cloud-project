@@ -1,14 +1,28 @@
+# TODO - have to define here???
+defmodule State do
+  defstruct(
+    maps:  :array.new(2,{:default,:dict.new()}),
+    increment:  0,
+    lookupByID:  :dict.new(),
+    lookupByName:  :gb_trees.empty(),
+    lookupByIP:  :gb_trees.empty(),
+    banned:  [],
+    sock:  nil
+  )
+end
+
+
 defmodule Websocket.Kill do
 
 def kill(state,id,message) do
-  %State{maps: smaps, banned: ipBlock, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state
+  %State{maps: maps, banned: ipBlock, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state
   {:ok,map}=:dict.find(id,lbid)
-  mapDict=:array.get(map,smaps)
+  mapDict=:array.get(map,maps)
   {:ok, %User{ip: ip, user: username, pid: pid, sock: sock}} = :dict.find(id,mapDict)
   Websockets.alert(sock,message)
   send pid, {kill,message}
-  :array.foldl(fn(_,dict,_) -> EsWebsock.sendToAll(dict,id,["logout @@@ ",username]) end,0,smaps)
-  maps1=:array.set(map, :dict.erase(id,mapDict),smaps)
+  :array.foldl(fn(_,dict,_) -> EsWebsock.sendToAll(dict,id,["logout @@@ ",username]) end,0,maps)
+  maps1=:array.set(map, :dict.erase(id,mapDict),maps)
   lbid1=:dict.erase(id,lbid)
   lbname1=removeID(id,lbName)
   lbip1=removeID(id,lbip)

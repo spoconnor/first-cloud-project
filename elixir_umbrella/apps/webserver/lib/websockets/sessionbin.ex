@@ -9,12 +9,12 @@ def session(session1) do
   session = :re.replace(session1,<<"[^a-z0-9]+">>,<<"">>,[:global,{:return,:binary}])
 
   case byte_size(session) do
-    26 -> void
+    26 -> :nil
     _ -> throw("invalid session")
         Lib.trace("Invalid Session")
   end
 
-  case :file.read_file(["/var/lib/php5/sess_",binary_to_list(session1)]) do
+  case :file.read_file(["/var/lib/php5/sess_", session1]) do
     {:ok,bin} -> parse(bin);
     {:error,_} -> throw("Could Not Load File")
   end
@@ -34,9 +34,9 @@ end
 #def parseKey(<<$\|,s/binary>>,key,list) do
 #  parseType(s,key,list)
 #end
-def parseKey(<<c,s/binary>>,key,list) do
-  parseKey(s,<<key/binary,c>>,list)
-end
+#def parseKey(<<c,s/binary>>,key,list) do
+#  parseKey(s,<<key/binary,c>>,list)
+#end
 
 def parseType(<<>>,_,_) do
   :fail
@@ -61,27 +61,27 @@ end
 #def parseInt(<<$;,s/binary>>,key,value,list) do
 #  parseKey(s,<<>>,[{key,binary_to_integer(value,0)}|list])
 #end
-def parseInt(<<c,s/binary>>,key,value,list) do
-  parseInt(s,key,<<value/binary,c>>,list)
-end
+#def parseInt(<<c,s/binary>>,key,value,list) do
+#  parseInt(s,key,<<value/binary,c>>,list)
+#end
 
 # TODO
 #def parseStrLen(<<$:,$",t/binary>>,len,key,list) do
 #  parseString(binary_to_integer(len,0),t,key,<<>>,list)
 #end
 
-def parseStrLen(<<c,t/binary>>,len,key,list) do
-  parseStrLen(t,<<len/binary,c>>,key,list)
-end
+#def parseStrLen(<<c,t/binary>>,len,key,list) do
+#  parseStrLen(t,<<len/binary,c>>,key,list)
+#end
 
 # TODO
 #def parseString(0,<<$",$;,s/binary>>,key,value,list) do
 #  parseKey(s,<<>>,[{key,value}|list])
 #end
 
-def parseString(amount,<<c,s/binary>>,key,value,list) do
-  parseString(amount-1,s,key,<<value/binary,c>>,list)
-end
+#def parseString(amount,<<c,s/binary>>,key,value,list) do
+#  parseString(amount-1,s,key,<<value/binary,c>>,list)
+#end
 
 def binary_to_integer(<<>>,acc) do
   acc
@@ -90,8 +90,8 @@ end
 #def binary_to_integer(<<num:8,rest/binary>>,acc) when num >= 48 and num < 58 do
 # binary_to_integer(rest, acc*10 + (num-48))
 #end
-def binary_to_integer(_,acc) do
-  exit({badarg,acc})
-end
+#def binary_to_integer(_,acc) do
+#  exit({badarg,acc})
+#end
 
 end
