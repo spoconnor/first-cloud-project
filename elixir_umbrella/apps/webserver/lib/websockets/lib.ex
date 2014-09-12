@@ -1,4 +1,4 @@
-defmodule(Lib) do
+defmodule Websocket.Lib do
 
 def say(x) do
   spawn(fn() -> :io.format("~s~n",[x]) end)

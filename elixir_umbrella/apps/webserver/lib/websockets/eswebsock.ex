@@ -1,6 +1,19 @@
 defmodule Websocket.EsWebsock do
 use GenServer
 
+defmodule State do
+  defstruct(
+    maps:  :array.new(2,{:default,:dict.new()}),
+    increment:  0,
+    lookupByID:  :dict.new(),
+    lookupByName:  :gb_trees.empty(),
+    lookupByIP:  :gb_trees.empty(),
+    banned:  [],
+    sock:  nil
+  )
+end
+
+
 # This code uses erlang OTP's gen_server to handle incoming data like movements, messages and registration
 # All data is centralized in the server state and is lost on exit. At this time there is no centralized database
 # though I don't plan on adding features that require one, like a player inventory or permanent statistics.

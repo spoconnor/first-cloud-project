@@ -1,4 +1,4 @@
-defmodule State do
+defmodule Websockets.State do
   defstruct(
     maps:  :array.new(2,{:default,:dict.new()}),
     increment:  0,

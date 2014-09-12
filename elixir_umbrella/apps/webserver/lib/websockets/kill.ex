@@ -1,4 +1,6 @@
-# TODO - have to define here???
+
+defmodule Websocket.Kill do
+
 defmodule State do
   defstruct(
     maps:  :array.new(2,{:default,:dict.new()}),
@@ -10,9 +12,6 @@ defmodule State do
     sock:  nil
   )
 end
-
-
-defmodule Websocket.Kill do
 
 def kill(state,id,message) do
   %State{maps: maps, banned: ipBlock, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state

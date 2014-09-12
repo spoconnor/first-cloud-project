@@ -108,7 +108,7 @@ def info({:data, data}, req, state) do
   {:loop, req, state, :hibernate}
 end
 
-def send_data(data, req) do
+def send_data(_data, _req) do
  #todo
  :ok
 end
@@ -125,9 +125,9 @@ end
 #	], req, state}
 #end
 
-def create_paste(req, state) do
-	pasteID = new_paste_id()
-	{:ok, [{"paste", paste}], req3} = :cowboy_req.body_qs(req)
+def create_paste(req, _state) do
+	_pasteID = new_paste_id()
+	{:ok, [{"paste", _paste}], _req3} = :cowboy_req.body_qs(req)
 #	:ok = file.write_file(full_path(pasteID), paste)
 #	case :cowboy_req.method(req3) do
 #		{"POST", req4} ->
