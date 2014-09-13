@@ -5,14 +5,14 @@ defmodule Websocket.User do
     id:  0,
     user:  "",
     map:  0,
-    lastMessage:  Lib.munixtime()-3000,
-    lastAction:  Lib.munixtime()-3000,
+    lastMessage:  Websocket.Lib.munixtime()-3000,
+    lastAction:  Websocket.Lib.munixtime()-3000,
     floodTest:  [ for x <- 1..6 do 4000 end ], 
     sprite:  "0",
-    ip:  nil,
+    ip:  :nil,
     auth:  "0",
-    sock:  nil,
-    pid:  nil
+    sock:  :nil,
+    pid:  :nil
   )
 end
 

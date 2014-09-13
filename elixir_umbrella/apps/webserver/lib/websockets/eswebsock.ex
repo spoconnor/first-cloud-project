@@ -1,19 +1,6 @@
 defmodule Websocket.EsWebsock do
 use GenServer
 
-defmodule State do
-  defstruct(
-    maps:  :array.new(2,{:default,:dict.new()}),
-    increment:  0,
-    lookupByID:  :dict.new(),
-    lookupByName:  :gb_trees.empty(),
-    lookupByIP:  :gb_trees.empty(),
-    banned:  [],
-    sock:  nil
-  )
-end
-
-
 # This code uses erlang OTP's gen_server to handle incoming data like movements, messages and registration
 # All data is centralized in the server state and is lost on exit. At this time there is no centralized database
 # though I don't plan on adding features that require one, like a player inventory or permanent statistics.
@@ -32,7 +19,7 @@ def init([]) do
   case :gen_tcp.listen(844, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) do
     {:ok, s} -> 
       spawn(fn() -> :connect.accept_connections(s) end)
-      {:ok, %State{sock: s}}
+      {:ok, %Websocket.State{sock: s}}
     Err -> 
       Lib.trace("Accept connections failed")
       throw(Err)
@@ -88,7 +75,7 @@ def handle_call(:getState, _from, state) do
   {:reply,state,state}
 end
 def handle_call(:debug, _from, state) do
-  %State{ lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip, maps: maps} = state
+  %Websocket.State{ lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip, maps: maps} = state
   Lib.trace(:dict.to_list(:array.get(0,maps)))
   Lib.trace(:gb_trees.to_list(lbName))
   Lib.trace(:gb_trees.to_list(lbip))
@@ -128,7 +115,7 @@ def handle_info(_info, state) do
   {:noreply, state}
 end
 
-def terminate(_reason, %State{sock: sock} = state) do
+def terminate(_reason, %Websocket.State{sock: sock} = state) do
   :gen_tcp.close(sock)
   Lib.trace("gen_server:terminate()",{_reason,state})
   :ok
