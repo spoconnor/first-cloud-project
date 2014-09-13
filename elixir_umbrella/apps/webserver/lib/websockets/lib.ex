@@ -19,7 +19,8 @@ end
 #  [f(i)|for(i+1, max, f)]
 #end
 #def b2h(bin) do
-#  :lists.flatten([:io_lib.format("~2.16.0B", [x]) || x <- binary_to_list(bin)])
+#  x = :binary.bin_to_list(bin)
+#  :lists.flatten([:io_lib.format("~2.16.0B", x)])
 #end
 #def h2b(string) do
 #  << << (:erlang.list_to_integer([char], 16)):4/integer >> || char <- string >>
@@ -28,7 +29,7 @@ end
 #  [x || <<x>> <= bin,x > 32, x < 127, x !== 45]
 #end
 #def b2s(bin) do
-#  b2s1(binary_to_list(bin),[])
+#  b2s1(:binary.bin_to_list(bin),[])
 #end
 #def b2s1([],str) do
 #  :lists.reverse(str)
