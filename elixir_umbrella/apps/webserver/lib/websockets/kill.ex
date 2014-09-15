@@ -1,4 +1,3 @@
-
 defmodule Websocket.Kill do
 
 def kill(state,id,message) do

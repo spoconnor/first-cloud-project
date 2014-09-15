@@ -12,10 +12,10 @@ def accept_connections(s) do
   spawn(fn() -> accept_connections(s) end)
   receive do
     {tcp,_,bin} ->
-      :gen_tcp.send(clientS, :websockets.handshake(bin))
+      :gen_tcp.send(clientS, WebSocket.Websockets.handshake(bin))
       step2(clientS)
     after timeoutTime ->
-      :websockets.die(clientS, "Timeout on Handshake")
+      Websocket.Websockets.die(clientS, "Timeout on Handshake")
   end
 end
 
@@ -24,21 +24,21 @@ def step2(clientS) do
     {tcp, _, bin1} ->
       ["register",user,sprite,x,y] = :string.tokens(:binary.bin_to_list(:binary.part(bin1,1,byte_size(bin1)-2)),"||")
       if (length(user)>25) do
-        :websockets.die("Name too long")
+        Websocket.Websockets.die("Name too long")
       end
       #test = :lists.any(fn(e) -> e===$ | e===$< | e===$> end, user)
       #case test do
-      #  true -> :websockets.die("Bad characters in username.'")
+      #  true -> Websocket.Websockets.die("Bad characters in username.'")
       #  false -> void 
       #end
       {:ok,{ip,_}} = :inet.peername(clientS)
       state = %Websocket.User{user: user,sprite: sprite,sock: clientS,x: x,y: y,ip: ip,pid: self()}
       case EsWebsock.checkUser(state) do
-        fail -> :websockets.die(clientS,"Already Connected");
+        fail -> Websocket.Websockets.die(clientS,"Already Connected");
         id -> client(%Websocket.Simple{id: id, sock: clientS})
       end
     after timeoutTime ->
-      :websockets.die(clientS,"Timeout on Handshake")
+      Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
    
@@ -62,7 +62,7 @@ end
 
 def logoutAndDie(state,msg) do
     EsWebsock.logout(state)
-    :websockets.die(state.sock,msg)
+    Websocket.Websockets.die(state.sock,msg)
 end
     
 def actions(state,data) do

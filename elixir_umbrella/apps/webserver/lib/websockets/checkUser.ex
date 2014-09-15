@@ -30,7 +30,7 @@ def checkUser2(ip,record,state) do
     [_|out] -> :nil
     [] -> out="[]"
   end
-  :websockets.msg(sock,"all",["[",out,"]"])
+  Websocket.Websockets.msg(sock,"all",["[",out,"]"])
 
   newDict=:dict.store(id, %Websocket.User{id: id},map0Dict)
   maps1=:array.set(0,newDict,maps)
