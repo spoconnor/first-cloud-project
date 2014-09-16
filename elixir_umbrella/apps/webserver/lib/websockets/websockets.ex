@@ -19,10 +19,10 @@ def handshake(bin,callback) do
     case :binary.split(bin,<<0x0d0a0d0a::32>>) do
         [httpRequest|[data]] -> :nil
         [httpRequest] -> data = :nil
+        other -> httpRequest = :nil
+                 data = :nil
     end
-#TODO - fix
-    #fields = :binary.split(httpRequest,<<0x0d0a::16>>,[global])
-    fields = "wibble"
+    fields = :binary.split(httpRequest,<<0x0d0a::16>>,[:global])
     %Websocket.Websock{
                key1: key1,
                key2: key2,
@@ -49,8 +49,7 @@ def handshake(bin,callback) do
              ["Sec-WebSocket-Origin: ",origin,"\r\n",
               "Sec-WebSocket-Location: ws://",host,":",:erlang.integer_to_list(port),request,"\r\n",
               "Sec-WebSocket-Protocol: sample\r\n\r\n",
-# TODO
-#              :erlang.md5(<<key1::32, key2::32,data/binary>>)
+              :erlang.md5(<<key1::32, key2::32,data/:binary>>)
              ]
          :false ->
              ["WebSocket-Origin: ",Origin,"\r\n",
@@ -78,24 +77,23 @@ def die(clientS,msg) do
   Lib.trace(MSG)
 end
 
-#TODO
-#def parseKeys([<<"Sec-WebSocket-key1: ",key/binary>>|t],websock) do
+#def parseKeys([<<"Sec-WebSocket-key1: ",key/:binary>>|t],websock) do
 #  parseKeys(t,websock{key1=genKey(key,[],0)})
 #end
-#def parseKeys([<<"Sec-WebSocket-Key2: ",key/binary>>|t],websock) do
+#def parseKeys([<<"Sec-WebSocket-Key2: ",key/:binary>>|t],websock) do
 #  parseKeys(t,websock{key2=genKey(key,[],0)})
 #end
-#def parseKeys([<<"Origin: ",origin/binary>>|t],websock) do
+#def parseKeys([<<"Origin: ",origin/:binary>>|t],websock) do
 #  parseKeys(t,websock{origin=origin})
 #end
-#def parseKeys([<<"Host: ",host/binary>>|t],websock) do
+#def parseKeys([<<"Host: ",host/:binary>>|t],websock) do
 #  [host1,port] = :binary.split(host,<<?:>>)
 #  parseKeys(t,websock{host=host1,port=list_to_integer(:binary.bin_to_list(port))})
 #end
-# TODO
-#def parseKeys([<<"GET ",request/binary>>|t],websock) do
+#
+#def parseKeys([<<"GET ",request/:binary>>|t],websock) do
 #  size = byte_size(request)-9
-#  <<request1::size/binary,_/binary>> = request
+#  <<request1::size/:binary,_/:binary>> = request
 #  parseKeys(t,websock{request = request1})
 #end
 

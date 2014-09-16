@@ -13,17 +13,15 @@ def start_link(opts \\ []) do
   GenServer.start_link(__MODULE__, :ok, opts)
 end
 
-def init([]) do
-  Process.process_flag(:trap_exit, :true)
+def init(:ok) do
+  IO.puts "Starting es websock..."
+  :erlang.process_flag(:trap_exit, :true)
   #443
-  case :gen_tcp.listen(844, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) do
-    {:ok, s} -> 
-      spawn(fn() -> :connect.accept_connections(s) end)
-      {:ok, %Websocket.State{sock: s}}
-    Err -> 
-      Lib.trace("Accept connections failed")
-      throw(Err)
-  end
+  port = 8081
+  {:ok, s} = :gen_tcp.listen(port, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) 
+  IO.puts "Accepting connections on port #{port}"
+  spawn(fn() -> :connect.accept_connections(s) end)
+  {:ok, %Websocket.State{sock: s}}
 end
 
 def debug() do
