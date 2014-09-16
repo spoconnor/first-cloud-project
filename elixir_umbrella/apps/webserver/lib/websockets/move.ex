@@ -1,17 +1,15 @@
 defmodule Websocket.Move do
 
-def move(simple{id=ID,map=Map},X,Y,State = state{maps=Maps})  do
-  MapDict=array:get(Map,Maps),
-  Now=u:munixtime(),
-  case dict:find(ID,MapDict) do
-    {ok, Record=user{lastAction=LastAction,user=User}} when (Now-LastAction)>349 ->
-      NewMaps=array:set(Map,dict:store(ID,Record user{lastAction=Now,x=X,y=Y},MapDict),Maps),
-      es_websock:sendToAll(MapDict,ID,["move @@@ ",User,"||",X,"||",Y]),
-      {noreply,State state{maps=NewMaps}};
-    _ -> {noreply,State}
+def move(%Websocket.Simple{id: id, map: map},x,y,state = %Websocket.State{maps: maps})  do
+  mapDict=:array.get(map,maps)
+  now=Lib.munixtime()
+  case :dict.find(id,mapDict) do
+    {:ok, record=%Websocket.User{lastAction: lastAction, user: user}} when (now-lastAction)>349 ->
+      newMaps=:array.set(map,:dict.store(id,%Websocket.User{lastAction: now, x: x, y: y},mapDict),maps)
+      EsWebsock.sendToAll(mapDict,id,["move @@@ ",user,"||",x,"||",y])
+      {:noreply,%Websocket.State{maps: newMaps}}
+    _ -> {:noreply,state}
   end
 end
 
 end
-
-    

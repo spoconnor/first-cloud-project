@@ -1,25 +1,25 @@
 defmodule Websocket.Kill do
 
-def kill(State,ID,Message) do
-  state{maps=Maps,banned=IPBlock,lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP} = State
-  {ok,Map}=dict:find(ID,LBID)
-  MapDict=array:get(Map,Maps)
-  {ok, user{ip=IP,user=Username,pid=Pid,sock=Sock}} = dict:find(ID,MapDict)
-  websockets:alert(Sock,Message)
-  Pid ! {kill,Message}
-  array:foldl(fun(_,Dict,_) -> es_websock:sendToAll(Dict,ID,["logout @@@ ",Username]),0 end,0,Maps)
-  Maps1=array:set(Map,dict:erase(ID,MapDict),Maps)
-  LBID1=dict:erase(ID,LBID)
-  LBName1=removeID(ID,LBName)
-  LBIP1=removeID(ID,LBIP)
-  IPBlock1=lists:delete(IP,IPBlock)
-  {noreply,State state{maps=Maps1,banned=IPBlock1,lookupByID=LBID1,lookupByName=LBName1,lookupByIP=LBIP1}}
+def kill(state,id,message) do
+  %Websocket.State{maps: maps, banned: ipBlock, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state
+  {:ok,map}=:dict.find(id,lbid)
+  mapDict=:array.get(map,maps)
+  {:ok, %Websocket.User{ip: ip, user: username, pid: pid, sock: sock}} = :dict.find(id,mapDict)
+  Websockets.alert(sock,message)
+  send pid, {:kill,message}
+  :array.foldl(fn(_,dict,_) -> EsWebsock.sendToAll(dict,id,["logout @@@ ",username]) end,0,maps)
+  maps1=:array.set(map, :dict.erase(id,mapDict),maps)
+  lbid1=:dict.erase(id,lbid)
+  lbName1=removeID(id,lbName)
+  lbip1=removeID(id,lbip)
+  ipBlock1=:lists.delete(ip,ipBlock)
+  {:noreply,%Websocket.State{maps: maps1, banned: ipBlock1, lookupByID: lbid1, lookupByName: lbName1, lookupByIP: lbip1}}
 end
    
-def removeID(ID,GB) do
-  Filter=fun({_,ID1}) when ID1===ID -> false;(_) -> true end,
-  gb_trees:from_orddict(lists:filter(Filter,gb_trees:to_list(GB)))
+def removeID(id,gb) do
+  filter=fn({_,id1}) when id1===id -> false;(_) -> true end
+  :gb_trees.from_orddict(:lists.filter(filter,:gb_trees.to_list(gb)))
 end
 
 end
-    
+

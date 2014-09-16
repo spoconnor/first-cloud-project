@@ -1,40 +1,44 @@
 defmodule Websocket.CheckUser do
 
-def checkUser(Record = user{ip=IP}, State = state{banned=Banned}) do
-  case :lists.any(fun(IP1) if IP1===IP do :true else :false end Banned) do
-    :false -> checkUser1(IP,Record,State);
-    :true -> u.trace("fail at IP ban"), {noreply,State}
+def checkUser(record = %Websocket.User{ip: ip}, state = %Websocket.State{banned: banned}) do
+  case :lists.any(fn(IP1) -> IP1===IP end, banned) do
+    :false -> checkUser1(ip,record,state)
+    :true -> Lib.trace("fail at IP ban") 
   end
+  {:noreply,state}
 end
 
-def checkUser1(IP,Record=user{ip=IP},State=state{lookupByIP=LBIP}) do
-  case :gb_trees.lookup(IP,LBIP) do
-    none -> checkUser2(IP,Record,State);
-    {value,_} ->  u.trace("fail at already logged in"), {reply,fail,State}
+def checkUser1(ip,record = %Websocket.User{ip: ip}, state = %Websocket.State{lookupByIP: lbip}) do
+  case :gb_trees.lookup(ip,lbip) do
+    none -> checkUser2(ip,record,state);
+    {value,_} ->  Lib.trace("fail at already logged in")
   end
+  {:reply,:fail,state}
 end
 
-def checkUser2(IP,Record,State) do
-  user{user=User,x=X,y=Y,sprite=Sprite,sock=Sock,auth=Auth} = Record
-  state{maps=Maps,increment=ID,lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP} = State
-  Map0Dict=:array.get(0,Maps)
+def checkUser2(ip,record,state) do
+  %Websocket.User{user: user, x: x, y: y, sprite: sprite, sock: sock, auth: auth} = record
+  %Websocket.State{maps: maps, increment: id, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state
+  map0Dict=:array.get(0,maps)
 
-  %%send all user locations for current map
-  Gather =
-    fun(_,user{x=X1,y=Y1,sprite=Sprite1,auth=Auth1,user=User1},Acc)->
-       [[",[\"",User1,"\",\"",Sprite1,"\",\"",Auth1,"\",\"",X1,"\",\"",Y1,"\"]"]|Acc]
+  # send all user locations for current map
+  gather =
+    fn(_, %Websocket.User{x: x1, y: y1, sprite: sprite1, auth: auth1, user: user1}, acc)->
+       [[",[\"",user1,"\",\"",sprite1,"\",\"",auth1,"\",\"",x1,"\",\"",y1,"\"]"]|acc]
     end
-  case :lists.flatten(:dict.fold(Gather,[],Map0Dict)) do
-    [_|Out] -> void
-    [] -> Out="[]"
+  case :lists.flatten(:dict.fold(gather,[],map0Dict)) do
+    [_|out] -> :nil
+    [] -> out="[]"
   end
-  :websockets.msg(Sock,"all",["[",Out,"]"])
+  Websocket.Websockets.msg(sock,"all",["[",out,"]"])
 
-  NewDict=:dict.store(ID,Record user{id=ID},Map0Dict)
-  Maps1=:array.set(0,NewDict,Maps)
-  LBID1=:dict.store(ID,0,LBID)
-  LBIP1=:gb_trees.enter(IP,{0,ID},LBIP)
-  LBName1=:gb_trees.enter(User,{0,ID},LBName)
-  :array.foldl(fun(_,Dict,_) -> es_websock:sendToAll(Dict,ID,["login @@@ ",User,"||",Sprite,"||",Auth,"||",X,"||",Y]) end,0,Maps)
-  {reply,ID,State state{maps=Maps1,increment=ID+1,lookupByID=LBID1,lookupByIP=LBIP1,lookupByName=LBName1}}
+  newDict=:dict.store(id, %Websocket.User{id: id},map0Dict)
+  maps1=:array.set(0,newDict,maps)
+  lbid1=:dict.store(id,0,lbid)
+  lbip1=:gb_trees.enter(ip,{0,id},lbip)
+  lbName1=:gb_trees.enter(user,{0,id},lbName)
+  :array.foldl(fn(_,dict,_) -> EsWebsock.sendToAll(dict,id,["login @@@ ",user,"||",sprite,"||",auth,"||",x,"||",y]) end,0,maps)
+  {:reply,id,%Websocket.State{maps: maps1, increment: id+1, lookupByID: lbid1, lookupByIP: lbip1, lookupByName: lbName1}}
+end
+
 end

@@ -1,16 +1,16 @@
 defmodule Websocket.Logout do
 
-def logout(simple{id=ID,map=Map},State = state{maps=Maps,lookupByID=LBID,lookupByName=LBName,lookupByIP=LBIP}) do
-  MapDict=array:get(Map,Maps)
-  case dict:find(ID,MapDict) do
-    {ok, user{user=User,pid=Pid,ip=IP}} ->
-        Pid ! {die,"Disconnected"}
-        es_websock:sendToAll(MapDict,ID,["logout @@@ ",User]),
-        LBID1=dict:erase(ID,LBID)
-        LBIP1=gb_trees:delete_any(IP,LBIP)
-        LBName1=gb_trees:delete_any(User,LBName)
-        {noreply,State state{maps=array:set(Map,dict:erase(ID,MapDict),Maps),lookupByID=LBID1,lookupByName=LBName1,lookupByIP=LBIP1}};
-    _ -> {noreply,State}
+def logout(%Websocket.Simple{id: id, map: map},state = %Websocket.State{maps: maps, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip}) do
+  mapDict=:array.get(map,maps)
+  case :dict.find(id,mapDict) do
+    {ok, %Websocket.User{user: user, pid: pid, ip: ip}} ->
+        send pid, {:die,"Disconnected"}
+        EsWebsock.sendToAll(mapDict,id,["logout @@@ ",user])
+        lbid1=:dict.erase(id,lbid)
+        lbip1=:gb_trees.delete_any(ip,lbip)
+        lbName1=:gb_trees.delete_any(user,lbName)
+        {:noreply, %Websocket.State{maps: :array.set(map, :dict.erase(id,mapDict),maps), lookupByID: lbid1, lookupByName: lbName1, lookupByIP: lbip1}}
+    _ -> {:noreply,state}
   end
 end
 

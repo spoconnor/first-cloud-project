@@ -9,6 +9,7 @@ end
 
 @riakworker Riak
 @webworker Webserver.Worker
+@es_websock Websocket.Worker
 
 # behaviour callbacks
 def init(:ok) do
@@ -23,8 +24,8 @@ def init(:ok) do
 
     children = [
       #worker(Riak.Client, []),
-      worker(Webserver.Worker, [[name: @webworker]]) ,
-      worker(Websocket.EsWebsock, []), 
+      worker(Webserver.Worker, [[name: @webworker]]),
+      worker(Websocket.EsWebsock, [[name: @es_websock]]), 
       #, [restart: :permanent, shutdown: 1000])
     ]
 
