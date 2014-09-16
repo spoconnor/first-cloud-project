@@ -85,19 +85,22 @@ def handle_get(req) do
     [{"content-type", "text/event-stream"}], req)
 
   # get latest data from database
-  datalist = {"blah...", "test", "wibble"}
+  datalist = ["blah...", "test", "wibble"] # TODO get from database
 
+  IO.puts "Sending response"
   # send each in the response
   :lists.foreach(
     fn(data) ->
       send_data(data, req1)
-    end, datalist)
+    end, 
+    datalist)
 
   # Add to listeners group
   #:ok = pg2.join(data_listeners, self())
 
   # Instruct cowboy to start looping and hibernate until a message is recv
-  {:loop, req1, :undefined, :hibernate}
+  #{:loop, req1, :undefined, :hibernate}
+  {:loop, req1, {}}
 end
 
 # called on every message received by hadler
@@ -105,14 +108,21 @@ def info({:data, data}, req, state) do
   # send data to listener
   send_data(data, req)
   # keep looping
-  {:loop, req, state, :hibernate}
+  #{:loop, req, state, :hibernate}
+  {:loop, req, state}
 end
 
-def send_data(_data, _req) do
- #todo
- :ok
+def send_data(data, req) do
+  IO.puts "Sending #{data}"
+  #event = get_title(data)
+  #details  = get_content(data)
+  chunk = "key:temp\ndata:#{data}\n\n"
+  :cowboy_req.chunk(chunk, req)
 end
 
+def terminate(_reason, _req, _state) do
+  :ok
+end
 
 ##### not needed...
 
