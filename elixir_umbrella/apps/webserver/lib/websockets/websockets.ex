@@ -30,7 +30,10 @@ def handshake(bin,callback) do
     data = :nil
     Lib.trace("HttpRequest: #{httpRequest}")
     Lib.trace("HttpData: #{data}")
-    fields = :binary.split(httpRequest,<<0x0d0a::16>>,[:global])
+    #fields = :binary.split(httpRequest,<<0x0d0a20::16>>,[:global])
+    fields = String.split(httpRequest, [" ", <<0x0d0a::16>>])
+    :lists.foreach(fn(a) -> Lib.trace("Field: #{a}") end, fields)
+    Lib.trace("Fields: #{fields}")
     %Websocket.Websock{
                key1: key1,
                key2: key2,
@@ -40,7 +43,7 @@ def handshake(bin,callback) do
                port: port
             } = parseKeys(fields,%Websocket.Websock{allowed: allowedOrigin, callback: callback})
 
-     case (key1===:undefined or key2===:undefined) do
+     case (key1===:nil or key2===:nil) do
          :false -> newWay=:true
          :true -> newWay=:false
      end
@@ -54,14 +57,14 @@ def handshake(bin,callback) do
      "Connection: Upgrade\r\n",
      case newWay do
          :true ->
-             ["Sec-WebSocket-Origin: ",origin,"\r\n",
-              "Sec-WebSocket-Location: ws://",host,":",:erlang.integer_to_list(port),request,"\r\n",
+             ["Sec-WebSocket-Origin: #{origin}\r\n",
+              "Sec-WebSocket-Location: ws://#{host}:#{port}#{request}\r\n",
               "Sec-WebSocket-Protocol: sample\r\n\r\n",
               :erlang.md5(<<key1::32, key2::32,data>>)
              ]
          :false ->
-             ["WebSocket-Origin: ",Origin,"\r\n",
-              "WebSocket-Location: ws://",host,":",:erlang.integer_to_list(port),request,"\r\n\r\n"
+             ["WebSocket-Origin: #{Origin}\r\n",
+              "WebSocket-Location: ws://#{host}:#{port}#{request}\r\n\r\n"
              ]
      end
     ]
@@ -85,29 +88,29 @@ def die(clientS,msg) do
   Lib.trace(MSG)
 end
 
-def parseKeys([<<"Sec-WebSocket-key1: ",key>>|t],websock) do
+def parseKeys(["Sec-WebSocket-key1:",key|t],websock) do
   Lib.trace("ParseKeys Sec-WebSocket-Key1: #{key}")
   parseKeys(t,%Websocket.Websock{key1: genKey(key,[],0)})
 end
-def parseKeys([<<"Sec-WebSocket-Key2: ",key>>|t],websock) do
+def parseKeys(["Sec-WebSocket-Key2:",key|t],websock) do
   Lib.trace("ParseKeys Sec-WebSocket-Key2: #{key}")
   parseKeys(t,%Websocket.Websock{key2: genKey(key,[],0)})
 end
-def parseKeys([<<"Origin: ",origin>>|t],websock) do
+def parseKeys(["Origin:",origin|t],websock) do
   Lib.trace("ParseKeys Origin: #{origin}")
   parseKeys(t,%Websocket.Websock{origin: origin})
 end
-def parseKeys([<<"Host: ",host>>|t],websock) do
+def parseKeys(["Host:",host|t],websock) do
   Lib.trace("ParseKeys Host: #{host}")
   [host1,port] = :binary.split(host,<<?:>>)
   parseKeys(t,%Websocket.Websock{host: host1, port: :erlang.list_to_integer(:binary.bin_to_list(port))})
 end
 
-def parseKeys([<<"GET ",request>>|t],websock) do
+def parseKeys(["GET","/",request|t],websock) do
   Lib.trace("ParseKeys Get: #{request}")
   #size = :binary.byte_size(request)-9
   #<<request1::size,_>> = request
-  #parseKeys(t,%Websocket.Websock{request:  request1})
+  parseKeys(t,%{websock | request: request})
 end
 
 def parseKeys([], %Websocket.Websock{origin: :undefined, host: :undefined} = w) do
@@ -116,7 +119,7 @@ def parseKeys([], %Websocket.Websock{origin: :undefined, host: :undefined} = w) 
 end
 def parseKeys([], %Websocket.Websock{} = w)
   do
-  Lib.trace("ParseKeys []")
+  Lib.trace("ParseKeys end")
 
   case  w.allowed do
     any ->
@@ -143,17 +146,13 @@ def parseKeys([],w) do
 end
 
 def parseKeys([_|t], %Websocket.Websock{callback: :false} = w) do
-  Lib.trace("ParseKeys [_|t] callback=false")
+  Lib.trace("ParseKeys [_|t] callback=false t=#{t}")
+  parseKeys(t,w)
 end
-def parseKeys([_|t], %Websocket.Websock{} = w)
-do
+def parseKeys([_|t], %Websocket.Websock{} = w) do
   Lib.trace("ParseKeys [_|t]")
   f=w.callback
   parseKeys(t, %{w | callbackData: f})
-end
-def parseKeys([_|t],websock) do
-  Lib.trace("ParseKeys [_|t]")
-  parseKeys(t,websock)
 end
 
 def genKey(<<x::8,rest>>,numbers,spaces) when x>47 and x<58 do

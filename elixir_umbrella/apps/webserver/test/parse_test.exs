@@ -12,9 +12,11 @@ end
   # A simple test
   test "Parse" do
 
-    fields = <<"HttpRequest: GET / HTTP/1.1\r\nHost: localhost:8081\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ouQOSesj+gPcmN8GoAvhNA==\r\nSec-WebSocket-Version: 13\r\nOrigin: http://faye.jcoglan.com\r\n\r\n">>
+    httpReq = <<"HttpRequest: GET / HTTP/1.1\r\nHost: localhost:8081\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Key: ouQOSesj+gPcmN8GoAvhNA==\r\nSec-WebSocket-Version: 13\r\nOrigin: http://faye.jcoglan.com\r\n\r\n">>
 
-    Websocket.Websock.parseKeys(fields, %Websocket.Websock{allowed: allowedOrigin, callback: :false})
+    fields = :binary.split(httpReq, <<0x0d0a::16>>, [:global])
+
+    Websocket.Websockets.parseKeys(fields, %Websocket.Websock{allowed: allowedOrigin, callback: :false})
 
     IO.puts(fields)
     assert(:true)
