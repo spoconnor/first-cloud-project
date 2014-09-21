@@ -14,13 +14,13 @@ def start_link(opts \\ []) do
 end
 
 def init(:ok) do
-  IO.puts "Starting es websock..."
+  Lib.trace("Starting es websock...")
   :erlang.process_flag(:trap_exit, :true)
   #443
   port = 8081
   {:ok, s} = :gen_tcp.listen(port, [:binary, {:packet, 0}, {:active, :true}, {:reuseaddr, :true}, {:packet_size,1024*2},{:keepalive,:true}]) 
-  IO.puts "Accepting connections on port #{port}"
-  spawn(fn() -> :connect.accept_connections(s) end)
+  Lib.trace("Accepting connections on port #{port}")
+  spawn(fn() -> Websocket.Connect.accept_connections(s) end)
   {:ok, %Websocket.State{sock: s}}
 end
 
