@@ -13,7 +13,9 @@ def accept_connections(s) do
   spawn(fn() -> accept_connections(s) end)
   receive do
     {tcp,_,bin} ->
-      :gen_tcp.send(clientS, Websocket.Websockets.handshake(bin))
+      reply =  Websocket.Websockets.handshake(bin)
+      Lib.trace("Reply: #{reply}")
+      :gen_tcp.send(clientS, reply)
       step2(clientS)
     after timeoutTime ->
       Websocket.Websockets.die(clientS, "Timeout on Handshake")

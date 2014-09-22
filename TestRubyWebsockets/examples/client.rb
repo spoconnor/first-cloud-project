@@ -16,6 +16,7 @@ EM.run {
 
   ws.onopen = lambda do |event|
     p [:open]
+    puts "Sending Ping..."
     ws.send("ping")
   end
 
