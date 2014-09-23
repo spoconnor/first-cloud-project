@@ -26,8 +26,9 @@ def step2(clientS) do
   Lib.trace("Connection Step2")
   receive do
     {tcp, _, bin1} ->
-      Lib.trace("Received connection")
-      msg = :string.tokens(:binary.bin_to_list(:binary.part(bin1,1,byte_size(bin1)-2)),"||") 
+      #msg = :string.tokens(:binary.bin_to_list(:binary.part(bin1,1,byte_size(bin1)-2)),"||") 
+      #<<msg::utf8>> = bin1
+      msg = bin1
       recvMsg(clientS, msg)
       
     after timeoutTime ->
@@ -35,6 +36,10 @@ def step2(clientS) do
   end
 end
    
+def recvMsg(clientS, msg) do
+  Lib.trace("Received: '#{msg}'")
+end
+
 def recvMsg(clientS, ["register",user,sprite,x,y]) do
   Lib.trace("Registering user")
   if (length(user)>25) do

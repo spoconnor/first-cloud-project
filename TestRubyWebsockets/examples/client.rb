@@ -16,8 +16,10 @@ EM.run {
 
   ws.onopen = lambda do |event|
     p [:open]
-    puts "Sending Ping..."
-    ws.send("ping")
+    puts "Sending Message..."
+    ws.send("Hello World!!!\r\n")
+    ws.send("Hello World!!!")
+    ws.send("Hello World!!!")
   end
 
   ws.onmessage = lambda do |event|
