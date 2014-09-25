@@ -111,8 +111,8 @@ end
 
 def parseKeys(["Host:",host|t],websock) do
   Lib.trace("ParseKeys Host: #{host}")
-  [host1,port] = :binary.split(host,<<?:>>)
-  parseKeys(t,%{websock | host: host1, port: :erlang.list_to_integer(:binary.bin_to_list(port))})
+  uri=URI.parse("ws://{host}")
+  parseKeys(t,%{websock | host: uri.host, port: uri.port})
 end
 
 def parseKeys(["Upgrade:","websocket"|t],websock) do
@@ -180,12 +180,12 @@ def parseKeys([],w) do
   throw("Missing Information")
 end
 
-def parseKeys([_|t], %Websocket.Websock{callback: :false} = w) do
-  Lib.trace("ParseKeys [_|t] callback=false t=#{t}")
+def parseKeys([ignore|t], %Websocket.Websock{callback: :false} = w) do
+  Lib.trace("ParseKeys Ignoring [#{ignore}|t] callback=false")
   parseKeys(t,w)
 end
-def parseKeys([_|t], %Websocket.Websock{} = w) do
-  Lib.trace("ParseKeys [_|t]")
+def parseKeys([ignore|t], %Websocket.Websock{} = w) do
+  Lib.trace("ParseKeys Ignoring [#{ignore}|t]")
   f=w.callback
   parseKeys(t, %{w | callbackData: f})
 end
