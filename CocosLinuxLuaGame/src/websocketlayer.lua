@@ -2,7 +2,7 @@ require "Cocos2d"
 require "Cocos2dConstants"
 require "NetworkConstants"
 
-local function createLayerWebSocket()
+function createLayerWebSocket()
 
     -- cclog
     cclog = function(...)
@@ -12,7 +12,6 @@ local function createLayerWebSocket()
     cclog("WebSocketTestLayer")
     local layer   = cc.Layer:create()
     local winSize = cc.Director:getInstance():getWinSize()
-        
     local MARGIN = 40
     local SPACE  = 35
 
@@ -69,25 +68,13 @@ local function createLayerWebSocket()
             end
         end
     end
+
     local labelSendBinary = cc.Label:createWithTTF("Send Binary", s_fontPath, 22)
     labelSendBinary:setAnchorPoint(cc.p(0.5, 0.5))
     local itemSendBinary = cc.MenuItemLabel:create(labelSendBinary)
     itemSendBinary:registerScriptTapHandler(onMenuSendBinaryClicked)
     itemSendBinary:setPosition(cc.p(winSize.width / 2, winSize.height - MARGIN - 2 * SPACE))
     menuRequest:addChild(itemSendBinary)
-
-
-        -- add the left-bottom "tools" menu to invoke menuPopup
-        local menuToolsItem = cc.MenuItemImage:create("menu1.png", "menu1.png")
-        menuToolsItem:setPosition(0, 0)
-        menuToolsItem:registerScriptTapHandler(menuCallbackOpenPopup)
-        menuTools = cc.Menu:create(menuToolsItem)
-        local itemWidth = menuToolsItem:getContentSize().width
-        local itemHeight = menuToolsItem:getContentSize().height
-        menuTools:setPosition(origin.x + itemWidth/2, origin.y + itemHeight/2)
-        layer:addChild(menuTools)
-
-
 
     --Send Text Status Label
     sendTextStatus = cc.Label:createWithTTF("Send Text WS is waiting...", s_fontPath, 14,cc.size(160, 100),cc.VERTICAL_TEXT_ALIGNMENT_CENTER,cc.VERTICAL_TEXT_ALIGNMENT_TOP)
@@ -107,14 +94,12 @@ local function createLayerWebSocket()
     errorStatus:setPosition(cc.p(320, 25))
     layer:addChild(errorStatus)
 
-    local toMainMenu = cc.Menu:create()
-    CreateExtensionsBasicLayerMenu(toMainMenu)
-    toMainMenu:setPosition(cc.p(0, 0))
-    layer:addChild(toMainMenu,10)
 
+cclog("Create WebSocket...")
     wsSendText   = cc.WebSocket:create("ws://127.0.0.1:8081")
     wsSendBinary = cc.WebSocket:create("ws://127.0.0.1:8081")
     wsError      = cc.WebSocket:create("ws://invalid.url.com")
+cclog("WebSocket Created")
 
     local function wsSendTextOpen(strData)
         sendTextStatus:setString("Send Text WS was opened.")
@@ -221,6 +206,7 @@ local function createLayerWebSocket()
 
     layer:registerScriptHandler(OnExit)
 
+cclog("Here10")
     return layer
 end
 

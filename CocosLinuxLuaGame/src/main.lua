@@ -9,7 +9,7 @@ end
 
 local function main()
 
--- for CCLuaEngine traceback
+for CCLuaEngine traceback
 function __G__TRACKBACK__(msg)
     cclog("----------------------------------------")
     cclog("LUA ERROR: " .. tostring(msg) .. "\n")
