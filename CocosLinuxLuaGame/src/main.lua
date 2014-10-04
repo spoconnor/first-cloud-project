@@ -7,9 +7,8 @@ cclog = function(...)
     print(string.format(...))
 end
 
-local function main()
 
-for CCLuaEngine traceback
+--for CCLuaEngine traceback
 function __G__TRACKBACK__(msg)
     cclog("----------------------------------------")
     cclog("LUA ERROR: " .. tostring(msg) .. "\n")
@@ -17,6 +16,8 @@ function __G__TRACKBACK__(msg)
     cclog("----------------------------------------")
     return msg
 end
+
+local function main()
 
 
     collectgarbage("collect")
@@ -55,6 +56,8 @@ end
     end
     require "hello2"
     cclog("result is " .. myadd(1, 1))
+
+wsSendText   = cc.WebSocket:create("ws://127.0.0.1:8081")
 
     ---------------
 
@@ -237,7 +240,8 @@ end
     --sceneGame:addChild(createLayerFarm())
     --sceneGame:addChild(createLayerMenu())
     require "websocketlayer"
-    sceneGame:addChild(createLayerWebSocket())
+    local webSocketLayer = (xpcall(createLayerWebSocket(), __G__TRACKBACK__))
+    sceneGame:addChild(webSocketLayer)
 	
 	if cc.Director:getInstance():getRunningScene() then
 		cc.Director:getInstance():replaceScene(sceneGame)
