@@ -1,10 +1,13 @@
 require "Cocos2d"
 require "Cocos2dConstants"
+require "NetworkConstants"
 
 -- cclog
 cclog = function(...)
     print(string.format(...))
 end
+
+local function main()
 
 -- for CCLuaEngine traceback
 function __G__TRACKBACK__(msg)
@@ -15,7 +18,7 @@ function __G__TRACKBACK__(msg)
     return msg
 end
 
-local function main()
+
     collectgarbage("collect")
     -- avoid memory leak
     collectgarbage("setpause", 100)
@@ -30,6 +33,7 @@ local function main()
     end
 
     glview:setDesignResolutionSize(480, 320, cc.ResolutionPolicy.NO_BORDER)
+
 
     --turn on display FPS
     director:setDisplayStats(true)
@@ -223,14 +227,17 @@ local function main()
 
     -- play background music, preload effect
     local bgMusicPath = cc.FileUtils:getInstance():fullPathForFilename("background.mp3") 
-    cc.SimpleAudioEngine:getInstance():playMusic(bgMusicPath, true)
+--    cc.SimpleAudioEngine:getInstance():playMusic(bgMusicPath, true)
     local effectPath = cc.FileUtils:getInstance():fullPathForFilename("effect1.wav")
     cc.SimpleAudioEngine:getInstance():preloadEffect(effectPath)
 
     -- run
     local sceneGame = cc.Scene:create()
-    sceneGame:addChild(createLayerFarm())
-    sceneGame:addChild(createLayerMenu())
+
+    --sceneGame:addChild(createLayerFarm())
+    --sceneGame:addChild(createLayerMenu())
+    require "websocketlayer"
+    sceneGame:addChild(createLayerWebSocket())
 	
 	if cc.Director:getInstance():getRunningScene() then
 		cc.Director:getInstance():replaceScene(sceneGame)
@@ -245,3 +252,5 @@ local status, msg = xpcall(main, __G__TRACKBACK__)
 if not status then
     error(msg)
 end
+
+
