@@ -30,14 +30,16 @@ def step2(clientS) do
       #<<msg::utf8>> = bin1
       msg = bin1
       recvMsg(clientS, msg)
-      
+      step2(clientS)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
    
 def recvMsg(clientS, msg) do
-  Lib.trace("Received: '#{msg}'")
+  Lib.trace("Received:")
+  Lib.trace("#{msg}")
+  :gen_tcp.send(clientS, msg)
 end
 
 def recvMsg(clientS, ["register",user,sprite,x,y]) do

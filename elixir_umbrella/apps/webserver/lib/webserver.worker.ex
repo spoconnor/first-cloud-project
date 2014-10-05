@@ -30,6 +30,9 @@ use GenServer
             {"/events", Webserver.Events.Handler, []},
             {"/foobar", Webserver.Foobar.Handler, []},
             {"/api", Webserver.RestApi.Handler, []},
+            {"/ws", :cowboy_static, {:file, "priv/ws_index.html"}},
+            #{"/static/[...]", cowboy_static, {:file, :websocket, "static"}},
+            {"/websocket", Webserver.Websocket.Handler, []},
             #{"/api/[:id]", [{:v1, :int}], Webserver.Toppage.Handler, []},
          ]
        }

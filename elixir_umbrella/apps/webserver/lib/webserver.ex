@@ -9,9 +9,9 @@ def start(_startType, _startArgs) do
 
   {:ok, _pid} = Webserver.Supervisor.start_link
 
-  IO.puts "Configuring Riak..."
-  {:ok, _pid} = Riak.start
-  {:ok, _pid} = Riak.configure([host: '127.0.0.1', port: 8087])
+#  IO.puts "Configuring Riak..."
+#  {:ok, _pid} = Riak.start
+#  {:ok, _pid} = Riak.configure([host: '127.0.0.1', port: 8087])
 
 end
 
