@@ -26,14 +26,14 @@ use GenServer
        {
          :_,
          [
-            {"/", :cowboy_static, {:file, "priv/index.html"}},
             {"/events", Webserver.Events.Handler, []},
             {"/foobar", Webserver.Foobar.Handler, []},
             {"/api", Webserver.RestApi.Handler, []},
-            {"/ws", :cowboy_static, {:file, "priv/ws_index.html"}},
-            #{"/static/[...]", cowboy_static, {:file, :websocket, "static"}},
+            {"/ws", :cowboy_static, {:priv_file, :Webserver, "ws_index.html"}},
             {"/websocket", Webserver.Websocket.Handler, []},
+            {"/static/[...]", :cowboy_static, {:priv_dir, :Webserver, "static"}},
             #{"/api/[:id]", [{:v1, :int}], Webserver.Toppage.Handler, []},
+            {"/[...]", :cowboy_static, {:file, "priv/index.html"}},
          ]
        }
     ])
