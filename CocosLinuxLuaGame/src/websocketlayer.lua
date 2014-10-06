@@ -10,6 +10,7 @@ function createLayerWebSocket()
     end
 
     cclog("WebSocketTestLayer")
+    local serverurl = "ws://10.1.1.4:8081"
     local layer   = cc.Layer:create()
     local winSize = cc.Director:getInstance():getWinSize()
     local MARGIN = 40
@@ -18,7 +19,6 @@ function createLayerWebSocket()
     local s_fontPath = "fonts/Marker Felt.ttf"
     local wsSendText   = nil
     local wsSendBinary = nil
-    local wsError      = nil
     local sendTextStatus  = nil
     local sendBinaryStatus = nil
     local errorStatus  = nil
@@ -88,18 +88,10 @@ function createLayerWebSocket()
     sendBinaryStatus:setPosition(cc.p(160, 25))
     layer:addChild(sendBinaryStatus)
 
-    --Error Label
-    errorStatus = cc.Label:createWithTTF("Error WS is waiting...", s_fontPath, 14, cc.size(160, 100), cc.VERTICAL_TEXT_ALIGNMENT_CENTER, cc.VERTICAL_TEXT_ALIGNMENT_TOP)
-    errorStatus:setAnchorPoint(cc.p(0, 0))
-    errorStatus:setPosition(cc.p(320, 25))
-    layer:addChild(errorStatus)
-
-
-cclog("Create WebSocket...")
-    wsSendText   = cc.WebSocket:create("ws://127.0.0.1:8081")
-    wsSendBinary = cc.WebSocket:create("ws://127.0.0.1:8081")
-    wsError      = cc.WebSocket:create("ws://invalid.url.com")
-cclog("WebSocket Created")
+    cclog("Create WebSocket...")
+    wsSendText   = cc.WebSocket:create(serverurl)
+    wsSendBinary = cc.WebSocket:create(serverurl)
+    cclog("WebSocket Created")
 
     local function wsSendTextOpen(strData)
         sendTextStatus:setString("Send Text WS was opened.")
@@ -151,24 +143,6 @@ cclog("WebSocket Created")
         cclog("sendBinary Error was fired")
     end
 
-    local function wsErrorOpen(strData)
-    end
-
-    local function wsErrorMessage(strData)
-
-    end
-
-    local function wsErrorError(strData)
-        cclog("Error was fired")
-        errorStatus:setString("an error was fired")
-    end
-
-    local function wsErrorClose(strData)
-        cclog("_wsiError websocket instance closed.")
-        errorStatus= nil
-        wsError = nil
-    end
-
     if nil ~= wsSendText then
         wsSendText:registerScriptHandler(wsSendTextOpen,cc.WEBSOCKET_OPEN)
         wsSendText:registerScriptHandler(wsSendTextMessage,cc.WEBSOCKET_MESSAGE)
@@ -183,13 +157,6 @@ cclog("WebSocket Created")
         wsSendBinary:registerScriptHandler(wsSendBinaryError,cc.WEBSOCKET_ERROR)
     end
 
-    if nil ~= wsError then
-        wsError:registerScriptHandler(wsErrorOpen,cc.WEBSOCKET_OPEN)
-        wsError:registerScriptHandler(wsErrorMessage,cc.WEBSOCKET_MESSAGE)
-        wsError:registerScriptHandler(wsErrorClose,cc.WEBSOCKET_CLOSE)
-        wsError:registerScriptHandler(wsErrorError,cc.WEBSOCKET_ERROR)
-    end
-
     local function OnExit(strEventName)
         if "exit" == strEventName then
             if nil ~= wsSendText  then
@@ -198,15 +165,11 @@ cclog("WebSocket Created")
             if nil ~= wsSendBinary then
                 wsSendBinary:close()
             end
-            if nil ~=  wsError     then
-                wsError:close()
-            end
         end
     end
 
     layer:registerScriptHandler(OnExit)
 
-cclog("Here10")
     return layer
 end
 

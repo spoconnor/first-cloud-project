@@ -240,8 +240,7 @@ wsSendText   = cc.WebSocket:create("ws://127.0.0.1:8081")
     --sceneGame:addChild(createLayerFarm())
     --sceneGame:addChild(createLayerMenu())
     require "websocketlayer"
-    local webSocketLayer = (xpcall(createLayerWebSocket(), __G__TRACKBACK__))
-    sceneGame:addChild(webSocketLayer)
+    sceneGame:addChild(createLayerWebSocket())
 	
 	if cc.Director:getInstance():getRunningScene() then
 		cc.Director:getInstance():replaceScene(sceneGame)
