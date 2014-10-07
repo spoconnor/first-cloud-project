@@ -332,10 +332,9 @@ local function main()
 
     --sceneGame:addChild(createLayerFarm())
     --sceneGame:addChild(createLayerMenu())
-    --require "websocketlayer"
-    --sceneGame:addChild(createLayerWebSocket())
-    --require "TileMaps"
-    sceneGame:addChild(TileMapEditTest())
+    require "websocketlayer"
+    sceneGame:addChild(createLayerWebSocket())
+    --sceneGame:addChild(TileMapEditTest())
 	
 	if cc.Director:getInstance():getRunningScene() then
 		cc.Director:getInstance():replaceScene(sceneGame)
