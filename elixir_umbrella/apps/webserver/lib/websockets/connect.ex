@@ -1,4 +1,5 @@
 defmodule Websocket.Connect do
+use Bitwise
 
 defmacro timeoutTime do
   30*1000
@@ -28,17 +29,62 @@ def step2(clientS) do
     {tcp, _, bin1} ->
       #msg = :string.tokens(:binary.bin_to_list(:binary.part(bin1,1,byte_size(bin1)-2)),"||") 
       #<<msg::utf8>> = bin1
-      msg = bin1
+      msg = decodeString(bin1)
       recvMsg(clientS, msg)
       step2(clientS)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
-   
+
+def decodeString(data) do
+  decodeStream(:binary.bin_to_list(data)
+end
+def decodeStream(bytes) do
+  [129,b2|t] = bytes  # string marker
+  length = b2 &&& 127  # bitwise AND, unless special case
+  #indexFirstMask = 2   # if not a special case
+  # TODO - For message length > 126 bytes
+  #if (length == 126)   # if a special case, change indexFirstMask
+  #  indexFirstMask = 4
+  #else if length == 127  # special case 2
+  #  indexFirstMask = 10
+  #end
+  [mask1,mask2,mask3,mask4|data] = t
+  masks = [mask1,mask2,mask3,mask4]
+  decodeBytes(data,masks,[])
+end
+def decodeBytes([],masks,decoded) do
+  decoded
+end
+def decodeBytes(data,masks,decoded) do
+  [byte|data2]=data
+  [mask|masks2]=masks
+  decodeBytes(data2, masks2++[mask], decoded ++ [byte ^^^ mask])
+end
+
+def encodeString(msg) do
+  encodeStream(:binary.bin_to_list(msg))
+end
+def encodeStream(msg) do
+  masks = [:random.uniform(255), :random.uniform(255), 
+           :random.uniform(255), :random.uniform(255)]
+  encoded = [129, Enum.count(msg) ||| 128] | masks
+  encodeBytes(msg, masks, encoded)
+end
+def encodeBytes([],masks,encoded) do
+  encoded
+end
+def encodeBytes(msg,masks,encoded) do
+  [byte|msg2]=msg
+  [mask|masks2]=masks
+  encodeBytes(msg2, masks2++[mask], encoded ++ [byte ^^^ mask])
+end
+
 def recvMsg(clientS, msg) do
   Lib.trace("Received:")
-  Lib.trace("#{msg}")
+  Lib.trace(msg)
+  #msg2 = encodeStream(msg)
   :gen_tcp.send(clientS, msg)
 end
 
@@ -62,7 +108,8 @@ end
 
 def recvMsg(["ping"]) do
   Lib.trace("Ping")
-  # TODO pong
+  msg = encodeString("pong")
+  :gen_tcp.send(clientS, msg)
 end
 
 
