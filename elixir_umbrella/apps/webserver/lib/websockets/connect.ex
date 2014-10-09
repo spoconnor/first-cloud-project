@@ -27,14 +27,34 @@ def step2(clientS) do
   Lib.trace("Connection Step2")
   receive do
     {tcp, _, bin1} ->
-      msg = decodeString(bin1)
-      recvMsg(clientS, msg)
-      resp = "4567"
-      Lib.trace("Sending: #{resp}")
-      :gen_tcp.send(clientS, encodeString(resp))
+      data = decodeString(bin1)
+      recvMsg(clientS, data)
       step2(clientS)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
+  end
+end
+
+# RegisterClient = 1
+def recvMsg(clientS, <<1, data>>) do
+#def recvMsg(clientS, ["register",user,sprite,x,y]) do
+  Lib.trace("Received: RegisterClient")
+  msg = Messages.RegisterClientRequest.decode(data)
+  Lib.trace("#{name}, #{ip}, #{pid}")
+  reply = Messages.Status.new(status: :OK, message: "Registered")
+  :gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
+end
+
+  if (length(user.name)>25) do
+    Websocket.Websockets.die("Name too long")
+  end
+  
+  #{:ok,{ip,_}} = :inet.peername(clientS)
+  state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: user.ip, pid: self()}
+
+  case EsWebsock.checkUser(state) do
+    fail -> Websocket.Websockets.die(clientS,"Already Connected");
+    id -> client(%Websocket.Simple{id: id, sock: clientS})
   end
 end
 
@@ -81,42 +101,11 @@ end
 #  encodeBytes(msg2, masks2++[mask], encoded ++ [byte ^^^ mask])
 #end
 
-def recvMsg(clientS, msg) do
-  Lib.trace("Received:")
-  Lib.trace(msg)
-  #msg2 = encodeStream(msg)
-end
-
-def recvMsg(clientS, ["register",user,sprite,x,y]) do
-  Lib.trace("Registering user")
-  if (length(user)>25) do
-    Websocket.Websockets.die("Name too long")
-  end
-  #test = :lists.any(fn(e) -> e===$ | e===$< | e===$> end, user)
-  #case test do
-  #  true -> Websocket.Websockets.die("Bad characters in username.'")
-  #  false -> void 
-  #end
-  {:ok,{ip,_}} = :inet.peername(clientS)
-  state = %Websocket.User{user: user,sprite: sprite,sock: clientS,x: x,y: y,ip: ip,pid: self()}
-  case EsWebsock.checkUser(state) do
-    fail -> Websocket.Websockets.die(clientS,"Already Connected");
-    id -> client(%Websocket.Simple{id: id, sock: clientS})
-  end
-end
-
-def recvMsg(clientS, ["ping"]) do
-  Lib.trace("Ping")
-  msg = encodeString("pong")
-  :gen_tcp.send(clientS, msg)
-end
-
-
 def client(state) do
   receive do
     {tcp,_,bin} -> 
-      bin1 = :binary.bin_to_list(:binary.part(bin,1,byte_size(bin)-2))
-      actions(state, :string.tokens(bin1,"||"))
+      data = decodeString(bin1)
+      actions(state, data)
       client(state)
     {:tcp_closed,_} ->
       logoutAndDie(state,"Disconnected")
@@ -135,15 +124,38 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-def actions(state,data) do
-    case data do
-        ["move",x,y]  -> EsWebsock.move(state,x,y)
-        ["say",message] -> EsWebsock.say(state,message)
-        ["nick",name] -> EsWebsock.nick(state,name)
-        ["sprite",sprite] when sprite==="0" or sprite==="1" -> EsWebsock.sprite(state,sprite)
-        ["challenge",user]  -> EsWebsock.challenge(state,user)
-        _ -> Lib.trace("Unidentified Message",data)
-    end
+# Message = 3
+def actions(state, <<3, data>>) do
+  Lib.trace("Received: Message")
+  msg = Messages.Message.decode(data)
+  Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+  EsWebsock.say(state, msg)
+end
+
+# Movement = 4
+def actions(state, <<4, data>>) do
+  Lib.trace("Received: Movement")
+  msg = Messages.Movement.decode(data)
+  Lib.trace("#{object}, #{from.x},#{from.y} #{to.x},#{to.y} #{speed}")
+  EsWebsock.move(state, msg.to.x, msg.to.y)
+end
+
+# Action = 5
+def actions(state, <<5, data>>) do
+  Lib.trace("Recevied: Action")
+  msg = Messages.Action.decode(data)
+  Lib.trace("#{from}, #{target}, #{what}, #{with}")
+end
+
+# Object = 6
+def actions(state, <<6, data>>) do
+  Lib.trace("Recevied: Object")
+  msg = Messages.Object.decode(data)
+  Lib.trace("#{location.x},#{location.y}, #{type}, #{action}, #{destination.x},#{destination.y}, #{speed}")
+end
+
+def actions(state, <<data>>) do
+  Lib.trace("Received: Unknown")
 end
 
 end
