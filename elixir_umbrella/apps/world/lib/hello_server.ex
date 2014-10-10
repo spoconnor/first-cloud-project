@@ -35,12 +35,12 @@ end
 
 # Called in response to GenServer.start_link/4. Initialize state
 def init(:ok) do
-  {:ok, %State{count=0}}
+  {:ok, %State{count: 0}}
 end
 
 # synchronously response with count, and update state
-def handle_call(:get_count, _from, %State{count=Count}) do 
-  {:reply, count, %State{count=count+1} }
+def handle_call(:get_count, _from, %State{count: count}) do 
+  {:reply, count, %State{count: count+1} }
 end
 
 # deal with Stop request
@@ -50,10 +50,8 @@ end
 
 # async call, with no reply
 def handle_cast(:say_hello, state) do
-  io.format("Hello~n")
-  {:noreply,
-  %State{count= %State.count+1}
-  }
+  IO.format("Hello~n")
+  {:noreply, %State{count: state.count+1} }
 end
 
 # out-of-band msgs
