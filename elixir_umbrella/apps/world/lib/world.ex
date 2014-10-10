@@ -9,7 +9,7 @@ defmodule World do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(World.Worker, [arg1, arg2, arg3])
-      worker(WorldState, [])
+      worker(HelloServer, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -9,6 +9,18 @@ end
 
 #---------------------------------------------------------------------------
 # API Function Definitions
+#
+# Example Usage
+#
+# iex(1)> {:ok,pid}=HelloServer.start_link
+# {:ok, #PID<0.84.0>}
+# iex(2)> HelloServer.say_hello(pid)
+# Hello
+# :ok
+# iex(4)> HelloServer.get_count(pid)
+# 2
+# iex(5)> HelloServer.get_count(pid)
+# 3
 
 # spawn and links to new process in one atomic step
 def start_link(opts \\ []) do
@@ -16,18 +28,18 @@ def start_link(opts \\ []) do
 end
 
 # Use cast to send async message
-def stop() do
-  GenServer.cast(:stop)
+def stop(pid) do
+  GenServer.cast(pid, :stop)
 end
 
 # Call fn, don't expect a response
-def say_hello() do
-  GenServer.cast( :say_hello)
+def say_hello(pid) do
+  GenServer.cast(pid, :say_hello)
 end
 
 # Call, but do want a response
-def get_count() do
-  GenServer.call( :get_count)
+def get_count(pid) do
+  GenServer.call(pid, :get_count)
 end
 
 #---------------------------------------------------------------------------
@@ -50,19 +62,19 @@ end
 
 # async call, with no reply
 def handle_cast(:say_hello, state) do
-  IO.format("Hello~n")
+  IO.puts("Hello")
   {:noreply, %State{count: state.count+1} }
 end
 
 # out-of-band msgs
 def handle_info(info, state) do
-  error_logger.info_msg("~p~n", [info])
+  IO.puts("#{info}")
   {:noreply, state}
 end
 
 # invoked by GenServer
 def terminate(_reason, _state) do
-  error_logger.info_msg("terminating~n")
+  IO.puts("terminating")
   :ok
 end
 
