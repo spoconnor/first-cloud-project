@@ -28,18 +28,18 @@ def start_link(opts \\ []) do
 end
 
 # Use cast to send async message
-def stop(pid) do
-  GenServer.cast(pid, :stop)
+def stop(server) do
+  GenServer.cast(server, :stop)
 end
 
 # Call fn, don't expect a response
-def say_hello(pid) do
-  GenServer.cast(pid, :say_hello)
+def say_hello(server) do
+  GenServer.cast(server, :say_hello)
 end
 
 # Call, but do want a response
-def get_count(pid) do
-  GenServer.call(pid, :get_count)
+def get_count(server) do
+  GenServer.call(server, :get_count)
 end
 
 #---------------------------------------------------------------------------
