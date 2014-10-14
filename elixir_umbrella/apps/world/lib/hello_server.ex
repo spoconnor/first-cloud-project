@@ -7,7 +7,7 @@ defmodule State do
  )
 end
 
-#---------------------------------------------------------------------------
+#-------------------------------------------------------------------
 # API Function Definitions
 #
 # Example Usage
@@ -42,11 +42,12 @@ def get_count(server) do
   GenServer.call(server, :get_count)
 end
 
-#---------------------------------------------------------------------------
+#-------------------------------------------------------------------
 # GenServer Function Definitions
 
 # Called in response to GenServer.start_link/4. Initialize state
 def init(:ok) do
+  IO.puts("HelloServer initializing")
   {:ok, %State{count: 0}}
 end
 
@@ -57,6 +58,7 @@ end
 
 # deal with Stop request
 def handle_cast(:stop, state) do
+  IO.puts("HelloServer stopping")
   {:stop, :normal, state }
 end
 
@@ -74,7 +76,7 @@ end
 
 # invoked by GenServer
 def terminate(_reason, _state) do
-  IO.puts("terminating")
+  IO.puts("HelloServer terminating")
   :ok
 end
 

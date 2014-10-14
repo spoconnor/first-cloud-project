@@ -1,3 +1,3 @@
-defmodule WorldServer do
+defmodule WorldState do
  
 end

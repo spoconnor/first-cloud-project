@@ -6,6 +6,7 @@ defmodule World.Supervisor do
   end
 
   @hello_server_name WORLD.HelloServer
+  @world_server_name WORLD.WORLDServer
 
 
 # Example usage
@@ -17,7 +18,8 @@ defmodule World.Supervisor do
   def init(:ok) do
 
     children = [
-      worker(HelloServer, [[name: @hello_server_name]])
+      worker(HelloServer, [[name: @hello_server_name]]),
+      worker(WorldServer, [[name: @world_server_name]])
     ]
 
     supervise(children, strategy: :one_for_one)

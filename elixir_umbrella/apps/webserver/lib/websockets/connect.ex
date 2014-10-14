@@ -39,23 +39,23 @@ end
 def recvMsg(clientS, <<1, data>>) do
 #def recvMsg(clientS, ["register",user,sprite,x,y]) do
   Lib.trace("Received: RegisterClient")
-  msg = Messages.RegisterClientRequest.decode(data)
-  Lib.trace("#{name}, #{ip}, #{pid}")
-  reply = Messages.Status.new(status: :OK, message: "Registered")
-  :gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
-end
+  user = Messages.RegisterClientRequest.decode(data)
+  Lib.trace("#{user.name}, #{user.ip}, #{user.pid}")
 
   if (length(user.name)>25) do
     Websocket.Websockets.die("Name too long")
   end
   
   #{:ok,{ip,_}} = :inet.peername(clientS)
-  state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: user.ip, pid: self()}
+  #state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: user.ip, pid: self()}
 
-  case EsWebsock.checkUser(state) do
-    fail -> Websocket.Websockets.die(clientS,"Already Connected");
-    id -> client(%Websocket.Simple{id: id, sock: clientS})
-  end
+  reply = Messages.Status.new(status: :OK, message: "Registered")
+  :gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
+
+  #case EsWebsock.checkUser(state) do
+  #  fail -> Websocket.Websockets.die(clientS,"Already Connected");
+  #  id -> client(%Websocket.Simple{id: id, sock: clientS})
+  #end
 end
 
 def decodeString(data) do
@@ -104,7 +104,7 @@ end
 def client(state) do
   receive do
     {tcp,_,bin} -> 
-      data = decodeString(bin1)
+      data = decodeString(bin)
       actions(state, data)
       client(state)
     {:tcp_closed,_} ->
@@ -136,7 +136,7 @@ end
 def actions(state, <<4, data>>) do
   Lib.trace("Received: Movement")
   msg = Messages.Movement.decode(data)
-  Lib.trace("#{object}, #{from.x},#{from.y} #{to.x},#{to.y} #{speed}")
+  Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
   EsWebsock.move(state, msg.to.x, msg.to.y)
 end
 
@@ -144,14 +144,14 @@ end
 def actions(state, <<5, data>>) do
   Lib.trace("Recevied: Action")
   msg = Messages.Action.decode(data)
-  Lib.trace("#{from}, #{target}, #{what}, #{with}")
+  Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
 end
 
 # Object = 6
 def actions(state, <<6, data>>) do
   Lib.trace("Recevied: Object")
   msg = Messages.Object.decode(data)
-  Lib.trace("#{location.x},#{location.y}, #{type}, #{action}, #{destination.x},#{destination.y}, #{speed}")
+  Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
 end
 
 def actions(state, <<data>>) do
