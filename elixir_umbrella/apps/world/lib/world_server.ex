@@ -46,7 +46,21 @@ end
 
 # Called in response to GenServer.start_link/4. Initialize state
 def init(:ok) do
+  loadmap("priv/map.bmp")
   { :ok, HashDict.new() }
+end
+
+defp loadmap(filename) do
+   :true = File.exists?(filename)
+   {:ok, data} = File.read(filename)
+   img = :binary.bin_to_list(data)
+   [66,77, s4,s3,s2,s1, r1,r2,r3,r4, o4,o3,o2,o1|img2] = img
+#WORD   FileType;     /* File type, always 4D42h ("BM") */
+#DWORD  FileSize;     /* Size of the file in bytes */
+#WORD   Reserved1;    /* Always 0 */
+#WORD   Reserved2;    /* Always 0 */
+#DWORD  BitmapOffset; /* Starting position of image data in bytes */
+
 end
 
 defp broadcast(users, from, msg) do
