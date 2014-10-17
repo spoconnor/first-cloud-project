@@ -1,0 +1,120 @@
+//package tutorial;
+ 
+//import "google/protobuf/csharp_options.proto";
+//
+//option (google.protobuf.csharp_file_options).namespace = "Onewheel.Interface";
+//option (google.protobuf.csharp_file_options).umbrella_classname = "WorldEventsProtos";
+
+option optimize_for = SPEED;
+
+enum MessageTypes {
+  RegisterClientRequest = 1;
+  Status = 2;
+  Message = 3;
+  Movement = 4;
+  Action = 5;
+  Object = 6;
+}
+
+message RegisterClientRequest
+{
+  required string name = 1;
+  required string ip = 2;
+  required int32 pid = 3;
+}
+
+message Status
+{
+  required StatusType status = 1;
+  required string message = 2;
+
+  enum StatusType {
+    OK = 0;
+    ERROR = 1;
+  }
+}
+
+message Message 
+{
+  required string from = 1;
+  required string target = 2;
+  required string message = 3;
+}
+
+message Coords
+{
+  required int32 x = 1;
+  required int32 y = 2;
+}
+
+message Movement
+{
+  required string object = 1;
+  required Coords from = 2;
+  required Coords to = 3;
+  required int32 speed = 4;
+}
+
+message Action
+{
+  required string from = 1;
+  required string target = 2;
+  required string what = 3;
+  required string with = 4;
+}
+
+message Object
+{
+  required Coords location = 1;
+  required int32 type = 2;
+  required ObjectAction action = 3;
+  required Coords destination = 4;
+  required int32 speed = 5;
+
+  enum ObjectAction {
+    ADD = 0;
+    REMOVE = 1;
+    MOVE = 2;
+  }
+}
+
+//service WebService {
+//  rpc RegisterClient (RegisterClientRequest) returns (Status);
+//  rpc Chat (Message) returns (Status);
+//  rpc DoAction (Action) returns (Status);
+//  rpc Move (Movement) returns (Status);
+//}
+
+//message Person {
+//  required string name = 1;
+//  required int32 id = 2;
+//  optional string email = 3;
+//
+//  enum PhoneType {
+//    MOBILE = 0;
+//    HOME = 1;
+//    WORK = 2;
+//  }
+//
+//  message PhoneNumber {
+//    required string number = 1;
+//    optional PhoneType type = 2 [default = HOME];
+//  }
+//
+//  repeated PhoneNumber phone = 4;
+//}
+// 
+//// Our address book file is just one of these.
+//message AddressBook {
+//  repeated Person person = 1;
+//}
+
+//message ServerInfoRequest {
+//  required string clientname = 1;
+//  optional int32 number = 2;
+//}
+//
+//message ServerInfoResponse {
+//  required string servername = 1;
+//}
+
