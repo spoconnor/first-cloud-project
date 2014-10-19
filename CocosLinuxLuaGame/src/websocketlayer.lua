@@ -10,6 +10,7 @@ function createLayerWebSocket()
     end
 
     cclog("WebSocketTestLayer")
+    --local serverurl = "ws://echo.websocket.org" 
     local serverurl = "ws://10.1.1.4:8081"
     local layer   = cc.Layer:create()
     local winSize = cc.Director:getInstance():getWinSize()
@@ -37,7 +38,7 @@ function createLayerWebSocket()
         if nil ~= wsSendBinary then
             if cc.WEBSOCKET_STATE_OPEN == wsSendBinary:getReadyState() then
                sendBinaryStatus:setString("Send Binary WS is waiting...")
-               wsSendBinary:sendString("1234")
+               wsSendBinary:sendString("1|Sean|Hi")
             else
                 local warningStr = "send binary websocket instance wasn't ready..."
                 sendBinaryStatus:setString(warningStr)
