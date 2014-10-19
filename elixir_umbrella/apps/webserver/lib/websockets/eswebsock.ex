@@ -24,24 +24,23 @@ def init(:ok) do
   {:ok, %Websocket.State{sock: s}}
 end
 
-def debug() do
-  GenServer.call(:debug)
+def debug(server) do
+  GenServer.call(server, :debug)
 end
 
-def stop() do
-  GenServer.call(:die)
+def stop(server) do
+  GenServer.call(server, :die)
 end
 
-def gs() do
-  GenServer.call(:getState)
+def gs(server) do
+  GenServer.call(server, :getState)
 end
 
-def rs() do
-  GenServer.call(:resetState)
+def rs(server) do
+  GenServer.call(server, :resetState)
 end
 
-
-def sendToAll(dict,you,message) do
+def sendToAll(server, dict,you,message) do
 # TODO - fix with a % map
 #  :dict.map(dict,
 #    fn(id,_) 
@@ -50,23 +49,28 @@ def sendToAll(dict,you,message) do
 #    end)
 end
 
-def say(simple,message) do
-  GenServer.cast({:say,simple,message})
+def say(server, simple,message) do
+  GenServer.cast(server, {:say,simple,message})
 end
 
-def move(simple,x,y) do
-  GenServer.cast({:move,simple,x,y})
+def move(server, simple,x,y) do
+  GenServer.cast(server, {:move,simple,x,y})
 end
 
-def logout(simple) do
-  GenServer.cast({:logout,simple})
+def logout(server, simple) do
+  GenServer.cast(server, {:logout,simple})
 end
 
-def checkUser(state) do
-  GenServer.call({:checkUser,state})
+def checkUser(server, state) do
+  IO.puts("eswebsock checkUser")
+  GenServer.call(server, {:checkUser,state})
 end
+
+################################
+# GenServer Function Definitions
 
 def handle_call({:checkUser,userState}, _, state) do
+  IO.puts("eswebsock handle call checkUser")
   CheckUser.checkUser(userState,state)
 end
 def handle_call(:getState, _from, state) do

@@ -31,7 +31,7 @@ def handshake(bin,callback) do
     #Lib.trace("HttpRequest: #{httpRequest}")
     #Lib.trace("HttpData: #{data}")
     #fields = :binary.split(httpRequest,<<0x0d0a20::16>>,[:global])
-    fields = String.split(httpRequest, [" ", <<0x0d0a::16>>])
+    fields = String.split(httpRequest, [" ", "\r\n"]) #<<0x0d0a::16>>])
     #:lists.foreach(fn(a) -> Lib.trace("Field: #{a}") end, fields)
     Lib.trace("Fields: #{fields}")
     %Websocket.Websock{

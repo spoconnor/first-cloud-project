@@ -20,6 +20,8 @@ Thread.new() do
   end
   exit()
 end
+
+
 $stdin.each_line() do |line|
   data = line.chomp()
   client.send(data)

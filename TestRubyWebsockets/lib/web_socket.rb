@@ -71,7 +71,7 @@ class WebSocket
 
       else # client
         
-        @web_socket_version = "hixie-76"
+        #@web_socket_version = "hixie-76"
         uri = arg.is_a?(String) ? URI.parse(arg) : arg
 
         if uri.scheme == "ws"
@@ -170,14 +170,13 @@ class WebSocket
       if !@handshaked
         raise(WebSocket::Error, "call WebSocket\#handshake first")
       end
-      case @web_socket_version
-        when "hixie-75", "hixie-76"
-          data = force_encoding(data.dup(), "ASCII-8BIT")
-          write("\x00#{data}\xff")
-          flush()
-        else
+      #case @web_socket_version
+        #when "hixie-75", "hixie-76"
+        #  data = force_encoding(data.dup(), "ASCII-8BIT")
+        #  write("\x00#{data}\xff")
+        #else
           send_frame(OPCODE_TEXT, data, !@server)
-      end
+      #end
     end
     
     def receive()

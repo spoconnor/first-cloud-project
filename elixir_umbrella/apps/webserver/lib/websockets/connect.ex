@@ -27,42 +27,48 @@ def step2(clientS) do
   Lib.trace("Connection Step2")
   receive do
     {tcp, _, bin1} ->
-      data = decodeString(bin1)
-      recvMsg(clientS, data)
-      step2(clientS)
+      IO.puts "Received something..."
+      str = to_string(decodeString(bin1))
+      IO.puts "'#{str}'"
+      data = String.split(str, "|")
+      registerMsg(clientS, data)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
 
 # RegisterClient = 1
-def recvMsg(clientS, <<1, data>>) do
-#def recvMsg(clientS, ["register",user,sprite,x,y]) do
-  Lib.trace("Received: RegisterClient")
-  user = Messages.RegisterClientRequest.decode(data)
-  Lib.trace("#{user.name}, #{user.ip}, #{user.pid}")
+def registerMsg(clientS, ["register",name]) do
+  Lib.trace("Received: RegisterClient #{name}")
+  #user = Messages.RegisterClientRequest.decode(data)
+  #Lib.trace("#{user.name}, #{user.ip}, #{user.pid}")
+  #Lib.trace("#{data}")
+  #fields=String.split(data, [" ", "\r\n"])
+  #Lib.trace("#{fields}")
 
-  if (length(user.name)>25) do
-    Websocket.Websockets.die("Name too long")
-  end
-  
-  #{:ok,{ip,_}} = :inet.peername(clientS)
-  #state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: user.ip, pid: self()}
-
-  reply = Messages.Status.new(status: :OK, message: "Registered")
-  :gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
-
-  #case EsWebsock.checkUser(state) do
-  #  fail -> Websocket.Websockets.die(clientS,"Already Connected");
-  #  id -> client(%Websocket.Simple{id: id, sock: clientS})
+  #if (length(user.name)>25) do
+  #  Websocket.Websockets.die("Name too long")
   #end
+  
+  {:ok,{ip,_}} = :inet.peername(clientS)
+  state = %Websocket.User{user: name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
+
+  #reply = Messages.Status.new(status: :OK, message: "Registered")
+  #:gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
+  reply = "Registered"
+  :gen_tcp.send(clientS, encodeString(reply))
+
+  case Websocket.EsWebsock.checkUser(Websocket.EsWebsock, state) do
+    fail -> Websocket.Websockets.die(clientS,"Already Connected");
+    id -> client(%Websocket.Simple{id: id, sock: clientS})
+  end
 end
 
 def decodeString(data) do
   decodeStream(:binary.bin_to_list(data))
 end
-def decodeStream(bytes) do
-  [129,b2|t] = bytes  # string marker
+# encrypted string marker
+def decodeStream([129,b2|t]) do
   length = b2 &&& 127  # bitwise AND, unless special case
   #indexFirstMask = 2   # if not a special case
   # TODO - For message length > 126 bytes
@@ -75,6 +81,7 @@ def decodeStream(bytes) do
   masks = [mask1,mask2,mask3,mask4]
   decodeBytes(data,masks,[])
 end
+
 def decodeBytes([],masks,decoded) do
   decoded
 end
@@ -85,7 +92,7 @@ def decodeBytes(data,masks,decoded) do
 end
 
 def encodeString(msg) do
-  encodeStream(:binary.bin_to_list(msg))
+encodeStream(:binary.bin_to_list(msg))
 end
 def encodeStream(msg) do
   #masks = [:random.uniform(255), :random.uniform(255), 
@@ -102,6 +109,7 @@ end
 #end
 
 def client(state) do
+  IO.puts("Client receive loop")
   receive do
     {tcp,_,bin} -> 
       data = decodeString(bin)
