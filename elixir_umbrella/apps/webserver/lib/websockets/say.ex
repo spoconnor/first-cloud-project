@@ -16,7 +16,7 @@ def say1({id,map,mapDict,message,maps},{:ok, record},state) do
   difference=waited - flood
   case waited > flood do 
     :true ->
-      EsWebsock.sendToAll(mapDict,id,["say @@@ ",user,"||",message]);
+      Websocket.EsWebsock.sendToAll(Websocket.Worker, mapDict,id,["say @@@ ",user,"||",message]);
     :false ->
       :websockets.alert(sock,["Error: Flooding, message not sent, wait ",flood - difference," more seconds."])
   end

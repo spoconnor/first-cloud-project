@@ -45,7 +45,7 @@ def sendToAll(server, dict,you,message) do
 #  :dict.map(dict,
 #    fn(id,_) 
 #    when id===you -> :nil
-#       (_,Record) -> :gen_tcp.send(id.sock,[0,message,255])
+#       (_,Record) -> Websocket.Websockets.sendTcpMsg(id.sock,[0,message,255])
 #    end)
 end
 
@@ -71,7 +71,7 @@ end
 
 def handle_call({:checkUser,userState}, _, state) do
   IO.puts("eswebsock handle call checkUser")
-  CheckUser.checkUser(userState,state)
+  Websocket.CheckUser.checkUser(userState,state)
 end
 def handle_call(:getState, _from, state) do
   {:reply,state,state}

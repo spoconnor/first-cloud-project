@@ -5,7 +5,7 @@ def logout(%Websocket.Simple{id: id, map: map},state = %Websocket.State{maps: ma
   case :dict.find(id,mapDict) do
     {ok, %Websocket.User{user: user, pid: pid, ip: ip}} ->
         send pid, {:die,"Disconnected"}
-        EsWebsock.sendToAll(mapDict,id,["logout @@@ ",user])
+        Websocket.EsWebsock.sendToAll(Websocket.Worker, mapDict,id,["logout @@@ ",user])
         lbid1=:dict.erase(id,lbid)
         lbip1=:gb_trees.delete_any(ip,lbip)
         lbName1=:gb_trees.delete_any(user,lbName)

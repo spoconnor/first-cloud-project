@@ -15,8 +15,10 @@ def accept_connections(s) do
   receive do
     {tcp,_,bin} ->
       reply =  Websocket.Websockets.handshake(bin)
-      Lib.trace("Reply: #{reply}")
+      Lib.trace("Reply: #{reply} to '#{:erlang.port_info(clientS)[:id]}'")
+      Lib.trace(:erlang.port_info(clientS))
       :gen_tcp.send(clientS, reply)
+      #Websocket.Websockets.sendTcpMsg(clientS, reply)
       step2(clientS)
     after timeoutTime ->
       Websocket.Websockets.die(clientS, "Timeout on Handshake")
@@ -54,11 +56,10 @@ def registerMsg(clientS, ["register",name]) do
   state = %Websocket.User{user: name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
 
   #reply = Messages.Status.new(status: :OK, message: "Registered")
-  #:gen_tcp.send(clientS, encodeString(Messages.Status.encode(reply)))
   reply = "Registered"
-  :gen_tcp.send(clientS, encodeString(reply))
+  Websocket.Websockets.sendTcpMsg(clientS, reply)
 
-  case Websocket.EsWebsock.checkUser(Websocket.EsWebsock, state) do
+  case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
     fail -> Websocket.Websockets.die(clientS,"Already Connected");
     id -> client(%Websocket.Simple{id: id, sock: clientS})
   end
@@ -91,23 +92,6 @@ def decodeBytes(data,masks,decoded) do
   decodeBytes(data2, masks2++[mask], decoded ++ [byte ^^^ mask])
 end
 
-def encodeString(msg) do
-encodeStream(:binary.bin_to_list(msg))
-end
-def encodeStream(msg) do
-  #masks = [:random.uniform(255), :random.uniform(255), 
-  #         :random.uniform(255), :random.uniform(255)]
-  #encoded = [129, Enum.count(msg) ||| 128] ++ masks
-  encoded = [129, Enum.count(msg)] ++ msg
-end
-#def encodeBytes([],encoded) do
-#  encoded
-#end
-#def encodeBytes(msg,encoded) do
-#  [byte|msg2]=msg
-#  encodeBytes(msg2, masks2++[mask], encoded ++ [byte ^^^ mask])
-#end
-
 def client(state) do
   IO.puts("Client receive loop")
   receive do
@@ -128,7 +112,7 @@ def client(state) do
 end
 
 def logoutAndDie(state,msg) do
-    EsWebsock.logout(state)
+    Websocket.EsWebsock.logout(Websocket.Worker, state)
     Websocket.Websockets.die(state.sock,msg)
 end
     
@@ -137,7 +121,7 @@ def actions(state, <<3, data>>) do
   Lib.trace("Received: Message")
   msg = Messages.Message.decode(data)
   Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
-  EsWebsock.say(state, msg)
+  Websocket.EsWebsock.say(Websocket.Worker, state, msg)
 end
 
 # Movement = 4
@@ -145,7 +129,7 @@ def actions(state, <<4, data>>) do
   Lib.trace("Received: Movement")
   msg = Messages.Movement.decode(data)
   Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
-  EsWebsock.move(state, msg.to.x, msg.to.y)
+  Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
 
 # Action = 5

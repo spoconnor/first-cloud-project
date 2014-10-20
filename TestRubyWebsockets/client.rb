@@ -18,15 +18,16 @@ Thread.new() do
   while data = client.receive()
     printf("Received: %p\n", data)
   end
+  printf("Closing reader")
   exit()
 end
-
 
 $stdin.each_line() do |line|
   data = line.chomp()
   client.send(data)
   printf("Sent: %p\n", data)
 end
+print("Client closing")
 client.close()
 
 #rescue Exception => e

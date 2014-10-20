@@ -84,20 +84,48 @@ def handshake(bin,callback) do
     ]
 end
 
+def sendTcpMsg(clientS, msg) do
+  :gen_tcp.send(clientS, encodeString(msg))
+end
+
+def encodeString(msg) do
+encodeStream(:binary.bin_to_list(msg))
+end
+def encodeStream(msg) do
+  #masks = [:random.uniform(255), :random.uniform(255),
+  #         :random.uniform(255), :random.uniform(255)]
+  #encoded = [129, Enum.count(msg) ||| 128] ++ masks
+  encoded = [129, Enum.count(msg)] ++ msg
+end
+#def encodeBytes([],encoded) do
+#  encoded
+#end
+#def encodeBytes(msg,encoded) do
+#  [byte|msg2]=msg
+#  encodeBytes(msg2, masks2++[mask], encoded ++ [byte ^^^ mask])
+#end
+
+
 def alert(clientS,msg) do
   msg(clientS,"alert",msg)
 end
 def msg(clientS,msg) do
-  :gen_tcp.send(clientS,[0,msg,255])
+  IO.puts("Sending msg '#{msg}'")
+  #:gen_tcp.send(clientS,[0,msg,255])
+  sendTcpMsg(clientS, msg)
 end
 def msg(clientS,type,msg) do
-  :gen_tcp.send(clientS,[0,type,<<" @@@ ">>,msg,255])
+  IO.puts("Sending msg '#{msg}' type '#{type}' to '#{:erlang.port_info(clientS)[:id]}'")
+  #:gen_tcp.send(clientS,[0,type,<<" @@@ ">>,msg,255])
+  sendTcpMsg(clientS, "Testing...")
+  sendTcpMsg(clientS, msg)
 end
 
 def die(clientS,msg) do
+  IO.puts("Websockets die '#{:erlang.port_info(clientS)[:id]}'")
   alert(clientS,msg)
-  :gen_tcp.send(clientS,[255,0])
-  :gen_tcp.send(clientS,[0,0,0,0,0,0,0,0,0])
+  #:gen_tcp.send(clientS,[255,0])
+  #:gen_tcp.send(clientS,[0,0,0,0,0,0,0,0,0])
   :gen_tcp.close(clientS)
   Lib.trace(MSG)
 end

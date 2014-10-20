@@ -7,7 +7,7 @@ def kill(state,id,message) do
   {:ok, %Websocket.User{ip: ip, user: username, pid: pid, sock: sock}} = :dict.find(id,mapDict)
   Websockets.alert(sock,message)
   send pid, {:kill,message}
-  :array.foldl(fn(_,dict,_) -> EsWebsock.sendToAll(dict,id,["logout @@@ ",username]) end,0,maps)
+  :array.foldl(fn(_,dict,_) -> Websocket.EsWebsock.sendToAll(Websocket.Worker, dict,id,["logout @@@ ",username]) end,0,maps)
   maps1=:array.set(map, :dict.erase(id,mapDict),maps)
   lbid1=:dict.erase(id,lbid)
   lbName1=removeID(id,lbName)
