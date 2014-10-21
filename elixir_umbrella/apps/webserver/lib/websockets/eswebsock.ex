@@ -41,15 +41,16 @@ def rs(server) do
 end
 
 def sendToAll(server, dict,you,message) do
-# TODO - fix with a % map
-#  :dict.map(dict,
-#    fn(id,_) 
-#    when id===you -> :nil
-#       (_,Record) -> Websocket.Websockets.sendTcpMsg(id.sock,[0,message,255])
-#    end)
+  #TODO
+  #:dict.map(dict,
+  #  fn(id,_) 
+  #  when id===you -> :nil
+  #     (_,record) -> Websocket.Websockets.sendTcpMsg(id.sock,[0,message,255])
+  #  end)
 end
 
 def say(server, simple,message) do
+  IO.puts("eswebsock say")
   GenServer.cast(server, {:say,simple,message})
 end
 
@@ -95,16 +96,16 @@ def handle_call(_request, _from, state) do
   {:reply, :ok, state}
 end
 
-def handle_cast({say,simple,message}, state) when message !== ""  do
-  Say.say(simple,message,state)
+def handle_cast({:say,simple,message}, state) when message !== ""  do
+  Websocket.Say.say(simple,message,state)
 end
 
-def handle_cast({move,simple,x,y}, state) do
-  Move.move(simple,x,y,state)
+def handle_cast({:move,simple,x,y}, state) do
+  Websocket.Move.move(simple,x,y,state)
 end
 
-def handle_cast({logout,simple}, state) do
-  Logout.logout(simple,state)
+def handle_cast({:logout,simple}, state) do
+  Websocket.Logout.logout(simple,state)
 end
 
 def handle_cast(_msg, state) do

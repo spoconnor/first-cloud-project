@@ -63,7 +63,6 @@ def registerMsg(clientS, ["register",name]) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id -> client(%Websocket.Simple{id: id, sock: clientS})
   end
-  IO.puts("RegisterMsg returning")
 end
 
 def decodeString(data) do
@@ -97,7 +96,9 @@ def client(state) do
   IO.puts("Client receive loop")
   receive do
     {tcp,_,bin} -> 
-      data = decodeString(bin)
+      str = to_string(decodeString(bin))
+      IO.puts "'#{str}'"
+      data = String.split(str, "|")
       actions(state, data)
       client(state)
     {:tcp_closed,_} ->
@@ -117,37 +118,33 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-# Message = 3
-def actions(state, <<3, data>>) do
+def actions(state, ["say",msg]) do
   Lib.trace("Received: Message")
-  msg = Messages.Message.decode(data)
-  Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+  #msg = Messages.Message.decode(data)
+  #Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
   Websocket.EsWebsock.say(Websocket.Worker, state, msg)
 end
 
-# Movement = 4
-def actions(state, <<4, data>>) do
+def actions(state, ["move",x,y]) do
   Lib.trace("Received: Movement")
-  msg = Messages.Movement.decode(data)
-  Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
-  Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
+  #msg = Messages.Movement.decode(data)
+  #Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
+  Websocket.EsWebsock.move(Websocket.Worker, state, x, y)
 end
 
-# Action = 5
-def actions(state, <<5, data>>) do
+def actions(state, ["action"|data]) do
   Lib.trace("Recevied: Action")
-  msg = Messages.Action.decode(data)
-  Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
+  #msg = Messages.Action.decode(data)
+  #Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
 end
 
-# Object = 6
-def actions(state, <<6, data>>) do
+def actions(state, ["object"|data]) do
   Lib.trace("Recevied: Object")
-  msg = Messages.Object.decode(data)
-  Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
+  #msg = Messages.Object.decode(data)
+  #Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
 end
 
-def actions(state, <<data>>) do
+def actions(state, _unknown) do
   Lib.trace("Received: Unknown")
 end
 

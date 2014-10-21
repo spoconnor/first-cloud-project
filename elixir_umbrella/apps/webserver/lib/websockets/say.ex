@@ -5,6 +5,7 @@ def flood do
 end
 
 def say(%Websocket.Simple{id: id, map: map},message,state = %Websocket.State{maps: maps}) do
+  Lib.trace("Websocket.say", message)
   mapDict=:array.get(map,maps)
   say1({id,map,mapDict,message,maps}, :dict.find(id,mapDict),state)
 end
