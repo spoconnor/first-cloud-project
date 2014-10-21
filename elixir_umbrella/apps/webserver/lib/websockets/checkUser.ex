@@ -5,9 +5,9 @@ def checkUser(record = %Websocket.User{ip: ip}, state = %Websocket.State{banned:
   case :lists.any(fn(IP1) -> IP1===IP end, banned) do
     :false -> checkUser1(ip,record,state)
     :true -> Lib.trace("fail at IP ban") 
+             {:noreply,state}
   end
   IO.puts("Check User returning")
-  {:noreply,state}
 end
 
 def ip2str(ip) do
@@ -19,8 +19,8 @@ def checkUser1(ip,record = %Websocket.User{ip: ip}, state = %Websocket.State{loo
   case :gb_trees.lookup(ip,lbip) do
     none -> checkUser2(ip,record,state);
     {value,_} ->  Lib.trace("fail at already logged in")
+                  {:reply,:fail,state}
   end
-  {:reply,:fail,state}
 end
 
 def checkUser2(ip,record,state) do
@@ -38,7 +38,8 @@ def checkUser2(ip,record,state) do
     [_|out] -> :nil
     [] -> out="[]"
   end
-  Websocket.Websockets.msg(sock,"all",["[",out,"]"])
+  #Websocket.Websockets.msg(sock,"all",["[",out,"]"])
+  Websocket.Websockets.msg(sock,"all",out)
 
   newDict=:dict.store(id, %Websocket.User{id: id},map0Dict)
   maps1=:array.set(0,newDict,maps)

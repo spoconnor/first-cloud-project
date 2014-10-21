@@ -60,9 +60,10 @@ def registerMsg(clientS, ["register",name]) do
   Websocket.Websockets.sendTcpMsg(clientS, reply)
 
   case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
-    fail -> Websocket.Websockets.die(clientS,"Already Connected");
+    {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id -> client(%Websocket.Simple{id: id, sock: clientS})
   end
+  IO.puts("RegisterMsg returning")
 end
 
 def decodeString(data) do
