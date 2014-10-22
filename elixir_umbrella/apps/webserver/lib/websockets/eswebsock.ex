@@ -41,6 +41,7 @@ def rs(server) do
 end
 
 def sendToAll(server, dict,you,message) do
+  Lib.trace("SendToAll", dict)
   #TODO
   #:dict.map(dict,
   #  fn(id,_) 

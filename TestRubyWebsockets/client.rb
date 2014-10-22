@@ -12,7 +12,7 @@ require "web_socket"
 #begin
 
 #client = WebSocket.new(ARGV[0])
-client = WebSocket.new("ws://10.1.1.4:8081")
+client = WebSocket.new("ws://localhost:8081")
 puts("Connected")
 Thread.new() do
   while data = client.receive()

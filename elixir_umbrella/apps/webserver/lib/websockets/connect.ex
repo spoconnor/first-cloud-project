@@ -93,7 +93,7 @@ def decodeBytes(data,masks,decoded) do
 end
 
 def client(state) do
-  IO.puts("Client receive loop")
+  IO.puts("Client #{state.id} receive loop")
   receive do
     {tcp,_,bin} -> 
       str = to_string(decodeString(bin))

@@ -14,6 +14,7 @@ def ip2str(ip) do
 end
 
 def checkUser1(ip,record = %Websocket.User{ip: ip}, state = %Websocket.State{lookupByIP: lbip}) do
+  IO.puts("CheckUser1")
   case :gb_trees.lookup(ip,lbip) do
     none -> checkUser2(ip,record,state);
     {value,_} ->  Lib.trace("fail at already logged in")
@@ -22,6 +23,7 @@ def checkUser1(ip,record = %Websocket.User{ip: ip}, state = %Websocket.State{loo
 end
 
 def checkUser2(ip,record,state) do
+  IO.puts("CheckUser2")
   %Websocket.User{user: user, x: x, y: y, sprite: sprite, sock: sock, auth: auth} = record
   %Websocket.State{maps: maps, increment: id, lookupByID: lbid, lookupByName: lbName, lookupByIP: lbip} = state
   map0Dict=:array.get(0,maps)
