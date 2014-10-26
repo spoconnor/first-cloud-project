@@ -1,3 +1,3 @@
-defmodule Messages do
-  use Protobuf, from: Path.expand("../../../../ProtoBufs/webservice.proto", __DIR__)
+defmodule CommsMessages do
+  use Protobuf, from: Path.expand("../../../../ProtoBufs/CommsMessages.proto", __DIR__)
 end

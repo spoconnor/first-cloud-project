@@ -40,10 +40,10 @@ def step2(clientS) do
 end
 
 # RegisterClient = 1
-def registerMsg(clientS, ["register",name]) do
-  Lib.trace("Received: RegisterClient #{name}")
-  #user = Messages.RegisterClientRequest.decode(data)
-  #Lib.trace("#{user.name}, #{user.ip}, #{user.pid}")
+def registerMsg(clientS, ["register",msg]) do
+  Lib.trace("Received: RegisterClient #{msg}")
+  user = CommsMessages.RegisterClientRequest.decode(msg)
+  Lib.trace("#{user.name}")
   #Lib.trace("#{data}")
   #fields=String.split(data, [" ", "\r\n"])
   #Lib.trace("#{fields}")
@@ -53,7 +53,7 @@ def registerMsg(clientS, ["register",name]) do
   #end
   
   {:ok,{ip,_}} = :inet.peername(clientS)
-  state = %Websocket.User{user: name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
+  state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
 
   #reply = Messages.Status.new(status: :OK, message: "Registered")
   reply = "Registered"
@@ -118,18 +118,18 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-def actions(state, ["say",msg]) do
+def actions(state, ["say",data]) do
   Lib.trace("Received: Message")
-  #msg = Messages.Message.decode(data)
-  #Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
-  Websocket.EsWebsock.say(Websocket.Worker, state, msg)
+  msg = CommsMessages.Message.decode(data)
+  Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+  Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
 end
 
-def actions(state, ["move",x,y]) do
+def actions(state, ["move",data]) do
   Lib.trace("Received: Movement")
-  #msg = Messages.Movement.decode(data)
-  #Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
-  Websocket.EsWebsock.move(Websocket.Worker, state, x, y)
+  msg = CommsMessages.Movement.decode(data)
+  Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
+  Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
 
 def actions(state, ["action"|data]) do

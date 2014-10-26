@@ -1,4 +1,4 @@
-//package tutorial;
+package CommsMessages;
  
 //import "google/protobuf/csharp_options.proto";
 //
@@ -7,20 +7,18 @@
 
 option optimize_for = SPEED;
 
-enum MessageTypes {
-  RegisterClientRequest = 1;
-  Status = 2;
-  Message = 3;
-  Movement = 4;
-  Action = 5;
-  Object = 6;
-}
+//enum MessageTypes {
+//  RegisterClientRequest = 1;
+//  Status = 2;
+//  Message = 3;
+//  Movement = 4;
+//  Action = 5;
+//  Object = 6;
+//}
 
 message RegisterClientRequest
 {
   required string name = 1;
-  required string ip = 2;
-  required int32 pid = 3;
 }
 
 message Status
