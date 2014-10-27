@@ -6,7 +6,9 @@ use GenServer
 
 defmodule ExchangeDeclare do
   require Record
-  Record.defrecord Record.extract(:'exchange.declare', from_lib: "rabbit_common/include/rabbit_framing.hrl")
+  defstruct(
+    Record.extract(:'exchange.declare', from_lib: "rabbit_common/include/rabbit_framing.hrl")
+  )
 end
 
 #-define(SERVER, ?MODULE). 
@@ -21,7 +23,7 @@ def start_link() do
 end
 
 def init([]) do
-  exchange = ExchangeDeclare(exchanger: <<"fanout">>, type: <<"fanout">>, durable: :true)
+  exchange = %ExchangeDeclare{exchange: <<"fanout">>, type: <<"fanout">>, durable: :true}
   declareInfo = {exchange}
   {:ok, pid} = :bunnyc.start_link(:mq_producer,
     {:network, "localhost", 5672, {<<"guest">>, <<"guest">>}, <<"/">>},
