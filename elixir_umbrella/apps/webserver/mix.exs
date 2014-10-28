@@ -37,11 +37,13 @@ defmodule Webserver.Mixfile do
       {:riakc, github: "basho/riak-erlang-client" },
       {:exprotobuf, github: "bitwalker/exprotobuf" },
       {:gpb, github: "tomas-abrahamsson/gpb"},
-      {:amqp_client, github: "mochi/amqp_client", override: :true},
-      {:rabbit_common, github: "mochi/rabbit_common", override: :true, app: :false},
+      #{:amqp_client, github: "mochi/amqp_client", override: :true},
+      #{:amqp_client, github: "jbrisbin/amqp_client" },
+      #{:rabbit_common, github: "mochi/rabbit_common", override: :true, compile: :false, app: :false},
       #{:meck, github: "eproxus/meck"},
-      {:meck, github: "basho/meck", tag: "0.8.1p1", override: :true},
-      {:gen_bunny, github: "mochi/gen_bunny"},
+      #{:meck, github: "basho/meck", tag: "0.8.1p1", override: :true},
+      #{:gen_bunny, github: "mochi/gen_bunny"},
+      {:exrabbit, github: "d0rc/exrabbit"},
     ]
   end
 
