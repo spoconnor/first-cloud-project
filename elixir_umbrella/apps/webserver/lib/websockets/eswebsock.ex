@@ -40,6 +40,10 @@ def rs(server) do
   GenServer.call(server, :resetState)
 end
 
+def notify(server, message) do
+  GenServer.cast(server, {:notify, message})
+end
+
 def sendToAll(server, dict,you,message) do
   Lib.trace("SendToAll", dict)
   #TODO
@@ -95,6 +99,12 @@ end
 def handle_call(_request, _from, state) do
   Lib.trace("unknown gen_server:handle_call()",_request)
   {:reply, :ok, state}
+end
+
+def handle_cast({:notify, message}, state) do
+  Lib.trace("eswebsocket notify '#{message}'")
+# TODO
+  {:noreply, state}
 end
 
 def handle_cast({:say,simple,message}, state) when message !== ""  do
