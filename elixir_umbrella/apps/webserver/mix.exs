@@ -38,12 +38,14 @@ defmodule Webserver.Mixfile do
       {:exprotobuf, github: "bitwalker/exprotobuf", tag: "0.8.3"},
       {:gpb, github: "tomas-abrahamsson/gpb", tag: "3.16.0", override: :true},
       #{:amqp_client, github: "mochi/amqp_client", override: :true},
-      {:amqp_client, github: "jbrisbin/amqp_client" },
+      #{:amqp_client, github: "jbrisbin/amqp_client" },
+      {:amqp, github: "pma/amqp", tag: "v0.0.6" },
       #{:rabbit_common, github: "mochi/rabbit_common", override: :true, compile: :false, app: :false},
       #{:meck, github: "eproxus/meck"},
       #{:meck, github: "basho/meck", tag: "0.8.1p1", override: :true},
       #{:gen_bunny, github: "mochi/gen_bunny"},
       #{:exrabbit, github: "d0rc/exrabbit"},
+      #{:erm, github: "k1complete/erm"},
     ]
   end
 
