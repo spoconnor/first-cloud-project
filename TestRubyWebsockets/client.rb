@@ -45,6 +45,8 @@ while (1) do
     puts "Say"
     msg = CommsMessages::Message.new
     printf("Message:")
+    msg.from = "me"
+    msg.target = "you"
     msg.message = gets.chomp
     bin = msg.to_s
     client.send("say|" + bin)

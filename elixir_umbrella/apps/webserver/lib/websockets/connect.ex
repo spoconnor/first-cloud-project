@@ -33,7 +33,7 @@ def step2(clientS) do
       str = to_string(decodeString(bin1))
       IO.puts "'#{str}'"
       data = String.split(str, "|")
-      registerMsg(clientS, str)
+      registerMsg(clientS, data)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
