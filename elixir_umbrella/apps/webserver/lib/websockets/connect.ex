@@ -33,7 +33,7 @@ def step2(clientS) do
       str = to_string(decodeString(bin1))
       IO.puts "'#{str}'"
       data = String.split(str, "|")
-      registerMsg(clientS, data)
+      registerMsg(clientS, str)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
@@ -99,7 +99,13 @@ def client(state) do
       str = to_string(decodeString(bin))
       IO.puts "'#{str}'"
       data = String.split(str, "|")
-      actions(state, data)
+
+      #actions(state, data)
+      # Temp code to send message thru rabbit queue
+      {:ok, conn} = AMQP.Connection.open
+      {:ok, chan} = AMQP.Channel.open(conn)
+      AMQP.Basic.publish chan, "webserver_exchange", "", bin
+
       client(state)
     {:tcp_closed,_} ->
       logoutAndDie(state,"Disconnected")

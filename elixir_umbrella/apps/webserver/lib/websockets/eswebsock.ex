@@ -40,8 +40,8 @@ def rs(server) do
   GenServer.call(server, :resetState)
 end
 
-def notify(server, message) do
-  GenServer.cast(server, {:notify, message})
+def notify(server, str) do
+  GenServer.cast(server, {:notify, str})
 end
 
 def sendToAll(server, dict,you,message) do
@@ -101,9 +101,10 @@ def handle_call(_request, _from, state) do
   {:reply, :ok, state}
 end
 
-def handle_cast({:notify, message}, state) do
-  Lib.trace("eswebsocket notify '#{message}'")
-# TODO
+def handle_cast({:notify, str}, state) do
+  Lib.trace("eswebsocket notify '#{str}'")
+  data = String.split(str, "|")
+  actions(data, state)
   {:noreply, state}
 end
 
@@ -137,6 +138,13 @@ end
 
 def code_change(_oldVsn, state, _extra) do
   {:ok, state}
+end
+
+def actions(["say",data], state) do
+  Lib.trace["Action: say"]
+  msg = CommsMessages.Message.decode(data)
+  Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+  # TODO send msg
 end
 
 end
