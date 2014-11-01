@@ -35,7 +35,8 @@ defmodule Websocket.QConsumer do
 
   defp consume(channel, tag, redelivered, payload) do
     try do
-      IO.puts("Received msg from queue: #{payload}")
+      IO.puts("Received msg from queue")
+      IO.puts "'#{payload}'"
       Websocket.EsWebsock.notify(Websocket.Worker, payload)
       Basic.ack channel, tag
       #Basic.reject channel, tag, requeue: false

@@ -58,6 +58,7 @@ def registerMsg(clientS, ["register",msg]) do
   #reply = Messages.Status.new(status: :OK, message: "Registered")
   reply = "Registered"
   Websocket.Websockets.sendTcpMsg(clientS, reply)
+  Websocket.Users.add_user(Websocket.Users, user.name, clientS)
 
   case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
@@ -104,7 +105,7 @@ def client(state) do
       # Temp code to send message thru rabbit queue
       {:ok, conn} = AMQP.Connection.open
       {:ok, chan} = AMQP.Channel.open(conn)
-      AMQP.Basic.publish chan, "webserver_exchange", "", bin
+      AMQP.Basic.publish chan, "webserver_exchange", "", str
 
       client(state)
     {:tcp_closed,_} ->
