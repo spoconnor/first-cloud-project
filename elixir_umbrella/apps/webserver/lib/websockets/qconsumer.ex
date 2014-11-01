@@ -37,7 +37,7 @@ defmodule Websocket.QConsumer do
     try do
       IO.puts("Received msg from queue")
       IO.puts "'#{payload}'"
-      Websocket.EsWebsock.notify(Websocket.Worker, payload)
+      Websocket.Users.notify(Websocket.Users, payload)
       Basic.ack channel, tag
       #Basic.reject channel, tag, requeue: false
     rescue

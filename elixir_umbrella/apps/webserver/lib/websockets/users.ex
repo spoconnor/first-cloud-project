@@ -5,15 +5,13 @@ defmodule Websocket.Users do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  def add_user(server, user, socket) do
-    GenServer.cast(server, {:add, user, socket})
+  def add_user(server, user, notify_pid) do
+    GenServer.cast(server, {:add, user, notify_pid})
   end
 
-  def notify_user(server, user, data) do
-    GenServer.cast(server, {:notify, user, data})
+  def notify(server, payload) do
+    GenServer.cast(server, {:notify, payload})
   end
-
-  
 
   def init(:ok) do
     Lib.trace("Starting Websocket.Users")
@@ -21,17 +19,25 @@ defmodule Websocket.Users do
     {:ok, users}
   end
 
-  def handle_cast({:add, user, socket}, users) do
+  def handle_cast({:add, user, notify_pid}, users) do
     Lib.trace("Adding user #{user}")
-    newUsers = HashDict.put(users, user, socket)
+    newUsers = HashDict.put(users, user, notify_pid)
     {:noreply, newUsers}
   end
 
-  def handle_cast({:notify, user, data}, users) do
+  def handle_cast({:notify, payload}, users) do
     #todo
-    Lib.trace("Notifying user")
+    Lib.trace("Notifying users")
+    data = String.split(payload, "|")
+    actions(data, users)
     {:noreply, users}
   end
 
+  defp actions(["say", data], users) do
+    Lib.trace("Action: say")
+    #msg = CommsMessages.Mesage.decode(data)
+    #Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+    # TODO - send message
+  end
 end
 

@@ -58,7 +58,8 @@ def registerMsg(clientS, ["register",msg]) do
   #reply = Messages.Status.new(status: :OK, message: "Registered")
   reply = "Registered"
   Websocket.Websockets.sendTcpMsg(clientS, reply)
-  Websocket.Users.add_user(Websocket.Users, user.name, clientS)
+  notify_pid = spawn(fn() -> notify_thread(clientS) end)
+  Websocket.Users.add_user(Websocket.Users, user.name, notify_pid)
 
   case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
@@ -117,6 +118,15 @@ def client(state) do
       logoutAndDie(state,"Crash")
     after idleTime ->
       logoutAndDie(state,"Idle")
+  end
+end
+
+def notify_thread(clientS) do
+  IO.puts("Client notify_thread")
+  receive do
+    {data} ->
+      IO.puts("Client notify thread recd #{data}")
+      notify_thread(clientS)
   end
 end
 
