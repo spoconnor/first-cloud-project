@@ -13,7 +13,7 @@ def accept_connections(s) do
   {:ok, clientS} = :gen_tcp.accept(s)
   spawn(fn() -> accept_connections(s) end)
   receive do
-    {tcp,_,bin} ->
+    {_tcp,_,bin} ->
       reply =  Websocket.Websockets.handshake(bin)
       Lib.trace("Reply: #{reply} to '#{:erlang.port_info(clientS)[:id]}'")
       Lib.trace(:erlang.port_info(clientS))
@@ -28,7 +28,7 @@ end
 def step2(clientS) do
   Lib.trace("Connection Step2")
   receive do
-    {tcp, _, bin1} ->
+    {_tcp, _, bin1} ->
       IO.puts "Received something..."
       str = to_string(decodeString(bin1))
       IO.puts "'#{str}'"
@@ -72,7 +72,7 @@ def decodeString(data) do
 end
 # encrypted string marker
 def decodeStream([129,b2|t]) do
-  length = b2 &&& 127  # bitwise AND, unless special case
+  #length = b2 &&& 127  # bitwise AND, unless special case
   #indexFirstMask = 2   # if not a special case
   # TODO - For message length > 126 bytes
   #if (length == 126)   # if a special case, change indexFirstMask
@@ -85,7 +85,7 @@ def decodeStream([129,b2|t]) do
   decodeBytes(data,masks,[])
 end
 
-def decodeBytes([],masks,decoded) do
+def decodeBytes([],_masks,decoded) do
   decoded
 end
 def decodeBytes(data,masks,decoded) do
@@ -97,7 +97,7 @@ end
 def client(state) do
   IO.puts("Client #{state.id} receive loop")
   receive do
-    {tcp,_,bin} -> 
+    {_tcp,_,bin} -> 
       str = to_string(decodeString(bin))
       Lib.trace("received:", str)
       data = String.split(str, "|")
@@ -124,8 +124,9 @@ end
 def notify_thread(clientS) do
   IO.puts("Client notify_thread")
   receive do
-    {data} ->
+    data ->
       IO.puts("Client notify thread recd #{data}")
+      Websocket.Websockets.sendTcpMsg(clientS, data)
       notify_thread(clientS)
   end
 end
@@ -135,7 +136,7 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-def actions(state, ["say",data]) do
+def actions(_state, ["say",data]) do
   Lib.trace("Received: Message")
   msg = CommsMessages.Message.decode(data)
   Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
@@ -149,19 +150,19 @@ def actions(state, ["move",data]) do
   Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
 
-def actions(state, ["action"|data]) do
+def actions(_state, ["action"|_data]) do
   Lib.trace("Recevied: Action")
   #msg = Messages.Action.decode(data)
   #Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
 end
 
-def actions(state, ["object"|data]) do
+def actions(_state, ["object"|_data]) do
   Lib.trace("Recevied: Object")
   #msg = Messages.Object.decode(data)
   #Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
 end
 
-def actions(state, _unknown) do
+def actions(_state, _unknown) do
   Lib.trace("Received: Unknown")
 end
 

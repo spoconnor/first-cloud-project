@@ -30,12 +30,17 @@ defmodule Websocket.Users do
     Lib.trace("Notifying users", payload)
     data = String.split(payload, "|")
     actions(data, users)
+    Enum.each users, fn {user, notify_pid} -> 
+      # TODO - select target of message
+      IO.puts("Sending notify to #{user}")
+      send notify_pid, payload
+    end
     {:noreply, users}
   end
 
   defp actions(["say", data], users) do
     Lib.trace("Action: say")
-    msg = CommsMessages.Mesage.decode(data)
+    msg = CommsMessages.Message.decode(data)
     Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
     
   end

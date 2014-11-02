@@ -27,7 +27,7 @@ def handshake(bin,callback) do
     #             data = :nil
     #end
     httpRequest = bin
-    data = :nil
+    #data = :nil
     #Lib.trace("HttpRequest: #{httpRequest}")
     #Lib.trace("HttpData: #{data}")
     #fields = :binary.split(httpRequest,<<0x0d0a20::16>>,[:global])
@@ -36,14 +36,14 @@ def handshake(bin,callback) do
     Lib.trace("Fields: #{fields}")
     %Websocket.Websock{
                key: key,
-               key1: key1,
-               key2: key2,
-               version: version,
-               protocol: protocol,
+               key1: _key1,
+               key2: _key2,
+               version: _version,
+               protocol: _protocol,
                origin: origin,
-               request: request,
-               host: host,
-               port: port
+               request: _request,
+               host: _host,
+               port: _port
             } = parseKeys(fields,%Websocket.Websock{allowed: allowedOrigin, callback: callback})
 
      #case (key1===:nil or key2===:nil) do
@@ -94,8 +94,8 @@ end
 def encodeStream(msg) do
   #masks = [:random.uniform(255), :random.uniform(255),
   #         :random.uniform(255), :random.uniform(255)]
-  #encoded = [129, Enum.count(msg) ||| 128] ++ masks
-  encoded = [129, Enum.count(msg)] ++ msg
+  #[129, Enum.count(msg) ||| 128] ++ masks
+  [129, Enum.count(msg)] ++ msg
 end
 #def encodeBytes([],encoded) do
 #  encoded
@@ -176,7 +176,7 @@ def parseKeys(["Origin:",origin|t],websock) do
   Lib.trace("ParseKeys Origin: #{origin}")
   parseKeys(t,%{websock | origin: origin})
 end
-def parseKeys([], %Websocket.Websock{origin: :undefined, host: :undefined} = w) do
+def parseKeys([], %Websocket.Websock{origin: :undefined, host: :undefined} = _w) do
   Lib.trace("ParseKeys Undefined")
   :nil
 end
