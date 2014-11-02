@@ -99,10 +99,10 @@ def client(state) do
   receive do
     {tcp,_,bin} -> 
       str = to_string(decodeString(bin))
-      IO.puts "'#{str}'"
+      Lib.trace("received:", str)
       data = String.split(str, "|")
 
-      #actions(state, data)
+      actions(state, data)
       # Temp code to send message thru rabbit queue
       {:ok, conn} = AMQP.Connection.open
       {:ok, chan} = AMQP.Channel.open(conn)
@@ -139,7 +139,7 @@ def actions(state, ["say",data]) do
   Lib.trace("Received: Message")
   msg = CommsMessages.Message.decode(data)
   Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
-  Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
+  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
 end
 
 def actions(state, ["move",data]) do

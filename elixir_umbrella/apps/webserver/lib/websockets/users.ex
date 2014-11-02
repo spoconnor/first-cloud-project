@@ -27,7 +27,7 @@ defmodule Websocket.Users do
 
   def handle_cast({:notify, payload}, users) do
     #todo
-    Lib.trace("Notifying users")
+    Lib.trace("Notifying users", payload)
     data = String.split(payload, "|")
     actions(data, users)
     {:noreply, users}
@@ -35,9 +35,9 @@ defmodule Websocket.Users do
 
   defp actions(["say", data], users) do
     Lib.trace("Action: say")
-    #msg = CommsMessages.Mesage.decode(data)
-    #Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
-    # TODO - send message
+    msg = CommsMessages.Mesage.decode(data)
+    Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+    
   end
 end
 
