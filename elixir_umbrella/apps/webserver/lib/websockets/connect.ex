@@ -41,10 +41,8 @@ end
 
 # RegisterClient = 1
 def registerMsg(clientS, ["register",msg]) do
-  Lib.trace("Received: RegisterClient #{msg}")
   user = CommsMessages.RegisterClientRequest.decode(msg)
-  Lib.trace("#{user.name}")
-  #Lib.trace("#{data}")
+  Lib.trace("Registering #{user.name}")
   #fields=String.split(data, [" ", "\r\n"])
   #Lib.trace("#{fields}")
 
@@ -103,7 +101,7 @@ def client(state) do
       data = String.split(str, "|")
 
       actions(state, data)
-      # Temp code to send message thru rabbit queue
+      # Send message thru rabbit queue
       {:ok, conn} = AMQP.Connection.open
       {:ok, chan} = AMQP.Channel.open(conn)
       AMQP.Basic.publish chan, "webserver_exchange", "", str
@@ -147,7 +145,7 @@ def actions(state, ["move",data]) do
   Lib.trace("Received: Movement")
   msg = CommsMessages.Movement.decode(data)
   Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
-  Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
+  #Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
 
 def actions(_state, ["action"|_data]) do

@@ -2,8 +2,7 @@ defmodule Websocket.Websockets do
 
 # TODO
 def allowedOrigin do
-  [ "rp.eliteskills.com",
-    "jimmyr.com",
+  [ "sean.com",
     "localhost",
     "76.74.253.61.844"
   ]
@@ -17,22 +16,9 @@ def handshake(bin) do
 end
 def handshake(bin,callback) do
     Lib.trace("Handshaking...")
-    Lib.trace(bin)
-    #split = :binary.split(bin,<<0x0d0a0d0a::32>>) 
-    #case split do
-    #    [httpRequest|[data]] -> :nil
-    #    [httpRequest|data] -> :nil
-    #    [httpRequest] -> data = :nil
-    #    httpRequest -> httpRequest = :nil
-    #             data = :nil
-    #end
+    #Lib.trace(bin)
     httpRequest = bin
-    #data = :nil
-    #Lib.trace("HttpRequest: #{httpRequest}")
-    #Lib.trace("HttpData: #{data}")
-    #fields = :binary.split(httpRequest,<<0x0d0a20::16>>,[:global])
     fields = String.split(httpRequest, [" ", "\r\n"]) #<<0x0d0a::16>>])
-    #:lists.foreach(fn(a) -> Lib.trace("Field: #{a}") end, fields)
     Lib.trace("Fields: #{fields}")
     %Websocket.Websock{
                key: key,
@@ -46,41 +32,19 @@ def handshake(bin,callback) do
                port: _port
             } = parseKeys(fields,%Websocket.Websock{allowed: allowedOrigin, callback: callback})
 
-     #case (key1===:nil or key2===:nil) do
-     #    :false -> newWay=:true
-     #    :true -> newWay=:false
-     #end
-
     # TODO - filter unsupported protocols
 
     acceptKey = :base64.encode(:crypto.hash(:sha, <<"#{key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11">>))
 
     ["HTTP/1.1 101 ", 
      #"WebSocket",
-      "Switching Protocols\r\n",
-     #case newWay do 
-     #  :true -> "WebSocket" 
-     #  :false -> "Web Socket" 
-     #end,
+     "Switching Protocols\r\n",
      #"Protocol Handshake\r\n",
      "Upgrade: websocket\r\n",
      "Connection: Upgrade\r\n",
-     #case newWay do
-     #    :true ->
-     #       [
-             "Sec-WebSocket-Origin: #{origin}\r\n",
-     #         "Sec-WebSocket-Location: ws://#{host}:#{port}\r\n",
-              "Sec-WebSocket-Accept: #{acceptKey}\r\n",
-              #"Sec-WebSocket-Protocol: sample\r\n",
-              #"#{request}"
-     #         :erlang.md5(<<key1::32, key2::32,data>>)
-     #        ]
-     #    :false ->
-     #        ["WebSocket-Origin: #{Origin}\r\n",
-     #         "WebSocket-Location: ws://#{host}:#{port}#{request}\r\n\r\n"
-     #        ]
-              "\r\n"
-     #end
+     "Sec-WebSocket-Origin: #{origin}\r\n",
+     "Sec-WebSocket-Accept: #{acceptKey}\r\n",
+     "\r\n"
     ]
 end
 
@@ -104,7 +68,6 @@ end
 #  [byte|msg2]=msg
 #  encodeBytes(msg2, masks2++[mask], encoded ++ [byte ^^^ mask])
 #end
-
 
 def alert(clientS,msg) do
   msg(clientS,"alert",msg)
@@ -131,59 +94,48 @@ def die(clientS,msg) do
 end
 
 def parseKeys(["GET","/",request|t],websock) do
-  Lib.trace("ParseKeys Get: #{request}")
+  #Lib.trace("ParseKeys Get: #{request}")
   #size = :binary.byte_size(request)-9
   #<<request1::size,_>> = request
   parseKeys(t,%{websock | request: request})
 end
 
 def parseKeys(["Host:",host|t],websock) do
-  Lib.trace("ParseKeys Host: #{host}")
+  #Lib.trace("ParseKeys Host: #{host}")
   uri=URI.parse("ws://{host}")
   parseKeys(t,%{websock | host: uri.host, port: uri.port})
 end
 
 def parseKeys(["Upgrade:","websocket"|t],websock) do
-  Lib.trace("ParseKeys Upgrade: websocket")
+  #Lib.trace("ParseKeys Upgrade: websocket")
   parseKeys(t,websock)
 end
 
 def parseKeys(["Sec-WebSocket-Protocol:",protocol|t],websock) do
-  Lib.trace("ParseKeys Sec-WebSocket-Protocol: #{protocol}")
+  #Lib.trace("ParseKeys Sec-WebSocket-Protocol: #{protocol}")
   parseKeys(t,%{websock | protocol: protocol})
 end
 
 def parseKeys(["Sec-WebSocket-Key:",key|t],websock) do
-  Lib.trace("ParseKeys Sec-WebSocket-Key: #{key}")
-  #parseKeys(t,%{websock | key: genKey(key,[],0)})
+  #Lib.trace("ParseKeys Sec-WebSocket-Key: #{key}")
   parseKeys(t,%{websock | key: key})
 end
-#def parseKeys(["Sec-WebSocket-key1:",key|t],websock) do
-#  Lib.trace("ParseKeys Sec-WebSocket-Key1: #{key}")
-#  parseKeys(t,%{websock | key1: genKey(key,[],0)})
-#end
-#def parseKeys(["Sec-WebSocket-Key2:",key|t],websock) do
-#  Lib.trace("ParseKeys Sec-WebSocket-Key2: #{key}")
-#  parseKeys(t,%{websock | key2: genKey(key,[],0)})
-#end
 
 def parseKeys(["Sec-WebSocket-Version:",version|t],websock) do
-  Lib.trace("ParseKeys Sec-WebSocket-Version: #{version}")
+  #Lib.trace("ParseKeys Sec-WebSocket-Version: #{version}")
   parseKeys(t,%{websock | version: version})
 end
 
 def parseKeys(["Origin:",origin|t],websock) do
-  Lib.trace("ParseKeys Origin: #{origin}")
+  #Lib.trace("ParseKeys Origin: #{origin}")
   parseKeys(t,%{websock | origin: origin})
 end
 def parseKeys([], %Websocket.Websock{origin: :undefined, host: :undefined} = _w) do
-  Lib.trace("ParseKeys Undefined")
+  #Lib.trace("ParseKeys Undefined")
   :nil
 end
-def parseKeys([], %Websocket.Websock{} = w)
-  do
-  Lib.trace("ParseKeys end")
-
+def parseKeys([], %Websocket.Websock{} = w) do
+  #Lib.trace("ParseKeys end")
   case  w.allowed do
     any ->
       test=:true
@@ -204,16 +156,16 @@ def parseKeys([], %Websocket.Websock{} = w)
 end
 
 def parseKeys([],w) do
-  Lib.trace("ParseKeys [] #{w}")
+  #Lib.trace("ParseKeys [] #{w}")
   throw("Missing Information")
 end
 
 def parseKeys([ignore|t], %Websocket.Websock{callback: :false} = w) do
-  Lib.trace("ParseKeys Ignoring [#{ignore}|t] callback=false")
+  #Lib.trace("ParseKeys Ignoring [#{ignore}|t] callback=false")
   parseKeys(t,w)
 end
 def parseKeys([ignore|t], %Websocket.Websock{} = w) do
-  Lib.trace("ParseKeys Ignoring [#{ignore}|t]")
+  #Lib.trace("ParseKeys Ignoring [#{ignore}|t]")
   f=w.callback
   parseKeys(t, %{w | callbackData: f})
 end
