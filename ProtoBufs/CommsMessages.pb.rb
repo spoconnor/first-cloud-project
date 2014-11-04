@@ -11,7 +11,7 @@
 # 
 # //enum MessageTypes {
 # //  RegisterClientRequest = 1;
-# //  Status = 2;
+# //  RegisterClientResponse = 2;
 # //  Message = 3;
 # //  Movement = 4;
 # //  Action = 5;
@@ -23,21 +23,16 @@
 #   required string name = 1;
 # }
 # 
-# message Status
+# message RegisterClientResponse
 # {
-#   required StatusType status = 1;
-#   required string message = 2;
-# 
-#   enum StatusType {
-#     OK = 0;
-#     ERROR = 1;
-#   }
+#   required string motd = 1;
+#   required int32 objectid = 2;
 # }
 # 
 # message Message 
 # {
-#   required string from = 1;
-#   required string target = 2;
+#   required int32 from = 1;
+#   required int32 target = 2;
 #   required string message = 3;
 # }
 # 
@@ -49,7 +44,7 @@
 # 
 # message Movement
 # {
-#   required string object = 1;
+#   required int32 object = 1;
 #   required Coords from = 2;
 #   required Coords to = 3;
 #   required int32 speed = 4;
@@ -57,8 +52,8 @@
 # 
 # message Action
 # {
-#   required string from = 1;
-#   required string target = 2;
+#   required int32 from = 1;
+#   required Coords target = 2;
 #   required string what = 3;
 #   required string with = 4;
 # }
@@ -130,20 +125,15 @@ module CommsMessages
     defined_in __FILE__
     required :string, :name, 1
   end
-  class Status < ::Protobuf::Message
+  class RegisterClientResponse < ::Protobuf::Message
     defined_in __FILE__
-    required :StatusType, :status, 1
-    required :string, :message, 2
-    class StatusType < ::Protobuf::Enum
-      defined_in __FILE__
-      OK = value(:OK, 0)
-      ERROR = value(:ERROR, 1)
-    end
+    required :string, :motd, 1
+    required :int32, :objectid, 2
   end
   class Message < ::Protobuf::Message
     defined_in __FILE__
-    required :string, :from, 1
-    required :string, :target, 2
+    required :int32, :from, 1
+    required :int32, :target, 2
     required :string, :message, 3
   end
   class Coords < ::Protobuf::Message
@@ -153,15 +143,15 @@ module CommsMessages
   end
   class Movement < ::Protobuf::Message
     defined_in __FILE__
-    required :string, :object, 1
+    required :int32, :object, 1
     required :Coords, :from, 2
     required :Coords, :to, 3
     required :int32, :speed, 4
   end
   class Action < ::Protobuf::Message
     defined_in __FILE__
-    required :string, :from, 1
-    required :string, :target, 2
+    required :int32, :from, 1
+    required :Coords, :target, 2
     required :string, :what, 3
     required :string, :with, 4
   end
