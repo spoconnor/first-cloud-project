@@ -26,11 +26,11 @@
 #     required int32 objectid = 2;
 #   }
 #   
-#   message Message 
+#   message Say 
 #   {
 #     required int32 from = 1;
 #     required int32 target = 2;
-#     required string message = 3;
+#     required string text = 3;
 #   }
 #   
 #   message Coords
@@ -74,7 +74,7 @@
 #     EPing = 1;
 #     ERegister = 2;
 #     ERegistered  = 3;
-#     EMessage = 4;
+#     ESay = 4;
 #     EMovement = 5;
 #     EAction = 6;
 #     EObject = 7;
@@ -87,7 +87,7 @@
 #   optional Ping ping  = 2;
 #   optional Register register  = 3;
 #   optional Registered registered = 4;
-#   optional Message message = 5;
+#   optional Say say = 5;
 #   optional Move move = 6;
 #   optional Action action = 7;
 #   optional Object object = 8;
@@ -95,7 +95,7 @@
 # 
 # //service WebService {
 # //  rpc RegisterClient (RegisterClientRequest) returns (Status);
-# //  rpc Chat (Message) returns (Status);
+# //  rpc Chat (Say) returns (Status);
 # //  rpc DoAction (Action) returns (Status);
 # //  rpc Move (Movement) returns (Status);
 # //}
@@ -155,11 +155,11 @@ module CommsMessages
       required :string, :motd, 1
       required :int32, :objectid, 2
     end
-    class Message < ::Protobuf::Message
+    class Say < ::Protobuf::Message
       defined_in __FILE__
       required :int32, :from, 1
       required :int32, :target, 2
-      required :string, :message, 3
+      required :string, :text, 3
     end
     class Coords < ::Protobuf::Message
       defined_in __FILE__
@@ -199,7 +199,7 @@ module CommsMessages
       EPing = value(:EPing, 1)
       ERegister = value(:ERegister, 2)
       ERegistered = value(:ERegistered, 3)
-      EMessage = value(:EMessage, 4)
+      ESay = value(:ESay, 4)
       EMovement = value(:EMovement, 5)
       EAction = value(:EAction, 6)
       EObject = value(:EObject, 7)
@@ -208,7 +208,7 @@ module CommsMessages
     optional :Ping, :ping, 2
     optional :Register, :register, 3
     optional :Registered, :registered, 4
-    optional :Message, :message, 5
+    optional :Say, :say, 5
     optional :Move, :move, 6
     optional :Action, :action, 7
     optional :Object, :object, 8

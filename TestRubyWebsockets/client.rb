@@ -61,7 +61,7 @@ while (1) do
   when "2"
     puts "Say"
     printf("Message:")
-    msg.msgtype = CommsMessages::Base::MsgType::EMessage
+    msg.msgtype = CommsMessages::Base::MsgType::ESay
     msg.say = CommsMessages::Base::Say.new
     msg.say.from = objectid
     msg.say.target = 999

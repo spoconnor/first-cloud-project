@@ -38,7 +38,7 @@ defmodule Websocket.Users do
     {:noreply, users}
   end
 
-  defp actions(%CommsMessages.Base{action: :'CommsMessages.Base.MsgType.ESay', say: msg}, users) do
+  defp actions(%CommsMessages.Base{action: :'ESay', say: msg}, users) do
     Lib.trace("Action: say")
     Lib.trace("#{msg.from}, #{msg.target}, #{msg.say}")
   end
