@@ -29,18 +29,16 @@ def step2(clientS) do
   Lib.trace("Connection Step2")
   receive do
     {_tcp, _, bin1} ->
-      IO.puts "Received something..."
       str = to_string(decodeString(bin1))
-      IO.puts "'#{str}'"
-      data = String.split(str, "|")
-      registerMsg(clientS, data)
+      Lib.trace("Received:", str)
+      registerMsg(clientS, str)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
 
 # RegisterClient = 1
-def registerMsg(clientS, ["register",msg]) do
+def registerMsg(clientS, <<1::utf8,msg::binary>>) do
   user = CommsMessages.RegisterClientRequest.decode(msg)
   Lib.trace("Registering #{user.name}")
   #fields=String.split(data, [" ", "\r\n"])
@@ -53,15 +51,17 @@ def registerMsg(clientS, ["register",msg]) do
   {:ok,{ip,_}} = :inet.peername(clientS)
   state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
 
-  #reply = Messages.Status.new(status: :OK, message: "Registered")
-  reply = "Registered"
-  Websocket.Websockets.sendTcpMsg(clientS, reply)
   notify_pid = spawn(fn() -> notify_thread(clientS) end)
   Websocket.Users.add_user(Websocket.Users, user.name, notify_pid)
 
   case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
-    id -> client(%Websocket.Simple{id: id, sock: clientS})
+    id ->
+      Lib.trace("ObjectId: #{id}")
+      reply = CommsMessages.RegisterClientResponse.new(objectid: id, motd: "Welcome!")
+      data = <<2::utf8>> <> CommsMessages.RegisterClientResponse.encode(reply)
+      Websocket.Websockets.sendTcpMsg(clientS, data)
+      client(%Websocket.Simple{id: id, sock: clientS})
   end
 end
 

@@ -17,10 +17,32 @@ require "CommsMessages.pb.rb"
 #client = WebSocket.new(ARGV[0])
 client = WebSocket.new("ws://localhost:8081")
 puts("Connected")
+objectid = 0
 
 Thread.new() do
   while data = client.receive()
-    printf("Received: %p\n", data)
+    printf("Received [%p]\n", data)
+    msgtype = data.unpack("c")
+    case msgtype
+    when [2]
+      puts("Registered")
+      data2 = data.unpack("c*")
+      msg = CommsMessages::RegisterClientResponse.new
+      msg.parse_from_string(data2[1..9999].pack("c*"))
+      objectid = msg.objectid
+      puts("id: #{objectid}")
+      puts("Motd: #{msg.motd}")
+    when [3]
+      puts("Message")
+      data2 = data.unpack("c*")
+      msg = CommsMessages::Message.new
+      msg.parse_from_string(data2[1..9999].pack("c*"))
+      puts("From: #{msg.from}")
+      puts("Target: #{msg.target}")
+      puts("Message: #{msg.message}")
+    else
+      puts("Unknown")
+    end
   end
   printf("Closing reader")
   exit()
@@ -40,20 +62,22 @@ while (1) do
     printf("Name:")
     msg.name = gets.chomp
     bin = msg.to_s
-    client.send("register|" + bin)
+    data = [1] + bin.unpack("c*")
+    client.send(data.pack("c*"))
   when "2"
     puts "Say"
     msg = CommsMessages::Message.new
     printf("Message:")
-    msg.from = "me"
-    msg.target = "you"
+    msg.from = objectid
+    msg.target = 999
     msg.message = gets.chomp
     bin = msg.to_s
-    client.send("say|" + bin)
+    data = [3] + bin.unpack("c*")
+    client.send(data.pack("c*"))
   when "3"
     puts "Move"
     msg = CommsMessages::Movement.new
-    msg.object = "me"
+    msg.object = objectid
     msg.speed = 10
     msg.from = CommsMessages::Coords.new
     printf("FromX:")

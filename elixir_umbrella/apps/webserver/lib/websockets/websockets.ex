@@ -49,6 +49,7 @@ def handshake(bin,callback) do
 end
 
 def sendTcpMsg(clientS, msg) do
+  Lib.trace("Sending", msg)
   :gen_tcp.send(clientS, encodeString(msg))
 end
 
