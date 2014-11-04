@@ -9,12 +9,16 @@
 # 
 # option optimize_for = SPEED;
 # 
-# message RegisterClientRequest
+# message Ping
+# {
+# }
+# 
+# message Register
 # {
 #   required string name = 1;
 # }
 # 
-# message RegisterClientResponse
+# message Registered
 # {
 #   required string motd = 1;
 #   required int32 objectid = 2;
@@ -33,7 +37,7 @@
 #   required int32 y = 2;
 # }
 # 
-# message Movement
+# message Move
 # {
 #   required int32 object = 1;
 #   required Coords from = 2;
@@ -66,24 +70,26 @@
 # 
 # message Base {
 #   enum MsgType {
-#     RegisterClientRequest = 1;
-#     RegisterClientResponse = 2;
-#     Message = 3;
-#     Movement = 4;
-#     Action = 5;
-#     Object = 6;
+#     Ping = 1;
+#     Register = 2;
+#     Registered  = 3;
+#     Message = 4;
+#     Movement = 5;
+#     Action = 6;
+#     Object = 7;
 #   }
 # 
 #   // Identifies which field is filled in.
 #   required MsgType msgtype = 1;
 # 
 #   // One of the following will be filled in.
-#   optional RegisterClientRequest registerClientRequest = 2;
-#   optional RegisterClientResponse registerClientResponse = 3;
-#   optional Message message = 4;
-#   optional Movement movement = 5;
-#   optional Action action = 6;
-#   optional Object object = 7;
+#   optional Ping ping  = 2;
+#   optional Register register  = 3;
+#   optional Registered registered = 4;
+#   optional Message message = 5;
+#   optional Move move = 6;
+#   optional Action action = 7;
+#   optional Object object = 8;
 # }
 # 
 # //service WebService {
@@ -134,11 +140,14 @@ require 'protobuf/message/extend'
 
 module CommsMessages
   ::Protobuf::OPTIONS[:"optimize_for"] = :SPEED
-  class RegisterClientRequest < ::Protobuf::Message
+  class Ping < ::Protobuf::Message
+    defined_in __FILE__
+  end
+  class Register < ::Protobuf::Message
     defined_in __FILE__
     required :string, :name, 1
   end
-  class RegisterClientResponse < ::Protobuf::Message
+  class Registered < ::Protobuf::Message
     defined_in __FILE__
     required :string, :motd, 1
     required :int32, :objectid, 2
@@ -154,7 +163,7 @@ module CommsMessages
     required :int32, :x, 1
     required :int32, :y, 2
   end
-  class Movement < ::Protobuf::Message
+  class Move < ::Protobuf::Message
     defined_in __FILE__
     required :int32, :object, 1
     required :Coords, :from, 2
@@ -186,19 +195,21 @@ module CommsMessages
     defined_in __FILE__
     class MsgType < ::Protobuf::Enum
       defined_in __FILE__
-      RegisterClientRequest = value(:RegisterClientRequest, 1)
-      RegisterClientResponse = value(:RegisterClientResponse, 2)
-      Message = value(:Message, 3)
-      Movement = value(:Movement, 4)
-      Action = value(:Action, 5)
-      Object = value(:Object, 6)
+      Ping = value(:Ping, 1)
+      Register = value(:Register, 2)
+      Registered = value(:Registered, 3)
+      Message = value(:Message, 4)
+      Movement = value(:Movement, 5)
+      Action = value(:Action, 6)
+      Object = value(:Object, 7)
     end
     required :MsgType, :msgtype, 1
-    optional :RegisterClientRequest, :registerClientRequest, 2
-    optional :RegisterClientResponse, :registerClientResponse, 3
-    optional :Message, :message, 4
-    optional :Movement, :movement, 5
-    optional :Action, :action, 6
-    optional :Object, :object, 7
+    optional :Ping, :ping, 2
+    optional :Register, :register, 3
+    optional :Registered, :registered, 4
+    optional :Message, :message, 5
+    optional :Move, :move, 6
+    optional :Action, :action, 7
+    optional :Object, :object, 8
   end
 end
