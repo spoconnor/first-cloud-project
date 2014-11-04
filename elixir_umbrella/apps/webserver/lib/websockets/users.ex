@@ -28,7 +28,8 @@ defmodule Websocket.Users do
   def handle_cast({:notify, payload}, users) do
     #todo
     Lib.trace("Notifying users", payload)
-    actions(payload, users)
+    msg = CommsMessages.Base.decode(payload)
+    actions(payload, msg)
     Enum.each users, fn {user, notify_pid} -> 
       # TODO - select target of message
       IO.puts("Sending notify to #{user}")
@@ -37,11 +38,13 @@ defmodule Websocket.Users do
     {:noreply, users}
   end
 
-  defp actions(<<3::utf8,data::binary>>, users) do
+  defp actions(%CommsMessages.Base{action: :'CommsMessages.Base.MsgType.ESay', say: msg}, users) do
     Lib.trace("Action: say")
-    msg = CommsMessages.Message.decode(data)
-    Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
-    
+    Lib.trace("#{msg.from}, #{msg.target}, #{msg.say}")
+  end
+
+  defp actions(_unknown, users) do
+    Lib.trace("Action: Unknown!")
   end
 end
 

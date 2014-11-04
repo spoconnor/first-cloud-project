@@ -22,24 +22,19 @@ objectid = 0
 Thread.new() do
   while data = client.receive()
     printf("Received [%p]\n", data)
-    msgtype = data.unpack("c")
-    case msgtype
-    when [2]
+    msg = CommsMessages::Base.new
+    msg.parse_from_string(data)
+    case msg.msgtype
+    when CommsMessages::Base::MsgType::ERegistered
       puts("Registered")
-      data2 = data.unpack("c*")
-      msg = CommsMessages::RegisterClientResponse.new
-      msg.parse_from_string(data2[1..9999].pack("c*"))
-      objectid = msg.objectid
+      objectid = msg.registered.objectid
       puts("id: #{objectid}")
-      puts("Motd: #{msg.motd}")
-    when [3]
-      puts("Message")
-      data2 = data.unpack("c*")
-      msg = CommsMessages::Message.new
-      msg.parse_from_string(data2[1..9999].pack("c*"))
-      puts("From: #{msg.from}")
-      puts("Target: #{msg.target}")
-      puts("Message: #{msg.message}")
+      puts("Motd: #{msg.registered.motd}")
+    when CommsMessages::Base::MsgType::ESay
+      puts("Say")
+      puts("From: #{msg.say.from}")
+      puts("Target: #{msg.say.target}")
+      puts("Say: #{msg.say.text}")
     else
       puts("Unknown")
     end
@@ -55,48 +50,47 @@ while (1) do
   puts("[3] move")
   puts("[4] exit")
   selection = gets.chomp
+  msg = CommsMessages::Base.new
   case selection
   when "1"
     puts "Register"
-    msg = CommsMessages::RegisterClientRequest.new
     printf("Name:")
-    msg.name = gets.chomp
-    bin = msg.to_s
-    data = [1] + bin.unpack("c*")
-    client.send(data.pack("c*"))
+    msg.msgtype = CommsMessages::Base::MsgType::ERegister
+    msg.register = CommsMessages::Base::Register.new
+    msg.register.name = gets.chomp
   when "2"
     puts "Say"
-    msg = CommsMessages::Message.new
     printf("Message:")
-    msg.from = objectid
-    msg.target = 999
-    msg.message = gets.chomp
-    bin = msg.to_s
-    data = [3] + bin.unpack("c*")
-    client.send(data.pack("c*"))
+    msg.msgtype = CommsMessages::Base::MsgType::EMessage
+    msg.say = CommsMessages::Base::Say.new
+    msg.say.from = objectid
+    msg.say.target = 999
+    msg.say.text = gets.chomp
   when "3"
     puts "Move"
-    msg = CommsMessages::Movement.new
-    msg.object = objectid
-    msg.speed = 10
-    msg.from = CommsMessages::Coords.new
+    msg.msgtype = CommsMessages::Base::MsgType::EMove
+    msg.move = CommsMessages::Base::Move.new
+    msg.move.object = objectid
+    msg.move.speed = 10
+    msg.move.from = CommsMessages::Base::Coords.new
     printf("FromX:")
-    msg.from.x = Integer(gets.chomp)
+    msg.movement.from.x = Integer(gets.chomp)
     printf("FromY:")
-    msg.from.y = Integer(gets.chomp)
-    msg.to = CommsMessages::Coords.new
+    msg.movement.from.y = Integer(gets.chomp)
+    msg.movement.to = CommsMessages::Base::Coords.new
     printf("ToX:")
-    msg.to.x = Integer(gets.chomp)
+    msg.movement.to.x = Integer(gets.chomp)
     printf("ToY:")
-    msg.to.y = Integer(gets.chomp)
-    bin = msg.to_s
-    client.send("move|" + bin)
+    msg.movement.to.y = Integer(gets.chomp)
   when "4"
     puts "Exit"
     exit
   else
     puts "Unknown option"
+    msg.msgtype = CommsMessages::Base::MsgType::EPing
+    msg.ping.from = CommsMessages::Base::Ping.new
   end
+  client.send(msg.to_s)
   #puts("Sent: %p\n", data)
 end
 puts("Client closing")

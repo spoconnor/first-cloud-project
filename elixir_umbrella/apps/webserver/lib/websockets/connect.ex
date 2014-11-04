@@ -31,39 +31,41 @@ def step2(clientS) do
     {_tcp, _, bin1} ->
       str = to_string(decodeString(bin1))
       Lib.trace("Received:", str)
-      registerMsg(clientS, str)
+      msg = CommsMessages.Base.decode(str)
+      registerMsg(clientS, msg.msgtype, msg)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
 
-# RegisterClient = 1
-def registerMsg(clientS, <<1::utf8,msg::binary>>) do
-  user = CommsMessages.RegisterClientRequest.decode(msg)
-  Lib.trace("Registering #{user.name}")
-  #fields=String.split(data, [" ", "\r\n"])
-  #Lib.trace("#{fields}")
-
+# RegisterClient
+def registerMsg(clientS, msgtype, msg) do
+  Lib.trace("Received:", msg.msgtype)
+  register = msg.register
+  Lib.trace("Registering #{register.name}")
   #if (length(user.name)>25) do
   #  Websocket.Websockets.die("Name too long")
   #end
-  
   {:ok,{ip,_}} = :inet.peername(clientS)
-  state = %Websocket.User{user: user.name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
+  state = %Websocket.User{user: register.name, sock: clientS, x: 1,y: 1, ip: ip, pid: self()}
 
   notify_pid = spawn(fn() -> notify_thread(clientS) end)
-  Websocket.Users.add_user(Websocket.Users, user.name, notify_pid)
+  Websocket.Users.add_user(Websocket.Users, register.name, notify_pid)
 
   case Websocket.EsWebsock.checkUser(Websocket.Worker, state) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id ->
       Lib.trace("ObjectId: #{id}")
-      reply = CommsMessages.RegisterClientResponse.new(objectid: id, motd: "Welcome!")
-      data = <<2::utf8>> <> CommsMessages.RegisterClientResponse.encode(reply)
+      reply = CommsMessages.Base.new(msgtype: :'CommsMessages.Base.MsgType.ERegistered', registered: CommsMessages.Base.Registered.new(objectid: id, motd: "Welcome!"))
+      data = CommsMessages.Base.encode(reply)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       client(%Websocket.Simple{id: id, sock: clientS})
   end
 end
+
+#def registerMsg(clientS, unexpected, _data) do
+#  Lib.trace("Unexpected type received", unexpected)
+#end
 
 def decodeString(data) do
   decodeStream(:binary.bin_to_list(data))
@@ -135,15 +137,15 @@ def logoutAndDie(state,msg) do
 end
     
 def actions(_state, ["say",data]) do
-  Lib.trace("Received: Message")
-  msg = CommsMessages.Message.decode(data)
-  Lib.trace("#{msg.from}, #{msg.target}, #{msg.message}")
+  Lib.trace("Received: Say")
+  msg = CommsMessages.Base.Say.decode(data)
+  Lib.trace("#{msg.from}, #{msg.target}, #{msg.text}")
   #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
 end
 
 def actions(state, ["move",data]) do
   Lib.trace("Received: Movement")
-  msg = CommsMessages.Movement.decode(data)
+  msg = CommsMessages.Base.Movement.decode(data)
   Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
   #Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
