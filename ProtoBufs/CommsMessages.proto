@@ -7,15 +7,6 @@ package CommsMessages;
 
 option optimize_for = SPEED;
 
-//enum MessageTypes {
-//  RegisterClientRequest = 1;
-//  RegisterClientResponse = 2;
-//  Message = 3;
-//  Movement = 4;
-//  Action = 5;
-//  Object = 6;
-//}
-
 message RegisterClientRequest
 {
   required string name = 1;
@@ -69,6 +60,28 @@ message Object
     REMOVE = 1;
     MOVE = 2;
   }
+}
+
+message Base {
+  enum MsgType {
+    RegisterClientRequest = 1;
+    RegisterClientResponse = 2;
+    Message = 3;
+    Movement = 4;
+    Action = 5;
+    Object = 6;
+  }
+
+  // Identifies which field is filled in.
+  required MsgType msgtype = 1;
+
+  // One of the following will be filled in.
+  optional RegisterClientRequest registerClientRequest = 2;
+  optional RegisterClientResponse registerClientResponse = 3;
+  optional Message message = 4;
+  optional Movement movement = 5;
+  optional Action action = 6;
+  optional Object object = 7;
 }
 
 //service WebService {
