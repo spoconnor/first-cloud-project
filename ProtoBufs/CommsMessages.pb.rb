@@ -9,15 +9,6 @@
 # 
 # option optimize_for = SPEED;
 # 
-# //enum MessageTypes {
-# //  RegisterClientRequest = 1;
-# //  RegisterClientResponse = 2;
-# //  Message = 3;
-# //  Movement = 4;
-# //  Action = 5;
-# //  Object = 6;
-# //}
-# 
 # message RegisterClientRequest
 # {
 #   required string name = 1;
@@ -71,6 +62,28 @@
 #     REMOVE = 1;
 #     MOVE = 2;
 #   }
+# }
+# 
+# message Base {
+#   enum MsgType {
+#     RegisterClientRequest = 1;
+#     RegisterClientResponse = 2;
+#     Message = 3;
+#     Movement = 4;
+#     Action = 5;
+#     Object = 6;
+#   }
+# 
+#   // Identifies which field is filled in.
+#   required MsgType msgtype = 1;
+# 
+#   // One of the following will be filled in.
+#   optional RegisterClientRequest registerClientRequest = 2;
+#   optional RegisterClientResponse registerClientResponse = 3;
+#   optional Message message = 4;
+#   optional Movement movement = 5;
+#   optional Action action = 6;
+#   optional Object object = 7;
 # }
 # 
 # //service WebService {
@@ -168,5 +181,24 @@ module CommsMessages
       REMOVE = value(:REMOVE, 1)
       MOVE = value(:MOVE, 2)
     end
+  end
+  class Base < ::Protobuf::Message
+    defined_in __FILE__
+    class MsgType < ::Protobuf::Enum
+      defined_in __FILE__
+      RegisterClientRequest = value(:RegisterClientRequest, 1)
+      RegisterClientResponse = value(:RegisterClientResponse, 2)
+      Message = value(:Message, 3)
+      Movement = value(:Movement, 4)
+      Action = value(:Action, 5)
+      Object = value(:Object, 6)
+    end
+    required :MsgType, :msgtype, 1
+    optional :RegisterClientRequest, :registerClientRequest, 2
+    optional :RegisterClientResponse, :registerClientResponse, 3
+    optional :Message, :message, 4
+    optional :Movement, :movement, 5
+    optional :Action, :action, 6
+    optional :Object, :object, 7
   end
 end
