@@ -9,74 +9,75 @@
 # 
 # option optimize_for = SPEED;
 # 
-# message Ping
-# {
-# }
-# 
-# message Register
-# {
-#   required string name = 1;
-# }
-# 
-# message Registered
-# {
-#   required string motd = 1;
-#   required int32 objectid = 2;
-# }
-# 
-# message Message 
-# {
-#   required int32 from = 1;
-#   required int32 target = 2;
-#   required string message = 3;
-# }
-# 
-# message Coords
-# {
-#   required int32 x = 1;
-#   required int32 y = 2;
-# }
-# 
-# message Move
-# {
-#   required int32 object = 1;
-#   required Coords from = 2;
-#   required Coords to = 3;
-#   required int32 speed = 4;
-# }
-# 
-# message Action
-# {
-#   required int32 from = 1;
-#   required Coords target = 2;
-#   required string what = 3;
-#   required string with = 4;
-# }
-# 
-# message Object
-# {
-#   required Coords location = 1;
-#   required int32 type = 2;
-#   required ObjectAction action = 3;
-#   required Coords destination = 4;
-#   required int32 speed = 5;
-# 
-#   enum ObjectAction {
-#     ADD = 0;
-#     REMOVE = 1;
-#     MOVE = 2;
-#   }
-# }
-# 
 # message Base {
+# 
+#   message Ping
+#   {
+#   }
+#   
+#   message Register
+#   {
+#     required string name = 1;
+#   }
+#   
+#   message Registered
+#   {
+#     required string motd = 1;
+#     required int32 objectid = 2;
+#   }
+#   
+#   message Message 
+#   {
+#     required int32 from = 1;
+#     required int32 target = 2;
+#     required string message = 3;
+#   }
+#   
+#   message Coords
+#   {
+#     required int32 x = 1;
+#     required int32 y = 2;
+#   }
+#   
+#   message Move
+#   {
+#     required int32 object = 1;
+#     required Coords from = 2;
+#     required Coords to = 3;
+#     required int32 speed = 4;
+#   }
+#   
+#   message Action
+#   {
+#     required int32 from = 1;
+#     required Coords target = 2;
+#     required string what = 3;
+#     required string with = 4;
+#   }
+#   
+#   message Object
+#   {
+#     required Coords location = 1;
+#     required int32 type = 2;
+#     required ObjectAction action = 3;
+#     required Coords destination = 4;
+#     required int32 speed = 5;
+#   
+#     enum ObjectAction {
+#       ADD = 0;
+#       REMOVE = 1;
+#       MOVE = 2;
+#     }
+#   }
+# 
 #   enum MsgType {
-#     Ping = 1;
-#     Register = 2;
-#     Registered  = 3;
-#     Message = 4;
-#     Movement = 5;
-#     Action = 6;
-#     Object = 7;
+#     EPing = 1;
+#     ERegister = 2;
+#     ERegistered  = 3;
+#     EMessage = 4;
+#     EMovement = 5;
+#     EAction = 6;
+#     EObject = 7;
 #   }
 # 
 #   // Identifies which field is filled in.
@@ -140,68 +141,68 @@ require 'protobuf/message/extend'
 
 module CommsMessages
   ::Protobuf::OPTIONS[:"optimize_for"] = :SPEED
-  class Ping < ::Protobuf::Message
-    defined_in __FILE__
-  end
-  class Register < ::Protobuf::Message
-    defined_in __FILE__
-    required :string, :name, 1
-  end
-  class Registered < ::Protobuf::Message
-    defined_in __FILE__
-    required :string, :motd, 1
-    required :int32, :objectid, 2
-  end
-  class Message < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :from, 1
-    required :int32, :target, 2
-    required :string, :message, 3
-  end
-  class Coords < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :x, 1
-    required :int32, :y, 2
-  end
-  class Move < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :object, 1
-    required :Coords, :from, 2
-    required :Coords, :to, 3
-    required :int32, :speed, 4
-  end
-  class Action < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :from, 1
-    required :Coords, :target, 2
-    required :string, :what, 3
-    required :string, :with, 4
-  end
-  class Object < ::Protobuf::Message
-    defined_in __FILE__
-    required :Coords, :location, 1
-    required :int32, :type, 2
-    required :ObjectAction, :action, 3
-    required :Coords, :destination, 4
-    required :int32, :speed, 5
-    class ObjectAction < ::Protobuf::Enum
-      defined_in __FILE__
-      ADD = value(:ADD, 0)
-      REMOVE = value(:REMOVE, 1)
-      MOVE = value(:MOVE, 2)
-    end
-  end
   class Base < ::Protobuf::Message
     defined_in __FILE__
+    class Ping < ::Protobuf::Message
+      defined_in __FILE__
+    end
+    class Register < ::Protobuf::Message
+      defined_in __FILE__
+      required :string, :name, 1
+    end
+    class Registered < ::Protobuf::Message
+      defined_in __FILE__
+      required :string, :motd, 1
+      required :int32, :objectid, 2
+    end
+    class Message < ::Protobuf::Message
+      defined_in __FILE__
+      required :int32, :from, 1
+      required :int32, :target, 2
+      required :string, :message, 3
+    end
+    class Coords < ::Protobuf::Message
+      defined_in __FILE__
+      required :int32, :x, 1
+      required :int32, :y, 2
+    end
+    class Move < ::Protobuf::Message
+      defined_in __FILE__
+      required :int32, :object, 1
+      required :Coords, :from, 2
+      required :Coords, :to, 3
+      required :int32, :speed, 4
+    end
+    class Action < ::Protobuf::Message
+      defined_in __FILE__
+      required :int32, :from, 1
+      required :Coords, :target, 2
+      required :string, :what, 3
+      required :string, :with, 4
+    end
+    class Object < ::Protobuf::Message
+      defined_in __FILE__
+      required :Coords, :location, 1
+      required :int32, :type, 2
+      required :ObjectAction, :action, 3
+      required :Coords, :destination, 4
+      required :int32, :speed, 5
+      class ObjectAction < ::Protobuf::Enum
+        defined_in __FILE__
+        ADD = value(:ADD, 0)
+        REMOVE = value(:REMOVE, 1)
+        MOVE = value(:MOVE, 2)
+      end
+    end
     class MsgType < ::Protobuf::Enum
       defined_in __FILE__
-      Ping = value(:Ping, 1)
-      Register = value(:Register, 2)
-      Registered = value(:Registered, 3)
-      Message = value(:Message, 4)
-      Movement = value(:Movement, 5)
-      Action = value(:Action, 6)
-      Object = value(:Object, 7)
+      EPing = value(:EPing, 1)
+      ERegister = value(:ERegister, 2)
+      ERegistered = value(:ERegistered, 3)
+      EMessage = value(:EMessage, 4)
+      EMovement = value(:EMovement, 5)
+      EAction = value(:EAction, 6)
+      EObject = value(:EObject, 7)
     end
     required :MsgType, :msgtype, 1
     optional :Ping, :ping, 2
