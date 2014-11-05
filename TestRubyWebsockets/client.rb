@@ -22,15 +22,15 @@ objectid = 0
 Thread.new() do
   while data = client.receive()
     printf("Received [%p]\n", data)
-    msg = CommsMessages::Base.new
+    msg = Base.new
     msg.parse_from_string(data)
     case msg.msgtype
-    when CommsMessages::Base::MsgType::ERegistered
+    when Base::MsgType::ERegistered
       puts("Registered")
       objectid = msg.registered.objectid
       puts("id: #{objectid}")
       puts("Motd: #{msg.registered.motd}")
-    when CommsMessages::Base::MsgType::ESay
+    when Base::MsgType::ESay
       puts("Say")
       puts("From: #{msg.say.from}")
       puts("Target: #{msg.say.target}")
@@ -50,34 +50,34 @@ while (1) do
   puts("[3] move")
   puts("[4] exit")
   selection = gets.chomp
-  msg = CommsMessages::Base.new
+  msg = Base.new
   case selection
   when "1"
     puts "Register"
     printf("Name:")
-    msg.msgtype = CommsMessages::Base::MsgType::ERegister
-    msg.register = CommsMessages::Base::Register.new
+    msg.msgtype = Base::MsgType::ERegister
+    msg.register = Base::Register.new
     msg.register.name = gets.chomp
   when "2"
     puts "Say"
     printf("Message:")
-    msg.msgtype = CommsMessages::Base::MsgType::ESay
-    msg.say = CommsMessages::Base::Say.new
+    msg.msgtype = Base::MsgType::ESay
+    msg.say = Base::Say.new
     msg.say.from = objectid
     msg.say.target = 999
     msg.say.text = gets.chomp
   when "3"
     puts "Move"
-    msg.msgtype = CommsMessages::Base::MsgType::EMove
-    msg.move = CommsMessages::Base::Move.new
+    msg.msgtype = Base::MsgType::EMove
+    msg.move = Base::Move.new
     msg.move.object = objectid
     msg.move.speed = 10
-    msg.move.from = CommsMessages::Base::Coords.new
+    msg.move.from = Base::Coords.new
     printf("FromX:")
     msg.movement.from.x = Integer(gets.chomp)
     printf("FromY:")
     msg.movement.from.y = Integer(gets.chomp)
-    msg.movement.to = CommsMessages::Base::Coords.new
+    msg.movement.to = Base::Coords.new
     printf("ToX:")
     msg.movement.to.x = Integer(gets.chomp)
     printf("ToY:")
@@ -87,10 +87,18 @@ while (1) do
     exit
   else
     puts "Unknown option"
-    msg.msgtype = CommsMessages::Base::MsgType::EPing
-    msg.ping.from = CommsMessages::Base::Ping.new
+    msg.msgtype = Base::MsgType::EPing
+    msg.ping = Base::Ping.new
+    msg.ping.count = 1
   end
   client.send(msg.to_s)
+
+  puts("Test encode")
+  a = msg.to_s
+  puts("Test decode")
+  b = Base.new
+  b.parse_from_string(a)
+  puts("#{b.say.text}")
   #puts("Sent: %p\n", data)
 end
 puts("Client closing")
