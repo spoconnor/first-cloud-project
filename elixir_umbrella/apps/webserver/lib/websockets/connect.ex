@@ -31,17 +31,16 @@ def step2(clientS) do
     {_tcp, _, bin1} ->
       str = to_string(decodeString(bin1))
       Lib.trace("Received:", str)
-      msg = CommsMessages.Base.decode(str)
-      registerMsg(clientS, msg.msgtype, msg)
+      {header,body} = Packet.decode(str)
+      registerMsg(clientS, header, body)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
 
 # RegisterClient
-def registerMsg(clientS, msgtype, msg) do
-  Lib.trace("Received:", msg.msgtype)
-  register = msg.register
+def registerMsg(clientS, header, register) do
+  Lib.trace("Received:", header.msgtype)
   Lib.trace("Registering #{register.name}")
   #if (length(user.name)>25) do
   #  Websocket.Websockets.die("Name too long")
@@ -56,8 +55,9 @@ def registerMsg(clientS, msgtype, msg) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id ->
       Lib.trace("ObjectId: #{id}")
-      reply = CommsMessages.Base.new(msgtype: :'ERegistered', registered: CommsMessages.Base.Registered.new(objectid: id, motd: "Welcome!"))
-      data = CommsMessages.Base.encode(reply)
+      header = CommsMessages.Header.new(msgtype: :'ERegistered')
+      registered = CommsMessages.Registered.new(objectid: id, motd: "Welcome!")
+      data = Packet.encode(header, registered)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       client(%Websocket.Simple{id: id, sock: clientS})
   end
@@ -134,15 +134,14 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-def actions(_state, %CommsMessages.Base{msgtype: :'ESay', say: msg}) do
-  Lib.trace("Received: Say")
-  Lib.trace("#{msg.from}, #{msg.target}, #{msg.text}")
-  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
-end
+#def actions(_state, %CommsMessages.Say{from: from, target: target, text: text}) do
+#  Lib.trace("Received: Say")
+#  Lib.trace("#{from}, #{target}, #{text}")
+#  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
+#end
 
-def actions(state, ["move",data]) do
+def actions(state, ["move",msg]) do
   Lib.trace("Received: Movement")
-  msg = CommsMessages.Base.Movement.decode(data)
   Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
   #Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end

@@ -19,22 +19,33 @@ client = WebSocket.new("ws://localhost:8081")
 puts("Connected")
 objectid = 0
 
+
+  PING = 1;
+  REGISTER = 2;
+  REGISTERED = 3;
+  SAY = 4;
+  MOVEMENT = 5;
+  ACTION = 6;
+  BLOCK = 7;
+
+
+
 Thread.new() do
   while data = client.receive()
     printf("Received [%p]\n", data)
-    msg = Base.new
-    msg.parse_from_string(data)
-    case msg.msgtype
-    when Base::MsgType::ERegistered
+    header = Header.new
+    header.parse_from_string(data)
+    case header.msgtype
+    when REGISTERED
       puts("Registered")
-      objectid = msg.registered.objectid
+      objectid = msg.objectid
       puts("id: #{objectid}")
-      puts("Motd: #{msg.registered.motd}")
-    when Base::MsgType::ESay
+      puts("Motd: #{msg.motd}")
+    when SAY
       puts("Say")
-      puts("From: #{msg.say.from}")
-      puts("Target: #{msg.say.target}")
-      puts("Say: #{msg.say.text}")
+      puts("From: #{msg.from}")
+      puts("Target: #{msg.target}")
+      puts("Say: #{msg.text}")
     else
       puts("Unknown")
     end
@@ -50,56 +61,48 @@ while (1) do
   puts("[3] move")
   puts("[4] exit")
   selection = gets.chomp
-  msg = Base.new
+  header = Header.new
   case selection
   when "1"
     puts "Register"
     printf("Name:")
-    msg.msgtype = Base::MsgType::ERegister
-    msg.register = Base::Register.new
-    msg.register.name = gets.chomp
+    header.msgtype = REGISTER
+    msg = Register.new
+    msg.name = gets.chomp
   when "2"
     puts "Say"
     printf("Message:")
-    msg.msgtype = Base::MsgType::ESay
-    msg.say = Base::Say.new
-    msg.say.from = objectid
-    msg.say.target = 999
-    msg.say.text = gets.chomp
+    header.msgtype = SAY
+    msg = Say.new
+    msg.from = objectid
+    msg.target = 999
+    msg.text = gets.chomp
   when "3"
     puts "Move"
-    msg.msgtype = Base::MsgType::EMove
-    msg.move = Base::Move.new
-    msg.move.object = objectid
-    msg.move.speed = 10
-    msg.move.from = Base::Coords.new
+    header.msgtype = MOVE
+    msg = Move.new
+    msg.object = objectid
+    msg.speed = 10
+    msg.from = Coords.new
     printf("FromX:")
-    msg.movement.from.x = Integer(gets.chomp)
+    msg.from.x = Integer(gets.chomp)
     printf("FromY:")
-    msg.movement.from.y = Integer(gets.chomp)
-    msg.movement.to = Base::Coords.new
+    msg.from.y = Integer(gets.chomp)
+    msg.to = Coords.new
     printf("ToX:")
-    msg.movement.to.x = Integer(gets.chomp)
+    msg.to.x = Integer(gets.chomp)
     printf("ToY:")
-    msg.movement.to.y = Integer(gets.chomp)
+    msg.to.y = Integer(gets.chomp)
   when "4"
     puts "Exit"
     exit
   else
     puts "Unknown option"
-    msg.msgtype = Base::MsgType::EPing
-    msg.ping = Base::Ping.new
-    msg.ping.count = 1
+    header.msgtype = PING
+    msg = Ping.new
+    msg.count = 1
   end
-  client.send(msg.to_s)
-
-  puts("Test encode")
-  a = msg.to_s
-  puts("Test decode")
-  b = Base.new
-  b.parse_from_string(a)
-  puts("#{b.say.text}")
-  #puts("Sent: %p\n", data)
+  client.send(header.to_s + msg.to_s)
 end
 puts("Client closing")
 client.close()

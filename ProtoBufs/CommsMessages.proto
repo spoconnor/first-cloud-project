@@ -5,9 +5,7 @@
 //option (google.protobuf.csharp_file_options).namespace = "Onewheel.Interface";
 //option (google.protobuf.csharp_file_options).umbrella_classname = "WorldEventsProtos";
 
-//option optimize_for = SPEED;
-
-message Base {
+option optimize_for = SPEED;
 
   message Ping
   {
@@ -54,7 +52,7 @@ message Base {
     required string with = 4;
   }
   
-  message Object
+  message Block
   {
     required Coords location = 1;
     required int32 type = 2;
@@ -63,34 +61,26 @@ message Base {
     required int32 speed = 5;
   
     enum ObjectAction {
-      ADD = 0;
-      REMOVE = 1;
-      MOVE = 2;
+      eAdd = 0;
+      eRemove = 1;
+      eMove = 2;
     }
   }
 
   enum MsgType {
-    EPing = 1;
-    ERegister = 2;
-    ERegistered  = 3;
-    ESay = 4;
-    EMovement = 5;
-    EAction = 6;
-    EObject = 7;
+    ePing = 1;
+    eRegister = 2;
+    eRegistered  = 3;
+    eSay = 4;
+    eMovement = 5;
+    eAction = 6;
+    eBlock = 7;
   }
 
-  // Identifies which field is filled in.
-  required MsgType msgtype = 1;
-
-  // One of the following will be filled in.
-  optional Ping ping  = 2;
-  optional Register register  = 3;
-  optional Registered registered = 4;
-  optional Say say = 5;
-  optional Move move = 6;
-  optional Action action = 7;
-  optional Object object = 8;
-}
+  message Header {
+    // Identifies type of following data
+    required int32 msgtype = 1;
+  }
 
 //service WebService {
 //  rpc RegisterClient (RegisterClientRequest) returns (Status);

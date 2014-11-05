@@ -7,9 +7,7 @@
 # //option (google.protobuf.csharp_file_options).namespace = "Onewheel.Interface";
 # //option (google.protobuf.csharp_file_options).umbrella_classname = "WorldEventsProtos";
 # 
-# //option optimize_for = SPEED;
-# 
-# message Base {
+# option optimize_for = SPEED;
 # 
 #   message Ping
 #   {
@@ -56,7 +54,7 @@
 #     required string with = 4;
 #   }
 #   
-#   message Object
+#   message Block
 #   {
 #     required Coords location = 1;
 #     required int32 type = 2;
@@ -65,34 +63,26 @@
 #     required int32 speed = 5;
 #   
 #     enum ObjectAction {
-#       ADD = 0;
-#       REMOVE = 1;
-#       MOVE = 2;
+#       eAdd = 0;
+#       eRemove = 1;
+#       eMove = 2;
 #     }
 #   }
 # 
 #   enum MsgType {
-#     EPing = 1;
-#     ERegister = 2;
-#     ERegistered  = 3;
-#     ESay = 4;
-#     EMovement = 5;
-#     EAction = 6;
-#     EObject = 7;
+#     ePing = 1;
+#     eRegister = 2;
+#     eRegistered  = 3;
+#     eSay = 4;
+#     eMovement = 5;
+#     eAction = 6;
+#     eBlock = 7;
 #   }
 # 
-#   // Identifies which field is filled in.
-#   required MsgType msgtype = 1;
-# 
-#   // One of the following will be filled in.
-#   optional Ping ping  = 2;
-#   optional Register register  = 3;
-#   optional Registered registered = 4;
-#   optional Say say = 5;
-#   optional Move move = 6;
-#   optional Action action = 7;
-#   optional Object object = 8;
-# }
+#   message Header {
+#     // Identifies type of following data
+#     required int32 msgtype = 1;
+#   }
 # 
 # //service WebService {
 # //  rpc RegisterClient (RegisterClientRequest) returns (Status);
@@ -140,76 +130,70 @@ require 'protobuf/message/enum'
 require 'protobuf/message/service'
 require 'protobuf/message/extend'
 
-class Base < ::Protobuf::Message
+::Protobuf::OPTIONS[:"optimize_for"] = :SPEED
+class Ping < ::Protobuf::Message
   defined_in __FILE__
-  class Ping < ::Protobuf::Message
+  required :int32, :count, 1
+end
+class Register < ::Protobuf::Message
+  defined_in __FILE__
+  required :string, :name, 1
+end
+class Registered < ::Protobuf::Message
+  defined_in __FILE__
+  required :string, :motd, 1
+  required :int32, :objectid, 2
+end
+class Say < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :from, 1
+  required :int32, :target, 2
+  required :string, :text, 3
+end
+class Coords < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :x, 1
+  required :int32, :y, 2
+end
+class Move < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :object, 1
+  required :Coords, :from, 2
+  required :Coords, :to, 3
+  required :int32, :speed, 4
+end
+class Action < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :from, 1
+  required :Coords, :target, 2
+  required :string, :what, 3
+  required :string, :with, 4
+end
+class Block < ::Protobuf::Message
+  defined_in __FILE__
+  required :Coords, :location, 1
+  required :int32, :type, 2
+  required :ObjectAction, :action, 3
+  required :Coords, :destination, 4
+  required :int32, :speed, 5
+  class ObjectAction < ::Protobuf::Enum
     defined_in __FILE__
-    required :int32, :count, 1
+    EAdd = value(:eAdd, 0)
+    ERemove = value(:eRemove, 1)
+    EMove = value(:eMove, 2)
   end
-  class Register < ::Protobuf::Message
-    defined_in __FILE__
-    required :string, :name, 1
-  end
-  class Registered < ::Protobuf::Message
-    defined_in __FILE__
-    required :string, :motd, 1
-    required :int32, :objectid, 2
-  end
-  class Say < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :from, 1
-    required :int32, :target, 2
-    required :string, :text, 3
-  end
-  class Coords < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :x, 1
-    required :int32, :y, 2
-  end
-  class Move < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :object, 1
-    required :Coords, :from, 2
-    required :Coords, :to, 3
-    required :int32, :speed, 4
-  end
-  class Action < ::Protobuf::Message
-    defined_in __FILE__
-    required :int32, :from, 1
-    required :Coords, :target, 2
-    required :string, :what, 3
-    required :string, :with, 4
-  end
-  class Object < ::Protobuf::Message
-    defined_in __FILE__
-    required :Coords, :location, 1
-    required :int32, :type, 2
-    required :ObjectAction, :action, 3
-    required :Coords, :destination, 4
-    required :int32, :speed, 5
-    class ObjectAction < ::Protobuf::Enum
-      defined_in __FILE__
-      ADD = value(:ADD, 0)
-      REMOVE = value(:REMOVE, 1)
-      MOVE = value(:MOVE, 2)
-    end
-  end
-  class MsgType < ::Protobuf::Enum
-    defined_in __FILE__
-    EPing = value(:EPing, 1)
-    ERegister = value(:ERegister, 2)
-    ERegistered = value(:ERegistered, 3)
-    ESay = value(:ESay, 4)
-    EMovement = value(:EMovement, 5)
-    EAction = value(:EAction, 6)
-    EObject = value(:EObject, 7)
-  end
-  required :MsgType, :msgtype, 1
-  optional :Ping, :ping, 2
-  optional :Register, :register, 3
-  optional :Registered, :registered, 4
-  optional :Say, :say, 5
-  optional :Move, :move, 6
-  optional :Action, :action, 7
-  optional :Object, :object, 8
+end
+class MsgType < ::Protobuf::Enum
+  defined_in __FILE__
+  EPing = value(:ePing, 1)
+  ERegister = value(:eRegister, 2)
+  ERegistered = value(:eRegistered, 3)
+  ESay = value(:eSay, 4)
+  EMovement = value(:eMovement, 5)
+  EAction = value(:eAction, 6)
+  EBlock = value(:eBlock, 7)
+end
+class Header < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :msgtype, 1
 end
