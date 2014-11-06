@@ -33,7 +33,7 @@ defmodule Websocket.Users do
 #    actions(payload, msg)
     Enum.each users, fn {user, notify_pid} -> 
       # TODO - select target of message
-      IO.puts("Sending notify to #{user}")
+      Lib.trace("Sending notify to #{user}")
       send notify_pid, payload
     end
     {:noreply, users}

@@ -45,8 +45,8 @@ defmodule Websocket.QConsumer do
         # This means we will retry consuming a message once in case of exception
         # before we give up and have it moved to the error queue
         Basic.reject channel, tag, requeue: not redelivered
-        IO.puts "Error reading '#{payload}'"
-        IO.puts Exception.message(exception)
+        Lib.trace("Error reading:", payload)
+        Lib.trace(Exception.message(exception))
     end
   end
 

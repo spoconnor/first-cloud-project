@@ -40,7 +40,7 @@ end
 
 # RegisterClient
 def registerMsg(clientS, header, register) do
-  Lib.trace("Received:", header.msgtype)
+  Lib.trace("MsgType:", header.msgtype)
   Lib.trace("Registering #{register.name}")
   #if (length(user.name)>25) do
   #  Websocket.Websockets.die("Name too long")
@@ -94,7 +94,7 @@ def decodeBytes(data,masks,decoded) do
 end
 
 def client(state) do
-  IO.puts("Client #{state.id} receive loop")
+  Lib.trace("Client #{state.id} receive loop")
   receive do
     {_tcp,_,bin} -> 
       str = to_string(decodeString(bin))
@@ -119,10 +119,10 @@ def client(state) do
 end
 
 def notify_thread(clientS) do
-  IO.puts("Client notify_thread")
+  Lib.trace("Client notify_thread")
   receive do
     data ->
-      IO.puts("Client notify thread recd #{data}")
+      Lib.trace("Client notify thread recd", data)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       notify_thread(clientS)
   end
@@ -146,13 +146,13 @@ def actions(state, ["move",msg]) do
 end
 
 def actions(_state, ["action"|_data]) do
-  Lib.trace("Recevied: Action")
+  Lib.trace("Received: Action")
   #msg = Messages.Action.decode(data)
   #Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
 end
 
 def actions(_state, ["object"|_data]) do
-  Lib.trace("Recevied: Object")
+  Lib.trace("Received: Object")
   #msg = Messages.Object.decode(data)
   #Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
 end
