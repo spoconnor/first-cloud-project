@@ -19,7 +19,6 @@ client = WebSocket.new("ws://localhost:8081")
 puts("Connected")
 objectid = 0
 
-
   PING = 1;
   REGISTER = 2;
   REGISTERED = 3;
@@ -28,21 +27,23 @@ objectid = 0
   ACTION = 6;
   BLOCK = 7;
 
-
-
 Thread.new() do
   while data = client.receive()
     printf("Received [%p]\n", data)
     header = Header.new
-    header.parse_from_string(data)
+    header.parse_from_string(data[0..1])
     case header.msgtype
     when REGISTERED
       puts("Registered")
+      msg = Registered.new
+      msg.parse_from_string(data[2..9999])
       objectid = msg.objectid
       puts("id: #{objectid}")
       puts("Motd: #{msg.motd}")
     when SAY
       puts("Say")
+      msg = Say.new
+      msg.parse_from_string(data[2..9999])
       puts("From: #{msg.from}")
       puts("Target: #{msg.target}")
       puts("Say: #{msg.text}")

@@ -55,9 +55,8 @@ def registerMsg(clientS, header, register) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id ->
       Lib.trace("ObjectId: #{id}")
-      header = CommsMessages.Header.new(msgtype: :'ERegistered')
       registered = CommsMessages.Registered.new(objectid: id, motd: "Welcome!")
-      data = Packet.encode(header, registered)
+      data = Packet.encode(registered)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       client(%Websocket.Simple{id: id, sock: clientS})
   end
