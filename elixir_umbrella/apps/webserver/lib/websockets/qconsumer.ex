@@ -6,9 +6,9 @@ defmodule Websocket.QConsumer do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  @exchange      "webserver_exchange"
-  @queue         "notify"
-  @queue_error   "#{@queue}_error"
+  @recv_mq_exchange "WorldServer_Out"
+  @queue            "notify"
+  @queue_error      "#{@queue}_error"
 
   def init(:ok) do
     {:ok, conn} = Connection.open("amqp://guest:guest@localhost")
@@ -21,8 +21,9 @@ defmodule Websocket.QConsumer do
     Queue.declare(chan, @queue, durable: false, arguments: [
       {"x-dead-letter-exchange", :longstr, ""}, 
       {"x-dead-letter-routing-key", :longstr, @queue_error}])
-    Exchange.fanout(chan, @exchange, durable: true)
-    Queue.bind(chan, @queue, @exchange)
+    Exchange.fanout(chan, @recv_mq_exchange, durable: true)
+
+    Queue.bind(chan, @queue, @recv_mq_exchange)
     # Register the GenServer process as a consumer
     Basic.consume(chan, @queue)
     {:ok, chan}
