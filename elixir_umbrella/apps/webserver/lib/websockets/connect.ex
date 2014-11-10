@@ -31,17 +31,16 @@ def step2(clientS) do
     {_tcp, _, bin1} ->
       str = to_string(decodeString(bin1))
       Lib.trace("Received:", str)
-      msg = CommsMessages.Base.decode(str)
-      registerMsg(clientS, msg.msgtype, msg)
+      {header,body} = Packet.decode(str)
+      registerMsg(clientS, header, body)
     after timeoutTime ->
       Websocket.Websockets.die(clientS,"Timeout on Handshake")
   end
 end
 
 # RegisterClient
-def registerMsg(clientS, msgtype, msg) do
-  Lib.trace("Received:", msg.msgtype)
-  register = msg.register
+def registerMsg(clientS, header, register) do
+  Lib.trace("MsgType:", header.msgtype)
   Lib.trace("Registering #{register.name}")
   #if (length(user.name)>25) do
   #  Websocket.Websockets.die("Name too long")
@@ -56,8 +55,8 @@ def registerMsg(clientS, msgtype, msg) do
     {:fail, _} -> Websocket.Websockets.die(clientS,"Already Connected");
     id ->
       Lib.trace("ObjectId: #{id}")
-      reply = CommsMessages.Base.new(msgtype: :'ERegistered', registered: CommsMessages.Base.Registered.new(objectid: id, motd: "Welcome!"))
-      data = CommsMessages.Base.encode(reply)
+      registered = CommsMessages.Registered.new(objectid: id, motd: "Welcome!")
+      data = Packet.encode(registered)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       client(%Websocket.Simple{id: id, sock: clientS})
   end
@@ -95,14 +94,12 @@ def decodeBytes(data,masks,decoded) do
 end
 
 def client(state) do
-  IO.puts("Client #{state.id} receive loop")
+  Lib.trace("Client #{state.id} receive loop")
   receive do
     {_tcp,_,bin} -> 
       str = to_string(decodeString(bin))
       Lib.trace("received:", str)
-      data = String.split(str, "|")
-
-      actions(state, data)
+      actions(state, str)
       # Send message thru rabbit queue
       {:ok, conn} = AMQP.Connection.open
       {:ok, chan} = AMQP.Channel.open(conn)
@@ -122,10 +119,10 @@ def client(state) do
 end
 
 def notify_thread(clientS) do
-  IO.puts("Client notify_thread")
+  Lib.trace("Client notify_thread")
   receive do
     data ->
-      IO.puts("Client notify thread recd #{data}")
+      Lib.trace("Client notify thread recd", data)
       Websocket.Websockets.sendTcpMsg(clientS, data)
       notify_thread(clientS)
   end
@@ -136,28 +133,26 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-def actions(_state, ["say",data]) do
-  Lib.trace("Received: Say")
-  msg = CommsMessages.Base.Say.decode(data)
-  Lib.trace("#{msg.from}, #{msg.target}, #{msg.text}")
-  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
-end
+#def actions(_state, %CommsMessages.Say{from: from, target: target, text: text}) do
+#  Lib.trace("Received: Say")
+#  Lib.trace("#{from}, #{target}, #{text}")
+#  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
+#end
 
-def actions(state, ["move",data]) do
+def actions(state, ["move",msg]) do
   Lib.trace("Received: Movement")
-  msg = CommsMessages.Base.Movement.decode(data)
   Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
   #Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
 end
 
 def actions(_state, ["action"|_data]) do
-  Lib.trace("Recevied: Action")
+  Lib.trace("Received: Action")
   #msg = Messages.Action.decode(data)
   #Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
 end
 
 def actions(_state, ["object"|_data]) do
-  Lib.trace("Recevied: Object")
+  Lib.trace("Received: Object")
   #msg = Messages.Object.decode(data)
   #Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
 end

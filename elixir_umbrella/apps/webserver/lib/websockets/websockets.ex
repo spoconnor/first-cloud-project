@@ -74,19 +74,19 @@ def alert(clientS,msg) do
   msg(clientS,"alert",msg)
 end
 def msg(clientS,msg) do
-  IO.puts("Sending msg '#{msg}'")
+  Lib.trace("Sending msg '#{msg}'")
   #:gen_tcp.send(clientS,[0,msg,255])
   sendTcpMsg(clientS, msg)
 end
 def msg(clientS,type,msg) do
-  IO.puts("Sending msg '#{msg}' type '#{type}' to '#{:erlang.port_info(clientS)[:id]}'")
+  Lib.trace("Sending msg '#{msg}' type '#{type}' to '#{:erlang.port_info(clientS)[:id]}'")
   #:gen_tcp.send(clientS,[0,type,<<" @@@ ">>,msg,255])
   sendTcpMsg(clientS, "Testing...")
   sendTcpMsg(clientS, msg)
 end
 
 def die(clientS,msg) do
-  IO.puts("Websockets die '#{:erlang.port_info(clientS)[:id]}'")
+  Lib.trace("Websockets die '#{:erlang.port_info(clientS)[:id]}'")
   alert(clientS,msg)
   #:gen_tcp.send(clientS,[255,0])
   #:gen_tcp.send(clientS,[0,0,0,0,0,0,0,0,0])

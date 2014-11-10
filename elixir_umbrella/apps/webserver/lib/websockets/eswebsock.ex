@@ -51,7 +51,7 @@ def sendToAll(server, dict,you,message) do
 end
 
 def say(server, simple,message) do
-  IO.puts("eswebsock say")
+  Lib.trace("eswebsock say")
   GenServer.cast(server, {:say,simple,message})
 end
 
@@ -64,7 +64,7 @@ def logout(server, simple) do
 end
 
 def checkUser(server, state) do
-  IO.puts("eswebsock checkUser")
+  Lib.trace("eswebsock checkUser")
   GenServer.call(server, {:checkUser,state})
 end
 
@@ -72,7 +72,7 @@ end
 # GenServer Function Definitions
 
 def handle_call({:checkUser,userState}, _, state) do
-  IO.puts("eswebsock handle call checkUser")
+  Lib.trace("eswebsock handle call checkUser")
   Websocket.CheckUser.checkUser(userState,state)
 end
 def handle_call(:getState, _from, state) do
