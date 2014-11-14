@@ -6,26 +6,22 @@ defmodule Websocket.QConsumer do
     GenServer.start_link(__MODULE__, :ok, opts)
   end
 
-  @recv_mq_exchange "WorldServer_Out"
-  @queue            "notify"
-  @queue_error      "#{@queue}_error"
-
   def init(:ok) do
     {:ok, conn} = Connection.open("amqp://guest:guest@localhost")
     {:ok, chan} = Channel.open(conn)
     # Limit unacknowledged messages to 10
     Basic.qos(chan, prefetch_count: 10)
-    Queue.declare(chan, @queue_error, durable: false)
+    Queue.declare(chan, @recv_queue, durable: false)
     # Messages that cannot be delivered to any consumer in 
     # the main queue will be routed to the error queue
-    Queue.declare(chan, @queue, durable: false, arguments: [
+    Queue.declare(chan, @error_queue, durable: false, arguments: [
       {"x-dead-letter-exchange", :longstr, ""}, 
-      {"x-dead-letter-routing-key", :longstr, @queue_error}])
-    Exchange.fanout(chan, @recv_mq_exchange, durable: true)
+      {"x-dead-letter-routing-key", :longstr, @error_queue}])
+    Exchange.direct(chan, @mq_exchange, durable: false)
 
-    Queue.bind(chan, @queue, @recv_mq_exchange)
+    Queue.bind(chan, @recv_queue, @mq_exchange)
     # Register the GenServer process as a consumer
-    Basic.consume(chan, @queue)
+    Basic.consume(chan, @recv_queue)
     {:ok, chan}
   end
 

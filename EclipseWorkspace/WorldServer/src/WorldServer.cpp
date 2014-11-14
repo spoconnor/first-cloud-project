@@ -6,11 +6,14 @@
 using namespace AmqpClient;
 int main()
 {
-    const std::string IN_EXCHANGE_NAME = "WorldServer_In";
-    const std::string OUT_EXCHANGE_NAME = "WorldServer_Out";
+    const std::string EXCHANGE_NAME = "WorldExchange";
+
     const std::string ROUTING_KEY = "RoutingKey";
     const std::string CONSUMER_TAG = "ConsumerTag";
-    const std::string QUEUE_NAME = "Notify_Queue";
+
+    const std::string RECV_QUEUE_NAME = "InboundQueue";
+    const std::string SEND_QUEUE_NAME = "OutboundQueue";
+    const std::string ERROR_QUEUE_NAME = "ErrorQueue";
 
     try
     {

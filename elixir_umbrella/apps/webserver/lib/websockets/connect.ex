@@ -1,9 +1,6 @@
 defmodule Websocket.Connect do
 use Bitwise
 
-@send_mq_exchange "WorldServer_In"
-@send_mq_queue "Notify_Queue"
-
 defmacro timeoutTime do
   30*1000
 end
@@ -109,16 +106,16 @@ def client(state) do
       #{:ok, chan} = AMQP.Channel.open(conn)
       #AMQP.Basic.publish chan, @send_mq_exchange, "", str
 
-      {:ok, conn} = AMQP.Connection.open
+      {:ok, conn} = AMQP.Connection.open("amqp://guest:guest@localhost")
       #{:ok, %AMQP.Connection{pid: #PID<0.165.0>}}
       {:ok, chan} = AMQP.Channel.open(conn)
       #{:ok, %AMQP.Channel{conn: %AMQP.Connection{pid: #PID<0.165.0>}, pid: #PID<0.177.0>}
-      {:ok, %{consumer_count: cons_count, message_count: msg_count, queue: _}} = AMQP.Queue.declare chan, @notify_queue
+      {:ok, %{consumer_count: cons_count, message_count: msg_count, queue: _}} = AMQP.Queue.declare chan, @send_queue, durable: false)
       Lib.trace("Queue consumer_count: #{cons_count}, message_count: #{msg_count}")
       #{:ok, %{consumer_count: 0, message_count: 0, queue: "test_queue"}}
-      :ok = AMQP.Exchange.declare chan, @send_mq_exchange 
-      :ok = AMQP.Queue.bind chan, @notify_queue, @send_mq_exchange
-      :ok = AMQP.Basic.publish chan, @send_mq_exchange, "", str
+      :ok = AMQP.Exchange.declare chan, @mq_exchange, durable: false
+      :ok = AMQP.Queue.bind chan, @send_queue, @mq_exchange
+      :ok = AMQP.Basic.publish chan, @mq_exchange, "", str
 
       client(state)
     {:tcp_closed,_} ->
