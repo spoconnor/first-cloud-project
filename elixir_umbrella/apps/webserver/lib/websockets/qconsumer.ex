@@ -11,17 +11,19 @@ defmodule Websocket.QConsumer do
     {:ok, chan} = Channel.open(conn)
     # Limit unacknowledged messages to 10
     Basic.qos(chan, prefetch_count: 10)
-    Queue.declare(chan, @recv_queue, durable: false)
+    Lib.trace("Declaring queue", Globals.recv_queue)
+    Queue.declare(chan, Globals.recv_queue, durable: false)
     # Messages that cannot be delivered to any consumer in 
     # the main queue will be routed to the error queue
-    Queue.declare(chan, @error_queue, durable: false, arguments: [
+    Lib.trace("Declaring queue", Globals.error_queue)
+    Queue.declare(chan, Globals.error_queue, durable: false, arguments: [
       {"x-dead-letter-exchange", :longstr, ""}, 
-      {"x-dead-letter-routing-key", :longstr, @error_queue}])
-    Exchange.direct(chan, @mq_exchange, durable: false)
+      {"x-dead-letter-routing-key", :longstr, Globals.error_queue}])
+    Exchange.direct(chan, Globals.mq_exchange)
 
-    Queue.bind(chan, @recv_queue, @mq_exchange)
+    Queue.bind(chan, Globals.recv_queue, Globals.mq_exchange)
     # Register the GenServer process as a consumer
-    Basic.consume(chan, @recv_queue)
+    Basic.consume(chan, Globals.recv_queue)
     {:ok, chan}
   end
 

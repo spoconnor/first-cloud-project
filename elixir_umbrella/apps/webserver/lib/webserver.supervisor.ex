@@ -13,11 +13,6 @@ end
 @q_consumer Websocket.QConsumer
 @users Websocket.Users
 
-@mq_exchange "WorldExchange"
-@recv_queue "InboundQueue"
-@send_queue "OutboundQueue"
-@error_queue "ErrorQueue"
-
 # behaviour callbacks
 def init(:ok) do
     IO.puts "Supervisor.init"

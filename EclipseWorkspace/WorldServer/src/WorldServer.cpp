@@ -19,15 +19,15 @@ int main()
     {
         Channel::ptr_t channelIn = Channel::Create();
 
-        channelIn->DeclareExchange(IN_EXCHANGE_NAME, Channel::EXCHANGE_TYPE_FANOUT);
-        std::string queueIn = channelIn->DeclareQueue(QUEUE_NAME);
-        channelIn->BindQueue(queueIn, IN_EXCHANGE_NAME, ROUTING_KEY);
+        channelIn->DeclareExchange(EXCHANGE_NAME, Channel::EXCHANGE_TYPE_FANOUT);
+        std::string queueIn = channelIn->DeclareQueue(RECV_QUEUE_NAME);
+        channelIn->BindQueue(queueIn, EXCHANGE_NAME, ROUTING_KEY);
         channelIn->BasicConsume(queueIn, CONSUMER_TAG);
 
         Channel::ptr_t channelOut = Channel::Create();
-        channelOut->DeclareExchange(OUT_EXCHANGE_NAME, Channel::EXCHANGE_TYPE_FANOUT);
-        std::string queueOut = channelOut->DeclareQueue(QUEUE_NAME);
-        channelOut->BindQueue(queueOut, OUT_EXCHANGE_NAME, ROUTING_KEY);
+        channelOut->DeclareExchange(EXCHANGE_NAME, Channel::EXCHANGE_TYPE_FANOUT);
+        std::string queueOut = channelOut->DeclareQueue(SEND_QUEUE_NAME);
+        channelOut->BindQueue(queueOut, EXCHANGE_NAME, ROUTING_KEY);
         channelOut->BasicConsume(queueOut, CONSUMER_TAG);
 
         Envelope::ptr_t env;
@@ -43,7 +43,7 @@ int main()
                           << "\n Redelivered: " << env->Redelivered()
                           << "\n Body: " << env->Message()->Body() << std::endl;
 
-                channelOut->BasicPublish(OUT_EXCHANGE_NAME, ROUTING_KEY, env->Message());
+                channelOut->BasicPublish(EXCHANGE_NAME, ROUTING_KEY, env->Message());
             }
             else
             {

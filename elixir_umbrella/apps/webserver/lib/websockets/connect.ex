@@ -99,23 +99,22 @@ def client(state) do
     {_tcp,_,bin} -> 
       str = to_string(decodeString(bin))
       Lib.trace("received:", str)
-      actions(state, str)
+      Lib.trace("type:", Packet.msgType(str))
       # Send message thru rabbit queue
 
       #{:ok, conn} = AMQP.Connection.open
       #{:ok, chan} = AMQP.Channel.open(conn)
-      #AMQP.Basic.publish chan, @send_mq_exchange, "", str
+      #AMQP.Basic.publish chan, send_mq_exchange, "", str
 
       {:ok, conn} = AMQP.Connection.open("amqp://guest:guest@localhost")
       #{:ok, %AMQP.Connection{pid: #PID<0.165.0>}}
       {:ok, chan} = AMQP.Channel.open(conn)
       #{:ok, %AMQP.Channel{conn: %AMQP.Connection{pid: #PID<0.165.0>}, pid: #PID<0.177.0>}
-      {:ok, %{consumer_count: cons_count, message_count: msg_count, queue: _}} = AMQP.Queue.declare chan, @send_queue, durable: false)
-      Lib.trace("Queue consumer_count: #{cons_count}, message_count: #{msg_count}")
+      {:ok, _queue} = AMQP.Queue.declare( chan, Globals.send_queue, durable: false)
       #{:ok, %{consumer_count: 0, message_count: 0, queue: "test_queue"}}
-      :ok = AMQP.Exchange.declare chan, @mq_exchange, durable: false
-      :ok = AMQP.Queue.bind chan, @send_queue, @mq_exchange
-      :ok = AMQP.Basic.publish chan, @mq_exchange, "", str
+      :ok = AMQP.Exchange.declare chan, Globals.mq_exchange
+      :ok = AMQP.Queue.bind chan, Globals.send_queue, Globals.mq_exchange
+      :ok = AMQP.Basic.publish chan, Globals.mq_exchange, "", str
 
       client(state)
     {:tcp_closed,_} ->
@@ -145,32 +144,4 @@ def logoutAndDie(state,msg) do
     Websocket.Websockets.die(state.sock,msg)
 end
     
-#def actions(_state, %CommsMessages.Say{from: from, target: target, text: text}) do
-#  Lib.trace("Received: Say")
-#  Lib.trace("#{from}, #{target}, #{text}")
-#  #Websocket.EsWebsock.say(Websocket.Worker, state, msg.message)
-#end
-
-def actions(state, ["move",msg]) do
-  Lib.trace("Received: Movement")
-  Lib.trace("#{msg.object}, #{msg.from.x},#{msg.from.y} #{msg.to.x},#{msg.to.y} #{msg.speed}")
-  #Websocket.EsWebsock.move(Websocket.Worker, state, msg.to.x, msg.to.y)
-end
-
-def actions(_state, ["action"|_data]) do
-  Lib.trace("Received: Action")
-  #msg = Messages.Action.decode(data)
-  #Lib.trace("#{msg.from}, #{msg.target}, #{msg.what}, #{msg.with}")
-end
-
-def actions(_state, ["object"|_data]) do
-  Lib.trace("Received: Object")
-  #msg = Messages.Object.decode(data)
-  #Lib.trace("#{msg.location.x},#{msg.location.y}, #{msg.type}, #{msg.action}, #{msg.destination.x},#{msg.destination.y}, #{msg.speed}")
-end
-
-def actions(_state, _unknown) do
-  Lib.trace("Received: Unknown")
-end
-
 end

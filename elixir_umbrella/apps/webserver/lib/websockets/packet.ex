@@ -13,6 +13,19 @@ defmodule Packet do
     end
   end
 
+  def msgType(<<a::8,b::8,body::binary>>) do
+    header = CommsMessages.Header.decode(<<a,b>>)
+    case header.msgtype do
+      1 -> "Ping"
+      2 -> "Register"
+      3 -> "Registered"
+      4 -> "Say"
+      5 -> "Movement"
+      6 -> "Action"
+      7 -> "Block"
+    end
+  end
+
   def encode(message) do
     case message.__struct__ do
       CommsMessages.Ping -> 
