@@ -9,21 +9,21 @@ defmodule Websocket.QConsumer do
   def init(:ok) do
     {:ok, conn} = Connection.open("amqp://guest:guest@localhost")
     {:ok, chan} = Channel.open(conn)
-    # Limit unacknowledged messages to 10
-    Basic.qos(chan, prefetch_count: 10)
-    Lib.trace("Declaring queue", Globals.recv_queue)
-    Queue.declare(chan, Globals.recv_queue, [durable: false, auto_delete: true, exclusive: false])
-    # Messages that cannot be delivered to any consumer in 
-    # the main queue will be routed to the error queue
-    Lib.trace("Declaring queue", Globals.error_queue)
-    Queue.declare(chan, Globals.error_queue, durable: false, arguments: [
-      {"x-dead-letter-exchange", :longstr, ""}, 
-      {"x-dead-letter-routing-key", :longstr, Globals.error_queue}])
-    :ok = Exchange.declare(chan, Globals.mq_exchange, :direct, [auto_delete: true, durable: false])
 
-    Queue.bind(chan, Globals.recv_queue, Globals.mq_exchange)
+    #Basic.qos(chan, prefetch_count: 10) # Limit unacknowledged messages to 10
+    #Lib.trace("Declaring queue", Globals.recv_queue)
+    #Queue.declare(chan, Globals.recv_queue, [durable: false, auto_delete: true, exclusive: false])
+    ## Messages that cannot be delivered to any consumer in 
+    ## the main queue will be routed to the error queue
+    #Lib.trace("Declaring queue", Globals.error_queue)
+    #Queue.declare(chan, Globals.error_queue, durable: false, arguments: [
+    #  {"x-dead-letter-exchange", :longstr, ""}, 
+    #  {"x-dead-letter-routing-key", :longstr, Globals.error_queue}])
+    #:ok = Exchange.declare(chan, Globals.mq_exchange, :direct, [auto_delete: true, durable: false])
+    #Queue.bind(chan, Globals.recv_queue, Globals.mq_exchange)
+
     # Register the GenServer process as a consumer
-    Basic.consume(chan, Globals.recv_queue)
+    Basic.consume(chan, Globals.outbound_queue)
     {:ok, chan}
   end
 

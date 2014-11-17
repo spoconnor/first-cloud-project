@@ -102,20 +102,12 @@ def client(state) do
       Lib.trace("type:", Packet.msgType(str))
       # Send message thru rabbit queue
 
-      #{:ok, conn} = AMQP.Connection.open
-      #{:ok, chan} = AMQP.Channel.open(conn)
-      #AMQP.Basic.publish chan, send_mq_exchange, "", str
-
       {:ok, conn} = AMQP.Connection.open("amqp://guest:guest@localhost")
-      #{:ok, %AMQP.Connection{pid: #PID<0.165.0>}}
       {:ok, chan} = AMQP.Channel.open(conn)
-      #{:ok, %AMQP.Channel{conn: %AMQP.Connection{pid: #PID<0.165.0>}, pid: #PID<0.177.0>}
-      {:ok, _queue} = AMQP.Queue.declare( chan, Globals.send_queue, [auto_delete: true, durable: false, exclusive: false])
-      #{:ok, %{consumer_count: 0, message_count: 0, queue: "test_queue"}}
-
-      :ok = AMQP.Exchange.declare(chan, Globals.mq_exchange, :direct, [auto_delete: true, durable: false])
-      :ok = AMQP.Queue.bind chan, Globals.send_queue, Globals.mq_exchange
-      :ok = AMQP.Basic.publish chan, Globals.mq_exchange, "", str
+      #{:ok, _queue} = AMQP.Queue.declare( chan, Globals.send_queue, [auto_delete: true, durable: false, exclusive: false])
+      #:ok = AMQP.Exchange.declare(chan, Globals.mq_exchange, :direct, [auto_delete: true, durable: false])
+      #:ok = AMQP.Queue.bind chan, Globals.send_queue, Globals.mq_exchange
+      :ok = AMQP.Basic.publish chan, Globals.mq_exchange, "Inbound", str
 
       client(state)
     {:tcp_closed,_} ->

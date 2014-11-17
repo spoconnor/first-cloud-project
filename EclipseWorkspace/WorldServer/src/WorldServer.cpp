@@ -8,12 +8,12 @@ int main()
 {
     const std::string EXCHANGE_NAME = "MyExchange";
 
-    const std::string ROUTING_KEY = "RoutingKey";
-    const std::string CONSUMER_TAG = "ConsumerTag";
+    const std::string OUTBOUND_ROUTING_KEY = "Outbound";
+    //const std::string CONSUMER_TAG = "ConsumerTag";
 
-    const std::string RECV_QUEUE_NAME = "InboundQueue";
-    const std::string SEND_QUEUE_NAME = "OutboundQueue";
-    const std::string ERROR_QUEUE_NAME = "ErrorQueue";
+    const std::string INBOUND_QUEUE_NAME = "InboundQueue";
+    const std::string OUTBOUND_QUEUE_NAME = "OutboundQueue";
+    //const std::string ERROR_QUEUE_NAME = "ErrorQueue";
 
     try
     {
