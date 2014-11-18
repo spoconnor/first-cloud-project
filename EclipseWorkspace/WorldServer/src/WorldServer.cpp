@@ -6,10 +6,15 @@
 using namespace AmqpClient;
 int main()
 {
+	const std::string HOSTNAME = "localhost";
+	const int PORT = 5672;
+	const std::string USERNAME = "guest";
+	const std::string PASSWORD = "guest";
+	const std::string VHOST = "/";
     const std::string EXCHANGE_NAME = "MyExchange";
 
     const std::string OUTBOUND_ROUTING_KEY = "Outbound";
-    //const std::string CONSUMER_TAG = "ConsumerTag";
+    const std::string CONSUMER_TAG = "ConsumerTag";
 
     const std::string INBOUND_QUEUE_NAME = "InboundQueue";
     const std::string OUTBOUND_QUEUE_NAME = "OutboundQueue";
@@ -17,21 +22,11 @@ int main()
 
     try
     {
-        Channel::ptr_t channelIn = Channel::Create();
-
-        channelIn->DeclareExchange(EXCHANGE_NAME, Channel::EXCHANGE_TYPE_DIRECT, false, false, true);
-        std::string queueIn = channelIn->DeclareQueue(RECV_QUEUE_NAME, false, false, false, true);
-        channelIn->BindQueue(queueIn, EXCHANGE_NAME, ROUTING_KEY);
-        channelIn->BasicConsume(queueIn, CONSUMER_TAG);
-
-        Channel::ptr_t channelOut = Channel::Create();
-        channelOut->DeclareExchange(EXCHANGE_NAME, Channel::EXCHANGE_TYPE_DIRECT, false, false, true);
-        std::string queueOut = channelOut->DeclareQueue(SEND_QUEUE_NAME, false, false, false, true);
-        channelOut->BindQueue(queueOut, EXCHANGE_NAME, ROUTING_KEY);
-        channelOut->BasicConsume(queueOut, CONSUMER_TAG);
+    	Channel::ptr_t channelIn = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
+        channelIn->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
 
         Envelope::ptr_t env;
-        for (int i = 0; i < 3; ++i)
+        while (true)
         {
             if (channelIn->BasicConsumeMessage(CONSUMER_TAG, env, 0))
             {
@@ -43,7 +38,7 @@ int main()
                           << "\n Redelivered: " << env->Redelivered()
                           << "\n Body: " << env->Message()->Body() << std::endl;
 
-                channelOut->BasicPublish(EXCHANGE_NAME, ROUTING_KEY, env->Message());
+                //channelOut->BasicPublish(EXCHANGE_NAME, ROUTING_KEY, env->Message());
             }
             else
             {
