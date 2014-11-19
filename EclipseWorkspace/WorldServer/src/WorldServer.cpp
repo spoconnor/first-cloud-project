@@ -1,7 +1,7 @@
 #include <SimpleAmqpClient.h>
-
 #include <iostream>
 #include <stdlib.h>
+#include "CommsMessages.pb.h"
 
 using namespace AmqpClient;
 
@@ -25,6 +25,10 @@ using namespace AmqpClient;
 
 int main()
 {
+	// Verify that the version of the library that we linked against is
+	// compatible with the version of the headers we compiled against.
+	GOOGLE_PROTOBUF_VERIFY_VERSION;
+
 	const std::string HOSTNAME = "localhost";
 	const int PORT = 5672;
 	const std::string USERNAME = "guest";
@@ -57,13 +61,24 @@ int main()
                           << "\n Redelivered: " << env->Redelivered()
                           << "\n Body: " << env->Message()->Body() << std::endl;
 
+                Say sayMsg;
+                if (!sayMsg.ParseFromString(env->Message()->Body()))
+                {
+                	std::cout << "Error parsing 'Say' message.\n";
+                	continue;
+                }
+
+                std::cout << "Say: '" << sayMsg.text() << "'\n";
+
+                msleep(2000);
+
                 channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, env->Message());
             }
             else
             {
                 std::cout << "Basic Consume failed.\n";
             }
-            msleep(5000);
+            msleep(4000);
         }
 
     }
@@ -76,5 +91,8 @@ int main()
     {
         std::cout << "Failure: " << e.what();
     }
+
+    // Optional:  Delete all global objects allocated by libprotobuf.
+      google::protobuf::ShutdownProtobufLibrary();
 }
 
