@@ -4,6 +4,25 @@
 #include <stdlib.h>
 
 using namespace AmqpClient;
+
+
+#ifdef _WIN32
+    #include <windows.h>
+
+    void msleep(unsigned milliseconds)
+    {
+        Sleep(milliseconds);
+    }
+#else
+    #include <unistd.h>
+
+    void msleep(unsigned milliseconds)
+    {
+        usleep(milliseconds * 1000); // takes microseconds
+    }
+#endif
+
+
 int main()
 {
 	const std::string HOSTNAME = "localhost";
@@ -22,13 +41,13 @@ int main()
 
     try
     {
-    	Channel::ptr_t channelIn = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
-        channelIn->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
+    	Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
+        channel->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
 
         Envelope::ptr_t env;
         while (true)
         {
-            if (channelIn->BasicConsumeMessage(CONSUMER_TAG, env, 0))
+            if (channel->BasicConsumeMessage(CONSUMER_TAG, env, 0))
             {
                 std::cout << "Envelope received: \n"
                           << " Exchange: " << env->Exchange()
@@ -38,12 +57,13 @@ int main()
                           << "\n Redelivered: " << env->Redelivered()
                           << "\n Body: " << env->Message()->Body() << std::endl;
 
-                //channelOut->BasicPublish(EXCHANGE_NAME, ROUTING_KEY, env->Message());
+                channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, env->Message());
             }
             else
             {
                 std::cout << "Basic Consume failed.\n";
             }
+            msleep(5000);
         }
 
     }
