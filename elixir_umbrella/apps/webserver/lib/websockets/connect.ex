@@ -107,7 +107,7 @@ def client(state) do
       #{:ok, _queue} = AMQP.Queue.declare( chan, Globals.send_queue, [auto_delete: true, durable: false, exclusive: false])
       #:ok = AMQP.Exchange.declare(chan, Globals.mq_exchange, :direct, [auto_delete: true, durable: false])
       #:ok = AMQP.Queue.bind chan, Globals.send_queue, Globals.mq_exchange
-      :ok = AMQP.Basic.publish chan, Globals.mq_exchange, "Inbound", str
+      :ok = AMQP.Basic.publish(chan, Globals.mq_exchange, "Inbound", str)
 
       client(state)
     {:tcp_closed,_} ->
