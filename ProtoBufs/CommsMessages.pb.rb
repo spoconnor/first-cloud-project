@@ -21,8 +21,8 @@
 #   
 #   message Registered
 #   {
-#     required string motd = 1;
-#     required int32 objectid = 2;
+#     required int32 objectid = 1;
+#     optional string motd = 2;
 #   }
 #   
 #   message Say 
@@ -34,6 +34,12 @@
 #   
 #   message Coords
 #   {
+#     required float x = 1;
+#     required float y = 2;
+#   }
+# 
+#   message BlockPosition
+#   {
 #     required int32 x = 1;
 #     required int32 y = 2;
 #   }
@@ -41,25 +47,25 @@
 #   message Move
 #   {
 #     required int32 object = 1;
-#     required Coords from = 2;
-#     required Coords to = 3;
-#     required int32 speed = 4;
+#     required BlockPosition from = 2;
+#     required BlockPosition to = 3;
+#     optional int32 speed = 4;
 #   }
 #   
 #   message Action
 #   {
 #     required int32 from = 1;
-#     required Coords target = 2;
+#     required BlockPosition target = 2;
 #     required string what = 3;
 #     required string with = 4;
 #   }
 #   
 #   message Block
 #   {
-#     required Coords location = 1;
+#     required BlockPosition location = 1;
 #     required int32 type = 2;
 #     required ObjectAction action = 3;
-#     required Coords destination = 4;
+#     required BlockPosition destination = 4;
 #     required int32 speed = 5;
 #   
 #     enum ObjectAction {
@@ -67,6 +73,14 @@
 #       eRemove = 1;
 #       eMove = 2;
 #     }
+#   }
+# 
+#   message Map
+#   {
+#     required int32 xsize = 1;
+#     required int32 ysize = 2;
+#     required int32 timestamp = 3;
+#     repeated int32 data = 4 [packed=true];
 #   }
 # 
 #   enum MsgType {
@@ -141,8 +155,8 @@ class Register < ::Protobuf::Message
 end
 class Registered < ::Protobuf::Message
   defined_in __FILE__
-  required :string, :motd, 1
-  required :int32, :objectid, 2
+  required :int32, :objectid, 1
+  optional :string, :motd, 2
 end
 class Say < ::Protobuf::Message
   defined_in __FILE__
@@ -152,29 +166,34 @@ class Say < ::Protobuf::Message
 end
 class Coords < ::Protobuf::Message
   defined_in __FILE__
+  required :float, :x, 1
+  required :float, :y, 2
+end
+class BlockPosition < ::Protobuf::Message
+  defined_in __FILE__
   required :int32, :x, 1
   required :int32, :y, 2
 end
 class Move < ::Protobuf::Message
   defined_in __FILE__
   required :int32, :object, 1
-  required :Coords, :from, 2
-  required :Coords, :to, 3
-  required :int32, :speed, 4
+  required :BlockPosition, :from, 2
+  required :BlockPosition, :to, 3
+  optional :int32, :speed, 4
 end
 class Action < ::Protobuf::Message
   defined_in __FILE__
   required :int32, :from, 1
-  required :Coords, :target, 2
+  required :BlockPosition, :target, 2
   required :string, :what, 3
   required :string, :with, 4
 end
 class Block < ::Protobuf::Message
   defined_in __FILE__
-  required :Coords, :location, 1
+  required :BlockPosition, :location, 1
   required :int32, :type, 2
   required :ObjectAction, :action, 3
-  required :Coords, :destination, 4
+  required :BlockPosition, :destination, 4
   required :int32, :speed, 5
   class ObjectAction < ::Protobuf::Enum
     defined_in __FILE__
@@ -182,6 +201,13 @@ class Block < ::Protobuf::Message
     ERemove = value(:eRemove, 1)
     EMove = value(:eMove, 2)
   end
+end
+class Map < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :xsize, 1
+  required :int32, :ysize, 2
+  required :int32, :timestamp, 3
+  repeated :int32, :data, 4, :packed => true
 end
 class MsgType < ::Protobuf::Enum
   defined_in __FILE__

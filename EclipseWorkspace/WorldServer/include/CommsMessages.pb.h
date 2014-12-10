@@ -37,9 +37,11 @@ class Register;
 class Registered;
 class Say;
 class Coords;
+class BlockPosition;
 class Move;
 class Action;
 class Block;
+class Map;
 class Header;
 
 enum Block_ObjectAction {
@@ -311,10 +313,17 @@ class Registered : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string motd = 1;
+  // required int32 objectid = 1;
+  inline bool has_objectid() const;
+  inline void clear_objectid();
+  static const int kObjectidFieldNumber = 1;
+  inline ::google::protobuf::int32 objectid() const;
+  inline void set_objectid(::google::protobuf::int32 value);
+
+  // optional string motd = 2;
   inline bool has_motd() const;
   inline void clear_motd();
-  static const int kMotdFieldNumber = 1;
+  static const int kMotdFieldNumber = 2;
   inline const ::std::string& motd() const;
   inline void set_motd(const ::std::string& value);
   inline void set_motd(const char* value);
@@ -323,19 +332,12 @@ class Registered : public ::google::protobuf::Message {
   inline ::std::string* release_motd();
   inline void set_allocated_motd(::std::string* motd);
 
-  // required int32 objectid = 2;
-  inline bool has_objectid() const;
-  inline void clear_objectid();
-  static const int kObjectidFieldNumber = 2;
-  inline ::google::protobuf::int32 objectid() const;
-  inline void set_objectid(::google::protobuf::int32 value);
-
   // @@protoc_insertion_point(class_scope:Registered)
  private:
-  inline void set_has_motd();
-  inline void clear_has_motd();
   inline void set_has_objectid();
   inline void clear_has_objectid();
+  inline void set_has_motd();
+  inline void clear_has_motd();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -515,6 +517,98 @@ class Coords : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // required float x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 1;
+  inline float x() const;
+  inline void set_x(float value);
+
+  // required float y = 2;
+  inline bool has_y() const;
+  inline void clear_y();
+  static const int kYFieldNumber = 2;
+  inline float y() const;
+  inline void set_y(float value);
+
+  // @@protoc_insertion_point(class_scope:Coords)
+ private:
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_y();
+  inline void clear_has_y();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  float x_;
+  float y_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_CommsMessages_2eproto();
+  friend void protobuf_AssignDesc_CommsMessages_2eproto();
+  friend void protobuf_ShutdownFile_CommsMessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Coords* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class BlockPosition : public ::google::protobuf::Message {
+ public:
+  BlockPosition();
+  virtual ~BlockPosition();
+
+  BlockPosition(const BlockPosition& from);
+
+  inline BlockPosition& operator=(const BlockPosition& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BlockPosition& default_instance();
+
+  void Swap(BlockPosition* other);
+
+  // implements Message ----------------------------------------------
+
+  BlockPosition* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BlockPosition& from);
+  void MergeFrom(const BlockPosition& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
   // required int32 x = 1;
   inline bool has_x() const;
   inline void clear_x();
@@ -529,7 +623,7 @@ class Coords : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 y() const;
   inline void set_y(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:Coords)
+  // @@protoc_insertion_point(class_scope:BlockPosition)
  private:
   inline void set_has_x();
   inline void clear_has_x();
@@ -549,7 +643,7 @@ class Coords : public ::google::protobuf::Message {
   friend void protobuf_ShutdownFile_CommsMessages_2eproto();
 
   void InitAsDefaultInstance();
-  static Coords* default_instance_;
+  static BlockPosition* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -614,25 +708,25 @@ class Move : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 object() const;
   inline void set_object(::google::protobuf::int32 value);
 
-  // required .Coords from = 2;
+  // required .BlockPosition from = 2;
   inline bool has_from() const;
   inline void clear_from();
   static const int kFromFieldNumber = 2;
-  inline const ::Coords& from() const;
-  inline ::Coords* mutable_from();
-  inline ::Coords* release_from();
-  inline void set_allocated_from(::Coords* from);
+  inline const ::BlockPosition& from() const;
+  inline ::BlockPosition* mutable_from();
+  inline ::BlockPosition* release_from();
+  inline void set_allocated_from(::BlockPosition* from);
 
-  // required .Coords to = 3;
+  // required .BlockPosition to = 3;
   inline bool has_to() const;
   inline void clear_to();
   static const int kToFieldNumber = 3;
-  inline const ::Coords& to() const;
-  inline ::Coords* mutable_to();
-  inline ::Coords* release_to();
-  inline void set_allocated_to(::Coords* to);
+  inline const ::BlockPosition& to() const;
+  inline ::BlockPosition* mutable_to();
+  inline ::BlockPosition* release_to();
+  inline void set_allocated_to(::BlockPosition* to);
 
-  // required int32 speed = 4;
+  // optional int32 speed = 4;
   inline bool has_speed() const;
   inline void clear_speed();
   static const int kSpeedFieldNumber = 4;
@@ -652,10 +746,10 @@ class Move : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::Coords* from_;
+  ::BlockPosition* from_;
   ::google::protobuf::int32 object_;
   ::google::protobuf::int32 speed_;
-  ::Coords* to_;
+  ::BlockPosition* to_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
@@ -730,14 +824,14 @@ class Action : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 from() const;
   inline void set_from(::google::protobuf::int32 value);
 
-  // required .Coords target = 2;
+  // required .BlockPosition target = 2;
   inline bool has_target() const;
   inline void clear_target();
   static const int kTargetFieldNumber = 2;
-  inline const ::Coords& target() const;
-  inline ::Coords* mutable_target();
-  inline ::Coords* release_target();
-  inline void set_allocated_target(::Coords* target);
+  inline const ::BlockPosition& target() const;
+  inline ::BlockPosition* mutable_target();
+  inline ::BlockPosition* release_target();
+  inline void set_allocated_target(::BlockPosition* target);
 
   // required string what = 3;
   inline bool has_what() const;
@@ -776,7 +870,7 @@ class Action : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::Coords* target_;
+  ::BlockPosition* target_;
   ::std::string* what_;
   ::std::string* with_;
   ::google::protobuf::int32 from_;
@@ -872,14 +966,14 @@ class Block : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .Coords location = 1;
+  // required .BlockPosition location = 1;
   inline bool has_location() const;
   inline void clear_location();
   static const int kLocationFieldNumber = 1;
-  inline const ::Coords& location() const;
-  inline ::Coords* mutable_location();
-  inline ::Coords* release_location();
-  inline void set_allocated_location(::Coords* location);
+  inline const ::BlockPosition& location() const;
+  inline ::BlockPosition* mutable_location();
+  inline ::BlockPosition* release_location();
+  inline void set_allocated_location(::BlockPosition* location);
 
   // required int32 type = 2;
   inline bool has_type() const;
@@ -895,14 +989,14 @@ class Block : public ::google::protobuf::Message {
   inline ::Block_ObjectAction action() const;
   inline void set_action(::Block_ObjectAction value);
 
-  // required .Coords destination = 4;
+  // required .BlockPosition destination = 4;
   inline bool has_destination() const;
   inline void clear_destination();
   static const int kDestinationFieldNumber = 4;
-  inline const ::Coords& destination() const;
-  inline ::Coords* mutable_destination();
-  inline ::Coords* release_destination();
-  inline void set_allocated_destination(::Coords* destination);
+  inline const ::BlockPosition& destination() const;
+  inline ::BlockPosition* mutable_destination();
+  inline ::BlockPosition* release_destination();
+  inline void set_allocated_destination(::BlockPosition* destination);
 
   // required int32 speed = 5;
   inline bool has_speed() const;
@@ -926,10 +1020,10 @@ class Block : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::Coords* location_;
+  ::BlockPosition* location_;
   ::google::protobuf::int32 type_;
   int action_;
-  ::Coords* destination_;
+  ::BlockPosition* destination_;
   ::google::protobuf::int32 speed_;
 
   mutable int _cached_size_;
@@ -941,6 +1035,122 @@ class Block : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Block* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Map : public ::google::protobuf::Message {
+ public:
+  Map();
+  virtual ~Map();
+
+  Map(const Map& from);
+
+  inline Map& operator=(const Map& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Map& default_instance();
+
+  void Swap(Map* other);
+
+  // implements Message ----------------------------------------------
+
+  Map* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Map& from);
+  void MergeFrom(const Map& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 xsize = 1;
+  inline bool has_xsize() const;
+  inline void clear_xsize();
+  static const int kXsizeFieldNumber = 1;
+  inline ::google::protobuf::int32 xsize() const;
+  inline void set_xsize(::google::protobuf::int32 value);
+
+  // required int32 ysize = 2;
+  inline bool has_ysize() const;
+  inline void clear_ysize();
+  static const int kYsizeFieldNumber = 2;
+  inline ::google::protobuf::int32 ysize() const;
+  inline void set_ysize(::google::protobuf::int32 value);
+
+  // required int32 timestamp = 3;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 3;
+  inline ::google::protobuf::int32 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int32 value);
+
+  // repeated int32 data = 4 [packed = true];
+  inline int data_size() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 4;
+  inline ::google::protobuf::int32 data(int index) const;
+  inline void set_data(int index, ::google::protobuf::int32 value);
+  inline void add_data(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      data() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_data();
+
+  // @@protoc_insertion_point(class_scope:Map)
+ private:
+  inline void set_has_xsize();
+  inline void clear_has_xsize();
+  inline void set_has_ysize();
+  inline void clear_has_ysize();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 xsize_;
+  ::google::protobuf::int32 ysize_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > data_;
+  mutable int _data_cached_byte_size_;
+  ::google::protobuf::int32 timestamp_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_CommsMessages_2eproto();
+  friend void protobuf_AssignDesc_CommsMessages_2eproto();
+  friend void protobuf_ShutdownFile_CommsMessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Map* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1131,15 +1341,37 @@ inline void Register::set_allocated_name(::std::string* name) {
 
 // Registered
 
-// required string motd = 1;
-inline bool Registered::has_motd() const {
+// required int32 objectid = 1;
+inline bool Registered::has_objectid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Registered::set_has_motd() {
+inline void Registered::set_has_objectid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Registered::clear_has_motd() {
+inline void Registered::clear_has_objectid() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void Registered::clear_objectid() {
+  objectid_ = 0;
+  clear_has_objectid();
+}
+inline ::google::protobuf::int32 Registered::objectid() const {
+  return objectid_;
+}
+inline void Registered::set_objectid(::google::protobuf::int32 value) {
+  set_has_objectid();
+  objectid_ = value;
+}
+
+// optional string motd = 2;
+inline bool Registered::has_motd() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Registered::set_has_motd() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Registered::clear_has_motd() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Registered::clear_motd() {
   if (motd_ != &::google::protobuf::internal::kEmptyString) {
@@ -1199,28 +1431,6 @@ inline void Registered::set_allocated_motd(::std::string* motd) {
     clear_has_motd();
     motd_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
-}
-
-// required int32 objectid = 2;
-inline bool Registered::has_objectid() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Registered::set_has_objectid() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Registered::clear_has_objectid() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Registered::clear_objectid() {
-  objectid_ = 0;
-  clear_has_objectid();
-}
-inline ::google::protobuf::int32 Registered::objectid() const {
-  return objectid_;
-}
-inline void Registered::set_objectid(::google::protobuf::int32 value) {
-  set_has_objectid();
-  objectid_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1345,7 +1555,7 @@ inline void Say::set_allocated_text(::std::string* text) {
 
 // Coords
 
-// required int32 x = 1;
+// required float x = 1;
 inline bool Coords::has_x() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1359,15 +1569,15 @@ inline void Coords::clear_x() {
   x_ = 0;
   clear_has_x();
 }
-inline ::google::protobuf::int32 Coords::x() const {
+inline float Coords::x() const {
   return x_;
 }
-inline void Coords::set_x(::google::protobuf::int32 value) {
+inline void Coords::set_x(float value) {
   set_has_x();
   x_ = value;
 }
 
-// required int32 y = 2;
+// required float y = 2;
 inline bool Coords::has_y() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1381,10 +1591,58 @@ inline void Coords::clear_y() {
   y_ = 0;
   clear_has_y();
 }
-inline ::google::protobuf::int32 Coords::y() const {
+inline float Coords::y() const {
   return y_;
 }
-inline void Coords::set_y(::google::protobuf::int32 value) {
+inline void Coords::set_y(float value) {
+  set_has_y();
+  y_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// BlockPosition
+
+// required int32 x = 1;
+inline bool BlockPosition::has_x() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void BlockPosition::set_has_x() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void BlockPosition::clear_has_x() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void BlockPosition::clear_x() {
+  x_ = 0;
+  clear_has_x();
+}
+inline ::google::protobuf::int32 BlockPosition::x() const {
+  return x_;
+}
+inline void BlockPosition::set_x(::google::protobuf::int32 value) {
+  set_has_x();
+  x_ = value;
+}
+
+// required int32 y = 2;
+inline bool BlockPosition::has_y() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void BlockPosition::set_has_y() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void BlockPosition::clear_has_y() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void BlockPosition::clear_y() {
+  y_ = 0;
+  clear_has_y();
+}
+inline ::google::protobuf::int32 BlockPosition::y() const {
+  return y_;
+}
+inline void BlockPosition::set_y(::google::protobuf::int32 value) {
   set_has_y();
   y_ = value;
 }
@@ -1415,7 +1673,7 @@ inline void Move::set_object(::google::protobuf::int32 value) {
   object_ = value;
 }
 
-// required .Coords from = 2;
+// required .BlockPosition from = 2;
 inline bool Move::has_from() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1426,24 +1684,24 @@ inline void Move::clear_has_from() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Move::clear_from() {
-  if (from_ != NULL) from_->::Coords::Clear();
+  if (from_ != NULL) from_->::BlockPosition::Clear();
   clear_has_from();
 }
-inline const ::Coords& Move::from() const {
+inline const ::BlockPosition& Move::from() const {
   return from_ != NULL ? *from_ : *default_instance_->from_;
 }
-inline ::Coords* Move::mutable_from() {
+inline ::BlockPosition* Move::mutable_from() {
   set_has_from();
-  if (from_ == NULL) from_ = new ::Coords;
+  if (from_ == NULL) from_ = new ::BlockPosition;
   return from_;
 }
-inline ::Coords* Move::release_from() {
+inline ::BlockPosition* Move::release_from() {
   clear_has_from();
-  ::Coords* temp = from_;
+  ::BlockPosition* temp = from_;
   from_ = NULL;
   return temp;
 }
-inline void Move::set_allocated_from(::Coords* from) {
+inline void Move::set_allocated_from(::BlockPosition* from) {
   delete from_;
   from_ = from;
   if (from) {
@@ -1453,7 +1711,7 @@ inline void Move::set_allocated_from(::Coords* from) {
   }
 }
 
-// required .Coords to = 3;
+// required .BlockPosition to = 3;
 inline bool Move::has_to() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -1464,24 +1722,24 @@ inline void Move::clear_has_to() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void Move::clear_to() {
-  if (to_ != NULL) to_->::Coords::Clear();
+  if (to_ != NULL) to_->::BlockPosition::Clear();
   clear_has_to();
 }
-inline const ::Coords& Move::to() const {
+inline const ::BlockPosition& Move::to() const {
   return to_ != NULL ? *to_ : *default_instance_->to_;
 }
-inline ::Coords* Move::mutable_to() {
+inline ::BlockPosition* Move::mutable_to() {
   set_has_to();
-  if (to_ == NULL) to_ = new ::Coords;
+  if (to_ == NULL) to_ = new ::BlockPosition;
   return to_;
 }
-inline ::Coords* Move::release_to() {
+inline ::BlockPosition* Move::release_to() {
   clear_has_to();
-  ::Coords* temp = to_;
+  ::BlockPosition* temp = to_;
   to_ = NULL;
   return temp;
 }
-inline void Move::set_allocated_to(::Coords* to) {
+inline void Move::set_allocated_to(::BlockPosition* to) {
   delete to_;
   to_ = to;
   if (to) {
@@ -1491,7 +1749,7 @@ inline void Move::set_allocated_to(::Coords* to) {
   }
 }
 
-// required int32 speed = 4;
+// optional int32 speed = 4;
 inline bool Move::has_speed() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1539,7 +1797,7 @@ inline void Action::set_from(::google::protobuf::int32 value) {
   from_ = value;
 }
 
-// required .Coords target = 2;
+// required .BlockPosition target = 2;
 inline bool Action::has_target() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1550,24 +1808,24 @@ inline void Action::clear_has_target() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void Action::clear_target() {
-  if (target_ != NULL) target_->::Coords::Clear();
+  if (target_ != NULL) target_->::BlockPosition::Clear();
   clear_has_target();
 }
-inline const ::Coords& Action::target() const {
+inline const ::BlockPosition& Action::target() const {
   return target_ != NULL ? *target_ : *default_instance_->target_;
 }
-inline ::Coords* Action::mutable_target() {
+inline ::BlockPosition* Action::mutable_target() {
   set_has_target();
-  if (target_ == NULL) target_ = new ::Coords;
+  if (target_ == NULL) target_ = new ::BlockPosition;
   return target_;
 }
-inline ::Coords* Action::release_target() {
+inline ::BlockPosition* Action::release_target() {
   clear_has_target();
-  ::Coords* temp = target_;
+  ::BlockPosition* temp = target_;
   target_ = NULL;
   return temp;
 }
-inline void Action::set_allocated_target(::Coords* target) {
+inline void Action::set_allocated_target(::BlockPosition* target) {
   delete target_;
   target_ = target;
   if (target) {
@@ -1721,7 +1979,7 @@ inline void Action::set_allocated_with(::std::string* with) {
 
 // Block
 
-// required .Coords location = 1;
+// required .BlockPosition location = 1;
 inline bool Block::has_location() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1732,24 +1990,24 @@ inline void Block::clear_has_location() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void Block::clear_location() {
-  if (location_ != NULL) location_->::Coords::Clear();
+  if (location_ != NULL) location_->::BlockPosition::Clear();
   clear_has_location();
 }
-inline const ::Coords& Block::location() const {
+inline const ::BlockPosition& Block::location() const {
   return location_ != NULL ? *location_ : *default_instance_->location_;
 }
-inline ::Coords* Block::mutable_location() {
+inline ::BlockPosition* Block::mutable_location() {
   set_has_location();
-  if (location_ == NULL) location_ = new ::Coords;
+  if (location_ == NULL) location_ = new ::BlockPosition;
   return location_;
 }
-inline ::Coords* Block::release_location() {
+inline ::BlockPosition* Block::release_location() {
   clear_has_location();
-  ::Coords* temp = location_;
+  ::BlockPosition* temp = location_;
   location_ = NULL;
   return temp;
 }
-inline void Block::set_allocated_location(::Coords* location) {
+inline void Block::set_allocated_location(::BlockPosition* location) {
   delete location_;
   location_ = location;
   if (location) {
@@ -1804,7 +2062,7 @@ inline void Block::set_action(::Block_ObjectAction value) {
   action_ = value;
 }
 
-// required .Coords destination = 4;
+// required .BlockPosition destination = 4;
 inline bool Block::has_destination() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -1815,24 +2073,24 @@ inline void Block::clear_has_destination() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void Block::clear_destination() {
-  if (destination_ != NULL) destination_->::Coords::Clear();
+  if (destination_ != NULL) destination_->::BlockPosition::Clear();
   clear_has_destination();
 }
-inline const ::Coords& Block::destination() const {
+inline const ::BlockPosition& Block::destination() const {
   return destination_ != NULL ? *destination_ : *default_instance_->destination_;
 }
-inline ::Coords* Block::mutable_destination() {
+inline ::BlockPosition* Block::mutable_destination() {
   set_has_destination();
-  if (destination_ == NULL) destination_ = new ::Coords;
+  if (destination_ == NULL) destination_ = new ::BlockPosition;
   return destination_;
 }
-inline ::Coords* Block::release_destination() {
+inline ::BlockPosition* Block::release_destination() {
   clear_has_destination();
-  ::Coords* temp = destination_;
+  ::BlockPosition* temp = destination_;
   destination_ = NULL;
   return temp;
 }
-inline void Block::set_allocated_destination(::Coords* destination) {
+inline void Block::set_allocated_destination(::BlockPosition* destination) {
   delete destination_;
   destination_ = destination;
   if (destination) {
@@ -1862,6 +2120,101 @@ inline ::google::protobuf::int32 Block::speed() const {
 inline void Block::set_speed(::google::protobuf::int32 value) {
   set_has_speed();
   speed_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// Map
+
+// required int32 xsize = 1;
+inline bool Map::has_xsize() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Map::set_has_xsize() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Map::clear_has_xsize() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Map::clear_xsize() {
+  xsize_ = 0;
+  clear_has_xsize();
+}
+inline ::google::protobuf::int32 Map::xsize() const {
+  return xsize_;
+}
+inline void Map::set_xsize(::google::protobuf::int32 value) {
+  set_has_xsize();
+  xsize_ = value;
+}
+
+// required int32 ysize = 2;
+inline bool Map::has_ysize() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Map::set_has_ysize() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Map::clear_has_ysize() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Map::clear_ysize() {
+  ysize_ = 0;
+  clear_has_ysize();
+}
+inline ::google::protobuf::int32 Map::ysize() const {
+  return ysize_;
+}
+inline void Map::set_ysize(::google::protobuf::int32 value) {
+  set_has_ysize();
+  ysize_ = value;
+}
+
+// required int32 timestamp = 3;
+inline bool Map::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Map::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Map::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Map::clear_timestamp() {
+  timestamp_ = 0;
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int32 Map::timestamp() const {
+  return timestamp_;
+}
+inline void Map::set_timestamp(::google::protobuf::int32 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// repeated int32 data = 4 [packed = true];
+inline int Map::data_size() const {
+  return data_.size();
+}
+inline void Map::clear_data() {
+  data_.Clear();
+}
+inline ::google::protobuf::int32 Map::data(int index) const {
+  return data_.Get(index);
+}
+inline void Map::set_data(int index, ::google::protobuf::int32 value) {
+  data_.Set(index, value);
+}
+inline void Map::add_data(::google::protobuf::int32 value) {
+  data_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Map::data() const {
+  return data_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Map::mutable_data() {
+  return &data_;
 }
 
 // -------------------------------------------------------------------
