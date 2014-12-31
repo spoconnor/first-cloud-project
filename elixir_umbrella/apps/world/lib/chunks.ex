@@ -4,7 +4,7 @@ use GenServer
 #-------------------------------------------------------------------
 # GenServer Function Definitions
 
-def start_link(opts \\ []) do
+def start_link(opts) do
   GenServer.start_link(__MODULE__, :ok, opts)
 end
 
@@ -14,9 +14,10 @@ end
 
 #-------------------------------------------------------------------
 
-def init(:ok) do
-  IO.puts("Chunks initializing")
-  {:ok, HashDict.new()}
+def init([x,y]) do
+  IO.puts("Chunks initializing with size #{x},#{y}")
+  chunks = HashDict.new
+  {:ok, %{xsize: x, ysize: y, chunks: chunks} }
 end
 
 def terminate(_reason, _state) do
@@ -28,22 +29,31 @@ end
 #  {:ok, state}
 #end
 
-def add_chunk(server, coords) do
-  GenServer.cast(server, coords, {:add, coords})
-end
-
-def get_chunk(server, coords) do
-  GenServer.call(server, {:get, coords, notify_pid})
+def get(server, x,y) do
+  GenServer.call(server, {:get, x,y})
 end
 
 #-------------------------------------------------------------------
 
-def handle_cast({:add, coords}) do
-  {:noreply, HashDict.new()}
+defp index(state, x,y) do
+  y * state.xsize + x
 end
 
-def handle_call(:get, _from, %State{count: count}) do 
-  {:reply, count, %State{count: count+1} }
+defp create_chunk() do
+  "wibble"
+end
+
+def handle_call({:get, x,y}, _from, state) do
+  if HashDict.has_key?(state.chunks, index(state, x,y)) do
+    IO.puts("Getting Chunk #{x},#{y}")
+    {:ok, chunk} = HashDict.fetch(state.chunks, index(state, x,y))
+    {:reply, chunk, state}
+  else
+    IO.puts("Creating Chunk #{x},#{y}")
+    chunk = create_chunk()
+    chunks = HashDict.put(state.chunks, index(state, x,y), chunk)
+    {:reply, chunk, %{state | chunks: chunks} }
+  end
 end
 
 #------------------------------------------------------------------
