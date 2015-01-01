@@ -10,7 +10,9 @@ use Bitwise
 
   # Return a width*height list of random floats between 0 and 1
   defp GenerateWhiteNoise(width, height) do
-    Stream.repeatedly(fn -> :random.uniform end) |> Enum.take(width * height)
+    #Stream.repeatedly(fn -> :random.uniform end) |> Enum.take(width * height)
+    :array.new([{:size,height}, {:fixed,:true}, {:default, 
+      :array.new([{:size,width}, {:fixed,:true}, {:default, :random.uniform}]))
   end
 
   # Returns int[][]
@@ -27,32 +29,29 @@ use Bitwise
     Enum.map(perlinNoise, fn {i} -> Interpolate(minY, maxY, i) end)
   end
 
-  # returns empty T[][]
-  # int width, int height
-  defp GetEmptyArray(width, height) do
-    Stream.repeatedly(fn -> 0 end) |> Enum.take(width * height)
-  end
-
-  defp lookup(list, _width, height, x, y) do
-    :lists.nth(height * x + y, list)
+  defp lookup(array, x, y) do
+    :array.get(x, :array.get(y, array))
   end
 
   # returns float[][]
   # float[][] baseNoise, int octave
   defp GenerateSmoothNoise(width, height, baseNoise, octave) do
-    smoothNoise = GetEmptyArray(width, height)
     samplePeriod = 1 <<< octave  # calculates 2 ^ k
     sampleFrequency = 1.0 / samplePeriod
 
-    for (int i = 0; i < width; i++)
-    {
+    smoothNoise = :array.new([{:size,height}, {:fixed,:true}, {:default, 
+      :array.new([{:size,width}, {:fixed,:true}, {:default, 0}]))
+
+    #for (int i = 0; i < width; i++)
+    Enum.each(list.seq(0, width-1), 
+    fn (i) ->
       # calculate the horizontal sampling indices
       iSample0 = div(i, samplePeriod) * samplePeriod
       iSample1 = rem( (iSample0 + samplePeriod), width) #wrap around
       horizontalBlend = (i - iSample0) * sampleFrequency
 
-      for (int j = 0; j < height; j++)
-      {
+      Enum.each(list.seq(0, height-1), 
+      fn (j) ->
         # calculate the vertical sampling indices
         jSample0 = div(j, samplePeriod) * samplePeriod
         jSample1 = rem( (jSample0 + samplePeriod), height) #wrap around
@@ -60,21 +59,29 @@ use Bitwise
 
         # blend the top two corners
         top = Interpolate(
-          lookup(baseNoise,width,height,iSample0,jSample0), 
-          lookup(baseNoise,width,height,iSample1,jSample0), 
+          lookup(baseNoise,iSample0,jSample0), 
+          lookup(baseNoise,iSample1,jSample0), 
           horizontalBlend)
 
         # blend the bottom two corners
         bottom = Interpolate(
-          lookup(baseNoise, width,height,iSample0,jSample1), 
-          lookup(baseNoise, width,height,iSample1,jSample1), 
+          lookup(baseNoise,iSample0,jSample1), 
+          lookup(baseNoise,iSample1,jSample1), 
           horizontalBlend)
 
         # final blend
         smoothNoise[i][j] = Interpolate(top, bottom, verticalBlend)
-      }
-    }
+      )
+    )
     return smoothNoise
+  end
+
+
+  defp Blend([p1|perlinNoise], [o1|octaveNoise], amplitude, result) do
+    Blend(perlinNoise, octaveNoise, amplitude, result ++ [p1 + o1 * amplitude])
+  end
+  defp Blend([], [], amplitude, result) do
+    result
   end
 
   # returns float[][] 
@@ -84,10 +91,8 @@ use Bitwise
     PERSISTANCE = 0.4f
 
     # generate smooth noise
-    for (int i = 0; i < octaveCount; i++)
-    {
-      smoothNoise[i] = GenerateSmoothNoise(width,height,baseNoise, i)
-    }
+    octaves = list.seq(octaveCount-1, 0, -1)
+    smoothNoise = Enum.map(octaves, fn (octave) -> GenerateSmoothNoise(width,height, baseNoise, octave) end)
 
     perlinNoise = GetEmptyArray(width, height) #an array of floats initialised to 0
 
@@ -95,19 +100,11 @@ use Bitwise
     totalAmplitude = 0.0f
 
     # blend noise together
-    for (int octave = octaveCount - 1; octave >= 0; octave--)
-    {
+    Enum.map(smoothNoise, fn (octaveNoise) -> 
       amplitude = amplitude * PERSISTANCE
       totalAmplitude = totalAmplitude + amplitude
-
-      for (int i = 0; i < width; i++)
-      {
-        for (int j = 0; j < height; j++)
-        {
-          perlinNoise[i][j] = perlinNoise[i][j] + smoothNoise[octave][i][j] * amplitude
-        }
-      }
-    }
+      perlinNoise = Blend(perlinNoise, octaveNoise, amplitude, [])
+    end)
 
     # normalisation
     normalizedPerlinNoise = Enum.map(perlinNoise, fn {i} -> i / totalAmplitude end)
