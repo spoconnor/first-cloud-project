@@ -1,25 +1,21 @@
 defmodule Array2D do
 
-  def test do
-   1
+  def new(width, height, default) do
+    :array.new([{:size,height}, {:fixed,:true}, {:default, 
+      :array.new([{:size,width}, {:fixed,:true}, {:default,default}])}])
   end
 
-  #def new(width, height, default) do
-  #  :array.new([{:size,height}, {:fixed,:true}, {:default, 
-  #    :array.new([{:size,width}, {:fixed,:true}, {:default, default}]))
-  #end
+  def get(array, x, y), do: :array.get(x, :array.get(y, array))
 
-  #def get(array, x, y) do
-  #  :array.get(x, :array.get(y, array))
-  #end
+  # Warning. Array is immutable. a new array is returned.
+  def set(array, x, y, value) do
+    line = :array.get(x, array)
+    :array.set(x, :array.set(y, value, line), array)
+  end
 
-  #def set(array, x, y, value) do
-  #  :array.set(x, :array.get(y, array), value)
-  #end
-
-  #def map(array, fn) do
-  #  :array.map(array, fn (i) ->
-  #    :array.map(i, fn) end)
-  #end
+  def map(array, func) do
+    :array.map(array, fn (i) ->
+      :array.map(i, func.()) end)
+  end
 
 end
