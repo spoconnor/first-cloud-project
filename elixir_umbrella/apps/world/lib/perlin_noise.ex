@@ -1,4 +1,4 @@
-﻿defmodule PerlinNoise do
+defmodule PerlinNoise do
 use Bitwise
 
   # returns int
