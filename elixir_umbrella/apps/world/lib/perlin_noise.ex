@@ -10,9 +10,7 @@ use Bitwise
 
   # Return a width*height list of random floats between 0 and 1
   defp GenerateWhiteNoise(width, height) do
-    #Stream.repeatedly(fn -> :random.uniform end) |> Enum.take(width * height)
-    :array.new([{:size,height}, {:fixed,:true}, {:default, 
-      :array.new([{:size,width}, {:fixed,:true}, {:default, :random.uniform}]))
+    Array2D.new(width, height, :random.uniform)
   end
 
   # Returns int[][]
@@ -27,10 +25,6 @@ use Bitwise
     #}
     #return heightMap;
     Enum.map(perlinNoise, fn {i} -> Interpolate(minY, maxY, i) end)
-  end
-
-  defp lookup(array, x, y) do
-    :array.get(x, :array.get(y, array))
   end
 
   # returns float[][]
