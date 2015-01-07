@@ -3,7 +3,7 @@ use Bitwise
 
   # returns int
   # int minY, int maxY, float t
-  defp interpolate(minY, maxY, t) do
+  defp Interpolate(minY, maxY, t) do
     u = 1 - t
     minY * u + maxY * t
   end
@@ -27,6 +27,10 @@ use Bitwise
     Enum.map(perlinNoise, fn {i} -> Interpolate(minY, maxY, i) end)
   end
 
+  defp Sample0(i, samplePeriod), do: div(i, samplePeriod) * samplePeriod
+  defp Sample1(i, samplePeriod, size), do rem( (Sample0(i, samplePeriod) + samplePeriod), size) #wrap around
+  defp Blend(i, samplePeriod, sampleFrequency), do: (i - Sample0(i, samplePeriod)) * sampleFrequency
+
   # returns float[][]
   # float[][] baseNoise, int octave
   defp GenerateSmoothNoise(width, height, baseNoise, octave) do
@@ -36,20 +40,30 @@ use Bitwise
     smoothNoise = :array.new([{:size,height}, {:fixed,:true}, {:default, 
       :array.new([{:size,width}, {:fixed,:true}, {:default, 0}]))
 
+  # calculate the horizontal sampling indices
+  i = 0..width-1
+  iStream = Stream.map(i, &([
+    &1,
+    Sample0(&1, samplePeriod),
+    Sample1(&1, samplePeriod, width),
+    Blend(&1, samplePeriod, sampleFrequency)
+  ]))
+
+  # calculate the horizontal sampling indices
+  j = 0..height-1
+  iStream = Stream.map(j, &([
+    &1,
+    Sample0(&1, samplePeriod),
+    Sample1(&1, samplePeriod, height),
+    Blend(&1, samplePeriod, sampleFrequency)
+  ]))
+
     #for (int i = 0; i < width; i++)
     Enum.each(list.seq(0, width-1), 
     fn (i) ->
-      # calculate the horizontal sampling indices
-      iSample0 = div(i, samplePeriod) * samplePeriod
-      iSample1 = rem( (iSample0 + samplePeriod), width) #wrap around
-      horizontalBlend = (i - iSample0) * sampleFrequency
 
       Enum.each(list.seq(0, height-1), 
       fn (j) ->
-        # calculate the vertical sampling indices
-        jSample0 = div(j, samplePeriod) * samplePeriod
-        jSample1 = rem( (jSample0 + samplePeriod), height) #wrap around
-        verticalBlend = (j - jSample0) * sampleFrequency
 
         # blend the top two corners
         top = Interpolate(
