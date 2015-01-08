@@ -3,19 +3,19 @@ use Bitwise
 
   # returns int
   # int minY, int maxY, float t
-  defp Interpolate(minY, maxY, t) do
+  def interpolate(minY, maxY, t) do
     u = 1 - t
     minY * u + maxY * t
   end
 
   # Return a width*height list of random floats between 0 and 1
-  defp GenerateWhiteNoise(width, height) do
-    Array2D.new(width, height, :random.uniform)
+  def generateWhiteNoise(width, height) do
+    Array2D.new(width, height, fn -> :random.uniform end)
   end
 
   # Returns int[][]
   # int minY, int maxY, float[][] perlinNoise
-  defp MapInts(minY, maxY, perlinNoise) do
+  def mapInts(minY, maxY, perlinNoise) do
     #width = perlinNoise.Length;
     #height = perlinNoise[0].Length;
     #int[][] heightMap = GetEmptyArray<int>(width, height);
@@ -24,94 +24,90 @@ use Bitwise
     #    heightMap[i][j] = Interpolate(minY, maxY, perlinNoise[i][j]);
     #}
     #return heightMap;
-    Enum.map(perlinNoise, fn {i} -> Interpolate(minY, maxY, i) end)
+    Enum.map(perlinNoise, fn {i} -> interpolate(minY, maxY, i) end)
   end
 
-  defp Sample0(i, samplePeriod), do: div(i, samplePeriod) * samplePeriod
-  defp Sample1(i, samplePeriod, size), do rem( (Sample0(i, samplePeriod) + samplePeriod), size) #wrap around
-  defp Blend(i, samplePeriod, sampleFrequency), do: (i - Sample0(i, samplePeriod)) * sampleFrequency
+  def sample0(i, samplePeriod), do: div(i, samplePeriod) * samplePeriod
+  def sample1(i, samplePeriod, size), do: rem( (sample0(i, samplePeriod) + samplePeriod), size) #wrap around
+  def blend(i, samplePeriod, sampleFrequency), do: (i - sample0(i, samplePeriod)) * sampleFrequency
 
   # returns float[][]
   # float[][] baseNoise, int octave
-  defp GenerateSmoothNoise(width, height, baseNoise, octave) do
+  def generateSmoothNoise(width, height, baseNoise, octave) do
     samplePeriod = 1 <<< octave  # calculates 2 ^ k
     sampleFrequency = 1.0 / samplePeriod
 
-    smoothNoise = :array.new([{:size,height}, {:fixed,:true}, {:default, 
-      :array.new([{:size,width}, {:fixed,:true}, {:default, 0}]))
+    #smoothNoise = :array.new([{:size,height}, {:fixed,:true}, {:default, 
+    #  :array.new([{:size,width}, {:fixed,:true}, {:default, 0}]))
+
+    smoothNoise = Array2D.new(width,height,0)
 
   # calculate the horizontal sampling indices
-  i = 0..width-1
-  iStream = Stream.map(i, &([
+  #0..width-1 |> iStream = Stream.map(i, &([
+  iSamples = 0..width-1 |> Enum.map(&([
     &1,
-    Sample0(&1, samplePeriod),
-    Sample1(&1, samplePeriod, width),
-    Blend(&1, samplePeriod, sampleFrequency)
+    sample0(&1, samplePeriod),
+    sample1(&1, samplePeriod, width),
+    blend(&1, samplePeriod, sampleFrequency)
   ]))
 
   # calculate the horizontal sampling indices
-  j = 0..height-1
-  iStream = Stream.map(j, &([
+  jSamples = 0..height-1 |> Enum.map(&([
     &1,
-    Sample0(&1, samplePeriod),
-    Sample1(&1, samplePeriod, height),
-    Blend(&1, samplePeriod, sampleFrequency)
+    sample0(&1, samplePeriod),
+    sample1(&1, samplePeriod, height),
+    blend(&1, samplePeriod, sampleFrequency)
   ]))
 
-    #for (int i = 0; i < width; i++)
-    Enum.each(list.seq(0, width-1), 
-    fn (i) ->
-
-      Enum.each(list.seq(0, height-1), 
-      fn (j) ->
+  Enum.map(iSamples, fn(i) -> 
+    Enum.map(jSamples, fn(j) -> [i,j] end) end)
 
         # blend the top two corners
-        top = Interpolate(
-          lookup(baseNoise,iSample0,jSample0), 
-          lookup(baseNoise,iSample1,jSample0), 
-          horizontalBlend)
+#        top = Interpolate(
+#          lookup(baseNoise,iSample0,jSample0), 
+#          lookup(baseNoise,iSample1,jSample0), 
+#          horizontalBlend)
 
         # blend the bottom two corners
-        bottom = Interpolate(
-          lookup(baseNoise,iSample0,jSample1), 
-          lookup(baseNoise,iSample1,jSample1), 
-          horizontalBlend)
+#        bottom = Interpolate(
+#          lookup(baseNoise,iSample0,jSample1), 
+#          lookup(baseNoise,iSample1,jSample1), 
+#          horizontalBlend)
 
         # final blend
-        smoothNoise[i][j] = Interpolate(top, bottom, verticalBlend)
-      )
-    )
-    return smoothNoise
+#        smoothNoise[i][j] = Interpolate(top, bottom, verticalBlend)
+#      )
+#    )
+#    return smoothNoise
   end
 
-
-  defp Blend([p1|perlinNoise], [o1|octaveNoise], amplitude, result) do
-    Blend(perlinNoise, octaveNoise, amplitude, result ++ [p1 + o1 * amplitude])
+  def blend([p1|perlinNoise], [o1|octaveNoise], amplitude, result) do
+    blend(perlinNoise, octaveNoise, amplitude, result ++ [p1 + o1 * amplitude])
   end
-  defp Blend([], [], amplitude, result) do
+  def blend([], [], amplitude, result) do
     result
   end
 
   # returns float[][] 
   # float[][] baseNoise, int octaveCount
-  defp GeneratePerlinNoise(width, height, baseNoise, octaveCount) do
-    smoothNoise = new float[octaveCount][][]; #an array of 2D arrays containing
-    PERSISTANCE = 0.4f
+  def generatePerlinNoise(width, height, baseNoise, octaveCount) do
+    smoothNoise = Array2D.new(0,0,0) # float[octaveCount][][]; #an array of 2D arrays containing
+    PERSISTANCE = 0.4
 
     # generate smooth noise
-    octaves = list.seq(octaveCount-1, 0, -1)
-    smoothNoise = Enum.map(octaves, fn (octave) -> GenerateSmoothNoise(width,height, baseNoise, octave) end)
+    octaves = [0..(octaveCount-1)]
+    smoothNoise = Enum.map(octaves, fn (octave) -> generateSmoothNoise(width,height, baseNoise, octave) end)
 
-    perlinNoise = GetEmptyArray(width, height) #an array of floats initialised to 0
+    perlinNoise = Array2D.new(width,height,0)
 
-    amplitude = 1f
-    totalAmplitude = 0.0f
+    amplitude = 1.0
+    totalAmplitude = 0.0
 
     # blend noise together
     Enum.map(smoothNoise, fn (octaveNoise) -> 
       amplitude = amplitude * PERSISTANCE
       totalAmplitude = totalAmplitude + amplitude
-      perlinNoise = Blend(perlinNoise, octaveNoise, amplitude, [])
+      perlinNoise = blend(perlinNoise, octaveNoise, amplitude, [])
     end)
 
     # normalisation
@@ -120,16 +116,21 @@ use Bitwise
 
   #--------------------------------------------------------------------------
 
-  def SeedRandom() do
+  # seed if of the form {1420, 706537, 145248}
+  def seedRandom(seed) do
+    :random.seed(seed)
+  end
+
+  def seedRandom() do
     :random.seed(:erlang.now)
   end
 
   # returns int[][] 
   # int width, int height, int minY, int maxY, int octaveCount
-  def GetIntMap(width, height, minY, maxY, octaveCount) do
-    baseNoise = GenerateWhiteNoise(width, height)
-    perlinNoise = GeneratePerlinNoise(width, height, baseNoise, octaveCount)
-    MapInts(minY, maxY, perlinNoise)
+  def getIntMap(width, height, minY, maxY, octaveCount) do
+    baseNoise = generateWhiteNoise(width, height)
+    perlinNoise = generatePerlinNoise(width, height, baseNoise, octaveCount)
+    mapInts(minY, maxY, perlinNoise)
   end
 
   #--------------------------------------------------------------------------
