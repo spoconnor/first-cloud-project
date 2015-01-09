@@ -14,8 +14,8 @@ defmodule Array2D do
   end
 
   def map(array, func) do
-    :array.map(array, fn (i, v) ->
-      :array.map(i, fn (ii,vv) -> func.(ii,vv) end) end)
+    :array.map(fn (i, v) ->
+      :array.map(fn (ii,vv) -> func.(ii,vv) end, i) end, array)
   end
 
 end
