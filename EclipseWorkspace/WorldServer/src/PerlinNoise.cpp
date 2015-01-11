@@ -1,8 +1,18 @@
-﻿namespace Sean.World
+﻿
+
+class PerlinNoise
 {
-	internal class PerlinNoise
-	{
-		private static float[][] GenerateWhiteNoise(int width, int height)
+	float[][] GenerateWhiteNoise(int width, int height)
+	int Interpolate(int minY, int maxY, float t)
+	int[][] MapInts(int minY, int maxY, float[][] perlinNoise)
+	T[][] GetEmptyArray<T>(int width, int height)
+	float[][] GenerateSmoothNoise(float[][] baseNoise, int octave)
+	float[][] GeneratePerlinNoise(float[][] baseNoise, int octaveCount)
+	int[][] GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
+};
+
+
+		float[][] GenerateWhiteNoise(int width, int height)
 		{
 			float[][] noise = GetEmptyArray<float>(width, height);
 
@@ -16,18 +26,13 @@
 			return noise;
 		}
 
-		private static float Interpolate(float x0, float x1, float alpha)
-		{
-			return x0 * (1 - alpha) + alpha * x1;
-		}
-
-		private static int Interpolate(int minY, int maxY, float t)
+		int Interpolate(int minY, int maxY, float t)
 		{
 			float u = 1 - t;
 			return (int)(minY * u + maxY * t);
 		}
 
-		private static int[][] MapInts(int minY, int maxY, float[][] perlinNoise)
+		int[][] MapInts(int minY, int maxY, float[][] perlinNoise)
 		{
 			int width = perlinNoise.Length;
 			int height = perlinNoise[0].Length;
@@ -43,23 +48,7 @@
 			return heightMap;
 		}
 
-		private static float[][] MapFloats(float minY, float maxY, float[][] perlinNoise)
-		{
-			int width = perlinNoise.Length;
-			int height = perlinNoise[0].Length;
-			float[][] treeMap = GetEmptyArray<float>(width, height);
-
-			for (int i = 0; i < width; i++)
-			{
-				for (int j = 0; j < height; j++)
-				{
-					treeMap[i][j] = Interpolate(minY, maxY, perlinNoise[i][j]);
-				}
-			}
-			return treeMap;
-		}
-
-		private static T[][] GetEmptyArray<T>(int width, int height)
+		T[][] GetEmptyArray<T>(int width, int height)
 		{
 			var image = new T[width][];
 
@@ -70,7 +59,7 @@
 			return image;
 		}
 
-		private static float[][] GenerateSmoothNoise(float[][] baseNoise, int octave)
+		float[][] GenerateSmoothNoise(float[][] baseNoise, int octave)
 		{
 			int width = baseNoise.Length;
 			int height = baseNoise[0].Length;
@@ -106,7 +95,7 @@
 			return smoothNoise;
 		}
 
-		private static float[][] GeneratePerlinNoise(float[][] baseNoise, int octaveCount)
+		float[][] GeneratePerlinNoise(float[][] baseNoise, int octaveCount)
 		{
 			int width = baseNoise.Length;
 			int height = baseNoise[0].Length;
@@ -152,18 +141,10 @@
 			return perlinNoise;
 		}
 
-		public static int[][] GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
+		int[][] GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
 		{
             float[][] baseNoise = GenerateWhiteNoise(width, height);
 			float[][] perlinNoise = GeneratePerlinNoise(baseNoise, octaveCount);
 			return MapInts(minY, maxY, perlinNoise);
 		}
-
-        public static float[][] GetFloatMap(int width, int height, float minY, float maxY, int octaveCount)
-		{
-            float[][] baseNoise = GenerateWhiteNoise(width, height);
-			float[][] perlinNoise = GeneratePerlinNoise(baseNoise, octaveCount);
-			return MapFloats(minY, maxY, perlinNoise);
-		}
 	}
-}
