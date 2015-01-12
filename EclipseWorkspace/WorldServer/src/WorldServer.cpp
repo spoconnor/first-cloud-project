@@ -46,6 +46,11 @@ int main()
 
     try
     {
+		PerlinNoise perlin = new PerlinNoise();
+		unsigned long seed[4] = {0x123, 0x234, 0x345, 0x456};
+		perlin.Seed(seed);
+
+
     	Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
         channel->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
 
