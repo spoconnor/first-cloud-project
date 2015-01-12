@@ -1,11 +1,11 @@
 ﻿#include "PerlinNoise.h"
 using namespace std;
 
-	PerlinNoise::PerlinNoise(unsigned long seeds[])
+	PerlinNoise::PerlinNoise(unsigned long int seed)
 	{
-		//unsigned long init[4] = {0x123, 0x234, 0x345, 0x456}, length = 4;
 		//MTRand_int32 irand(init, length); // 32-bit int generator
-		mRand(seeds, 4); // 32-bit double generator
+		mRand(); // 32-bit double generator
+		mRand.seed(seed);
 		// this is an example of initializing by an array
 		// you may use MTRand(seed) with any 32bit integer
 		// as a seed for a simpler initialization
@@ -24,18 +24,14 @@ using namespace std;
 		//		}
 	}
 
-	PerlinNoise::~PerlinNoise()
+	TArray2<float>* PerlinNoise::GenerateWhiteNoise(int width, int height)
 	{
-	}
-
-	float[][] PerlinNoise::GenerateWhiteNoise(int width, int height)
-	{
-		float noise[width][height];
+		TArray2<float>* noise = new TArray2<float>(width,height);
 		for (int i = 0; i < width; i++)
 		{
 			for (int j = 0; j < height; j++)
 			{
-				noise[i][j] = mRand();
+				(*noise)(i,j) = mRand();
 			}
 		}
 		return noise;
@@ -47,67 +43,64 @@ using namespace std;
 		return (int)(minY * u + maxY * t);
 	}
 
-	int[][] PerlinNoise::MapInts(int minY, int maxY, float perlinNoise[][], int width, int height)
+	TArray2<int>* PerlinNoise::MapInts(int minY, int maxY, TArray2<float>* perlinNoise)
 	{
-		//int* heightMap = new int[width][height];
-		std::array<std::array<int, height>, width> heightMap;
-
-		for (int i = 0; i < width; i++)
+		TArray2<int>* heightMap = new TArray2<int>(perlinNoise->rows(), perlinNoise->cols());
+		for (unsigned int i = 0; i < perlinNoise->rows(); i++)
 		{
-			for (int j = 0; j < height; j++)
+			for (unsigned int j = 0; j < perlinNoise->cols(); j++)
 			{
-				heightMap[i][j] = Interpolate(minY, maxY, perlinNoise[i][j]);
+				(*heightMap)(i,j) = Interpolate(minY, maxY, (*perlinNoise)(i,j));
 			}
 		}
 		return heightMap;
 	}
 
-	float[][] PerlinNoise::GenerateSmoothNoise(int octave, float baseNoise[][], int width, int height)
+	TArray2<float>* PerlinNoise::GenerateSmoothNoise(int octave, TArray2<float>* baseNoise)
 	{
-		float* smoothNoise = new float[width][height];
+		TArray2<float>* smoothNoise = new TArray2<float>(baseNoise->rows(), baseNoise->cols());
 		int samplePeriod = 1 << octave; // calculates 2 ^ k
 		float sampleFrequency = 1.0f / samplePeriod;
 
-		for (int i = 0; i < width; i++)
+		for (unsigned int i = 0; i < baseNoise->rows(); i++)
 		{
 			//calculate the horizontal sampling indices
 			int iSample0 = (i / samplePeriod) * samplePeriod;
-			int iSample1 = (iSample0 + samplePeriod) % width; //wrap around
+			int iSample1 = (iSample0 + samplePeriod) % baseNoise->rows(); //wrap around
 			float horizontalBlend = (i - iSample0) * sampleFrequency;
 
-			for (int j = 0; j < height; j++)
+			for (unsigned int j = 0; j < baseNoise->cols(); j++)
 			{
 				//calculate the vertical sampling indices
 				int jSample0 = (j / samplePeriod) * samplePeriod;
-				int jSample1 = (jSample0 + samplePeriod) % height; //wrap around
+				int jSample1 = (jSample0 + samplePeriod) % baseNoise->cols(); //wrap around
 				float verticalBlend = (j - jSample0) * sampleFrequency;
 
 				//blend the top two corners
-				float top = Interpolate(baseNoise[iSample0][jSample0], baseNoise[iSample1][jSample0], horizontalBlend);
+				float top = Interpolate((*baseNoise)(iSample0,jSample0), (*baseNoise)(iSample1,jSample0), horizontalBlend);
 
 				//blend the bottom two corners
-				float bottom = Interpolate(baseNoise[iSample0][jSample1], baseNoise[iSample1][jSample1], horizontalBlend);
+				float bottom = Interpolate((*baseNoise)(iSample0,jSample1), (*baseNoise)(iSample1,jSample1), horizontalBlend);
 
 				//final blend
-				smoothNoise[i][j] = Interpolate(top, bottom, verticalBlend);
+				(*smoothNoise)(i,j) = Interpolate(top, bottom, verticalBlend);
 			}
 		}
 		return smoothNoise;
 	}
 
-	float[][] PerlinNoise::GeneratePerlinNoise(int octaveCount, float baseNoise[][], int width, int height)
+	TArray2<float>* PerlinNoise::GeneratePerlinNoise(int octaveCount, TArray2<float>* baseNoise)
 	{
-		float* smoothNoise = new float[octaveCount][][]; //an array of 2D arrays containing
-
+		TArray2<float>* smoothNoise[octaveCount];
 		const float PERSISTANCE = 0.4f;
 
 		//generate smooth noise
 		for (int i = 0; i < octaveCount; i++)
 		{
-			smoothNoise[i] = GenerateSmoothNoise(i, baseNoise, width, height);
+			smoothNoise[i] = GenerateSmoothNoise(i, baseNoise);
 		}
 
-		float* perlinNoise = new float[width][height]; //an array of floats initialised to 0
+		TArray2<float>* perlinNoise = new TArray2<float>(baseNoise->rows(),baseNoise->cols());
 
 		float amplitude = 1.0f;
 		float totalAmplitude = 0.0f;
@@ -118,30 +111,31 @@ using namespace std;
 			amplitude *= PERSISTANCE;
 			totalAmplitude += amplitude;
 
-			for (int i = 0; i < width; i++)
+			for (unsigned int i = 0; i < baseNoise->rows(); i++)
 			{
-				for (int j = 0; j < height; j++)
+				for (unsigned int j = 0; j < baseNoise->cols(); j++)
 				{
-					perlinNoise[i][j] += smoothNoise[octave][i][j] * amplitude;
+					(*perlinNoise)(i,j) += (*smoothNoise[octave])(i,j) * amplitude;
 				}
 			}
 		}
 
 		//normalisation
-		for (int i = 0; i < width; i++)
+		for (unsigned int i = 0; i < baseNoise->rows(); i++)
 		{
-			for (int j = 0; j < height; j++)
+			for (unsigned int j = 0; j < baseNoise->cols(); j++)
 			{
-				perlinNoise[i][j] /= totalAmplitude;
+				(*perlinNoise)(i,j) /= totalAmplitude;
 			}
 		}
 		return perlinNoise;
 	}
 
-	int[][] PerlinNoise::GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
+	TArray2<int>* PerlinNoise::GetIntMap(int width, int height, int minY, int maxY, int octaveCount)
 	{
-		float* baseNoise = GenerateWhiteNoise(width, height);
-		float* perlinNoise = GeneratePerlinNoise(octaveCount, baseNoise, width, height);
-		return MapInts(minY, maxY, perlinNoise, width, height);
+		TArray2<float>* baseNoise = GenerateWhiteNoise(width, height);
+		TArray2<float>* perlinNoise = GeneratePerlinNoise(octaveCount, baseNoise);
+		return MapInts(minY, maxY, perlinNoise);
 	}
+
 

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "CommsMessages.pb.h"
+#include "PerlinNoise.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace AmqpClient;
@@ -46,10 +47,18 @@ int main()
 
     try
     {
-		PerlinNoise perlin = new PerlinNoise();
-		unsigned long seed[4] = {0x123, 0x234, 0x345, 0x456};
-		perlin.Seed(seed);
-
+    	PerlinNoise perlin(0x123);
+    	TArray2<int>* map = perlin.GetIntMap(10,10,0,5,8);
+    	int j = 1;
+    	for(TArray2<int>::iterator i = map->begin(); i != map->end(); i++)
+    	{
+    		std::cout << (*i) << ",";
+    		if (j++ == 10)
+    		{
+    			std::cout << std::endl;
+    			j = 1;
+    		}
+    	}
 
     	Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
         channel->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
