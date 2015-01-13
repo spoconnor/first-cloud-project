@@ -27,15 +27,15 @@ using namespace AmqpClient;
 
 int main()
 {
-	// Verify that the version of the library that we linked against is
-	// compatible with the version of the headers we compiled against.
-	GOOGLE_PROTOBUF_VERIFY_VERSION;
+  // Verify that the version of the library that we linked against is
+  // compatible with the version of the headers we compiled against.
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-	const std::string HOSTNAME = "localhost";
-	const int PORT = 5672;
-	const std::string USERNAME = "guest";
-	const std::string PASSWORD = "guest";
-	const std::string VHOST = "/";
+  const std::string HOSTNAME = "localhost";
+  const int PORT = 5672;
+  const std::string USERNAME = "guest";
+  const std::string PASSWORD = "guest";
+  const std::string VHOST = "/";
     const std::string EXCHANGE_NAME = "MyExchange";
 
     const std::string OUTBOUND_ROUTING_KEY = "Outbound";
@@ -47,20 +47,20 @@ int main()
 
     try
     {
-    	PerlinNoise perlin(0x123);
-    	TArray2<int>* map = perlin.GetIntMap(10,10,0,5,8);
-    	int j = 1;
-    	for(TArray2<int>::iterator i = map->begin(); i != map->end(); i++)
-    	{
-    		std::cout << (*i) << ",";
-    		if (j++ == 10)
-    		{
-    			std::cout << std::endl;
-    			j = 1;
-    		}
-    	}
+      PerlinNoise perlin(0x123);
+      int j = 1;
+      TArray2<uint>* map = perlin.GetIntMap(40,40,0,99,5);
+      for(TArray2<uint>::iterator i = map->begin(); i != map->end(); i++)
+      {
+        std::cout << (*i) << ",";
+        if (j++ == 40)
+        {
+          std::cout << std::endl;
+          j = 1;
+        }
+      }
 
-    	Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
+      Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
         channel->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
 
         Envelope::ptr_t env;
@@ -82,48 +82,48 @@ int main()
                 Say sayMsg;
                 Header header;
                 header.ParseFromString(headStr);
-				switch (header.msgtype())
-				{
-				case 1 : // Ping
-					std::cout << "Ping" << std::endl;
-					break;
-				case 2: // Register
-					std::cout << "Register" << std::endl;
-					break;
-				case 3: // Registered
-					std::cout << "Registered" << std::endl;
-					break;
-				case 4: // Say
-	                if (!sayMsg.ParseFromString(bodyStr))
-	                {
-	                	std::cout << "Error parsing 'Say' message.\n";
-	                	continue;
-	                }
-	                std::cout << "Say: '" << sayMsg.text() << "'\n";
-					break;
-				case 5: // Movement
-					std::cout << "Movement" << std::endl;
-					break;
-				case 6: // Action
-					std::cout << "Action" << std::endl;
-					break;
-				case 7: // Block
-					std::cout << "Block" << std::endl;
-					break;
-				default:
-					std::cout << "Unknown message type " << header.msgtype() << std::endl;
-				}
-
-                msleep(2000);
-
-                channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, env->Message());
-            }
-            else
-            {
-                std::cout << "Basic Consume failed.\n";
-            }
-            msleep(4000);
+        switch (header.msgtype())
+        {
+        case 1 : // Ping
+          std::cout << "Ping" << std::endl;
+          break;
+        case 2: // Register
+          std::cout << "Register" << std::endl;
+          break;
+        case 3: // Registered
+          std::cout << "Registered" << std::endl;
+          break;
+        case 4: // Say
+                  if (!sayMsg.ParseFromString(bodyStr))
+                  {
+                    std::cout << "Error parsing 'Say' message.\n";
+                    continue;
+                  }
+                  std::cout << "Say: '" << sayMsg.text() << "'\n";
+          break;
+        case 5: // Movement
+          std::cout << "Movement" << std::endl;
+          break;
+        case 6: // Action
+          std::cout << "Action" << std::endl;
+          break;
+        case 7: // Block
+          std::cout << "Block" << std::endl;
+          break;
+        default:
+          std::cout << "Unknown message type " << header.msgtype() << std::endl;
         }
+
+        msleep(2000);
+
+        channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, env->Message());
+        }
+        else
+        {
+            std::cout << "Basic Consume failed.\n";
+        }
+        msleep(4000);
+      }
 
     }
     catch (MessageReturnedException &e)
