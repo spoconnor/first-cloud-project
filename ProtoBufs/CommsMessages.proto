@@ -15,6 +15,7 @@ option optimize_for = SPEED;
   message Register
   {
     required string name = 1;
+    required MapCoords mapCoords = 2;
   }
   
   message Registered
@@ -30,6 +31,12 @@ option optimize_for = SPEED;
     required string text = 3;
   }
   
+  message MapCoords
+  {
+    required int32 x = 1;
+    required int32 y = 2;
+  }
+
   message Coords
   {
     required float x = 1;
@@ -89,6 +96,7 @@ option optimize_for = SPEED;
     eMovement = 5;
     eAction = 6;
     eBlock = 7;
+    eMap = 8;
   }
 
   message Header {

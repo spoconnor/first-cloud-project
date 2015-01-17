@@ -47,19 +47,6 @@ int main()
 
     try
     {
-      PerlinNoise perlin(0x123);
-      int j = 1;
-      TArray2<uint>* map = perlin.GetIntMap(40,40,0,99,5);
-      for(TArray2<uint>::iterator i = map->begin(); i != map->end(); i++)
-      {
-        std::cout << (*i) << ",";
-        if (j++ == 40)
-        {
-          std::cout << std::endl;
-          j = 1;
-        }
-      }
-
       Channel::ptr_t channel = Channel::Create(HOSTNAME, PORT, USERNAME, PASSWORD, VHOST);
         channel->BasicConsume(INBOUND_QUEUE_NAME, CONSUMER_TAG, true, true, false);
 
@@ -71,6 +58,7 @@ int main()
                 std::string bodyStr = env->Message()->Body().substr(2, -1);
                 std::string headStr = env->Message()->Body().substr(0, 2);
 
+
                 std::cout << "Envelope received: \n"
                           << " Exchange: " << env->Exchange()
                           << "\n Routing key: " << env->RoutingKey()
@@ -79,7 +67,6 @@ int main()
                           << "\n Redelivered: " << env->Redelivered()
                           << "\n Body: " << bodyStr << std::endl;
 
-                Say sayMsg;
                 Header header;
                 header.ParseFromString(headStr);
         switch (header.msgtype())
@@ -88,12 +75,22 @@ int main()
           std::cout << "Ping" << std::endl;
           break;
         case 2: // Register
-          std::cout << "Register" << std::endl;
+          Register regMsg;
+          if (!regMsg.ParseFromStrig(bodyStr))
+          {
+                    std::cout << "Error parsing 'Register' message.\n";
+                    continue;
+          }
+          std::cout << "Register '" << regMsg.name << "' at (" << regMsg.mapCoords.x << "," << regMsg.mapCoords.y << ")" << std::endl;
+    
+
           break;
         case 3: // Registered
           std::cout << "Registered" << std::endl;
+
           break;
         case 4: // Say
+                Say sayMsg;
                   if (!sayMsg.ParseFromString(bodyStr))
                   {
                     std::cout << "Error parsing 'Say' message.\n";
@@ -109,6 +106,9 @@ int main()
           break;
         case 7: // Block
           std::cout << "Block" << std::endl;
+          break;
+        case 8: // Map
+          std::cout << "Map: '" << std::endl;
           break;
         default:
           std::cout << "Unknown message type " << header.msgtype() << std::endl;

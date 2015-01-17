@@ -19,7 +19,7 @@ void MapServer::GenerateMap()
 {
   PerlinNoise perlin(1234567);
   map = perlin.GetIntMap(_MapWidth, _MapHeight, _MapMinY, _MapMaxY, _OctaveCount);
- 
+  
 }
 
 void MapServer::DumpMap()
