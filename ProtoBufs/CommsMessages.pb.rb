@@ -32,6 +32,12 @@
 #     required string text = 3;
 #   }
 #   
+#   message MapCoords
+#   {
+#     required int32 x = 1;
+#     required int32 y = 2;
+#   }
+# 
 #   message Coords
 #   {
 #     required float x = 1;
@@ -75,10 +81,20 @@
 #     }
 #   }
 # 
+#   message EnterMap
+#   {
+#     required MapCoords mapCoords = 1;
+#   }
+# 
+#   message ExitMap
+#   {
+#     required MapCoords mapCoords = 1;
+#   }
+# 
 #   message Map
 #   {
-#     required int32 xsize = 1;
-#     required int32 ysize = 2;
+#     required MapCoords mapCoords = 1;
+#     required MapCoords mapSize = 2;
 #     required int32 timestamp = 3;
 #     repeated int32 data = 4 [packed=true];
 #   }
@@ -91,6 +107,8 @@
 #     eMovement = 5;
 #     eAction = 6;
 #     eBlock = 7;
+#     eEnterMap = 8;
+#     eExitMap = 9;
 #   }
 # 
 #   message Header {
@@ -164,6 +182,11 @@ class Say < ::Protobuf::Message
   required :int32, :target, 2
   required :string, :text, 3
 end
+class MapCoords < ::Protobuf::Message
+  defined_in __FILE__
+  required :int32, :x, 1
+  required :int32, :y, 2
+end
 class Coords < ::Protobuf::Message
   defined_in __FILE__
   required :float, :x, 1
@@ -202,10 +225,18 @@ class Block < ::Protobuf::Message
     EMove = value(:eMove, 2)
   end
 end
+class EnterMap < ::Protobuf::Message
+  defined_in __FILE__
+  required :MapCoords, :mapCoords, 1
+end
+class ExitMap < ::Protobuf::Message
+  defined_in __FILE__
+  required :MapCoords, :mapCoords, 1
+end
 class Map < ::Protobuf::Message
   defined_in __FILE__
-  required :int32, :xsize, 1
-  required :int32, :ysize, 2
+  required :MapCoords, :mapCoords, 1
+  required :MapCoords, :mapSize, 2
   required :int32, :timestamp, 3
   repeated :int32, :data, 4, :packed => true
 end
@@ -218,6 +249,8 @@ class MsgType < ::Protobuf::Enum
   EMovement = value(:eMovement, 5)
   EAction = value(:eAction, 6)
   EBlock = value(:eBlock, 7)
+  EEnterMap = value(:eEnterMap, 8)
+  EExitMap = value(:eExitMap, 9)
 end
 class Header < ::Protobuf::Message
   defined_in __FILE__

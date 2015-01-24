@@ -36,11 +36,14 @@ class Ping;
 class Register;
 class Registered;
 class Say;
+class MapCoords;
 class Coords;
 class BlockPosition;
 class Move;
 class Action;
 class Block;
+class EnterMap;
+class ExitMap;
 class Map;
 class Header;
 
@@ -71,11 +74,13 @@ enum MsgType {
   eSay = 4,
   eMovement = 5,
   eAction = 6,
-  eBlock = 7
+  eBlock = 7,
+  eEnterMap = 8,
+  eExitMap = 9
 };
 bool MsgType_IsValid(int value);
 const MsgType MsgType_MIN = ePing;
-const MsgType MsgType_MAX = eBlock;
+const MsgType MsgType_MAX = eExitMap;
 const int MsgType_ARRAYSIZE = MsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* MsgType_descriptor();
@@ -460,6 +465,98 @@ class Say : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Say* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MapCoords : public ::google::protobuf::Message {
+ public:
+  MapCoords();
+  virtual ~MapCoords();
+
+  MapCoords(const MapCoords& from);
+
+  inline MapCoords& operator=(const MapCoords& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MapCoords& default_instance();
+
+  void Swap(MapCoords* other);
+
+  // implements Message ----------------------------------------------
+
+  MapCoords* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MapCoords& from);
+  void MergeFrom(const MapCoords& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 x = 1;
+  inline bool has_x() const;
+  inline void clear_x();
+  static const int kXFieldNumber = 1;
+  inline ::google::protobuf::int32 x() const;
+  inline void set_x(::google::protobuf::int32 value);
+
+  // required int32 y = 2;
+  inline bool has_y() const;
+  inline void clear_y();
+  static const int kYFieldNumber = 2;
+  inline ::google::protobuf::int32 y() const;
+  inline void set_y(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:MapCoords)
+ private:
+  inline void set_has_x();
+  inline void clear_has_x();
+  inline void set_has_y();
+  inline void clear_has_y();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 x_;
+  ::google::protobuf::int32 y_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_CommsMessages_2eproto();
+  friend void protobuf_AssignDesc_CommsMessages_2eproto();
+  friend void protobuf_ShutdownFile_CommsMessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MapCoords* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1038,6 +1135,174 @@ class Block : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class EnterMap : public ::google::protobuf::Message {
+ public:
+  EnterMap();
+  virtual ~EnterMap();
+
+  EnterMap(const EnterMap& from);
+
+  inline EnterMap& operator=(const EnterMap& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const EnterMap& default_instance();
+
+  void Swap(EnterMap* other);
+
+  // implements Message ----------------------------------------------
+
+  EnterMap* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const EnterMap& from);
+  void MergeFrom(const EnterMap& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required .MapCoords mapCoords = 1;
+  inline bool has_mapcoords() const;
+  inline void clear_mapcoords();
+  static const int kMapCoordsFieldNumber = 1;
+  inline const ::MapCoords& mapcoords() const;
+  inline ::MapCoords* mutable_mapcoords();
+  inline ::MapCoords* release_mapcoords();
+  inline void set_allocated_mapcoords(::MapCoords* mapcoords);
+
+  // @@protoc_insertion_point(class_scope:EnterMap)
+ private:
+  inline void set_has_mapcoords();
+  inline void clear_has_mapcoords();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::MapCoords* mapcoords_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_CommsMessages_2eproto();
+  friend void protobuf_AssignDesc_CommsMessages_2eproto();
+  friend void protobuf_ShutdownFile_CommsMessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static EnterMap* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ExitMap : public ::google::protobuf::Message {
+ public:
+  ExitMap();
+  virtual ~ExitMap();
+
+  ExitMap(const ExitMap& from);
+
+  inline ExitMap& operator=(const ExitMap& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ExitMap& default_instance();
+
+  void Swap(ExitMap* other);
+
+  // implements Message ----------------------------------------------
+
+  ExitMap* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ExitMap& from);
+  void MergeFrom(const ExitMap& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required .MapCoords mapCoords = 1;
+  inline bool has_mapcoords() const;
+  inline void clear_mapcoords();
+  static const int kMapCoordsFieldNumber = 1;
+  inline const ::MapCoords& mapcoords() const;
+  inline ::MapCoords* mutable_mapcoords();
+  inline ::MapCoords* release_mapcoords();
+  inline void set_allocated_mapcoords(::MapCoords* mapcoords);
+
+  // @@protoc_insertion_point(class_scope:ExitMap)
+ private:
+  inline void set_has_mapcoords();
+  inline void clear_has_mapcoords();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::MapCoords* mapcoords_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_CommsMessages_2eproto();
+  friend void protobuf_AssignDesc_CommsMessages_2eproto();
+  friend void protobuf_ShutdownFile_CommsMessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ExitMap* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Map : public ::google::protobuf::Message {
  public:
   Map();
@@ -1092,19 +1357,23 @@ class Map : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 xsize = 1;
-  inline bool has_xsize() const;
-  inline void clear_xsize();
-  static const int kXsizeFieldNumber = 1;
-  inline ::google::protobuf::int32 xsize() const;
-  inline void set_xsize(::google::protobuf::int32 value);
+  // required .MapCoords mapCoords = 1;
+  inline bool has_mapcoords() const;
+  inline void clear_mapcoords();
+  static const int kMapCoordsFieldNumber = 1;
+  inline const ::MapCoords& mapcoords() const;
+  inline ::MapCoords* mutable_mapcoords();
+  inline ::MapCoords* release_mapcoords();
+  inline void set_allocated_mapcoords(::MapCoords* mapcoords);
 
-  // required int32 ysize = 2;
-  inline bool has_ysize() const;
-  inline void clear_ysize();
-  static const int kYsizeFieldNumber = 2;
-  inline ::google::protobuf::int32 ysize() const;
-  inline void set_ysize(::google::protobuf::int32 value);
+  // required .MapCoords mapSize = 2;
+  inline bool has_mapsize() const;
+  inline void clear_mapsize();
+  static const int kMapSizeFieldNumber = 2;
+  inline const ::MapCoords& mapsize() const;
+  inline ::MapCoords* mutable_mapsize();
+  inline ::MapCoords* release_mapsize();
+  inline void set_allocated_mapsize(::MapCoords* mapsize);
 
   // required int32 timestamp = 3;
   inline bool has_timestamp() const;
@@ -1127,17 +1396,17 @@ class Map : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:Map)
  private:
-  inline void set_has_xsize();
-  inline void clear_has_xsize();
-  inline void set_has_ysize();
-  inline void clear_has_ysize();
+  inline void set_has_mapcoords();
+  inline void clear_has_mapcoords();
+  inline void set_has_mapsize();
+  inline void clear_has_mapsize();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 xsize_;
-  ::google::protobuf::int32 ysize_;
+  ::MapCoords* mapcoords_;
+  ::MapCoords* mapsize_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > data_;
   mutable int _data_cached_byte_size_;
   ::google::protobuf::int32 timestamp_;
@@ -1549,6 +1818,54 @@ inline void Say::set_allocated_text(::std::string* text) {
     clear_has_text();
     text_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// -------------------------------------------------------------------
+
+// MapCoords
+
+// required int32 x = 1;
+inline bool MapCoords::has_x() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MapCoords::set_has_x() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MapCoords::clear_has_x() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MapCoords::clear_x() {
+  x_ = 0;
+  clear_has_x();
+}
+inline ::google::protobuf::int32 MapCoords::x() const {
+  return x_;
+}
+inline void MapCoords::set_x(::google::protobuf::int32 value) {
+  set_has_x();
+  x_ = value;
+}
+
+// required int32 y = 2;
+inline bool MapCoords::has_y() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void MapCoords::set_has_y() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void MapCoords::clear_has_y() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void MapCoords::clear_y() {
+  y_ = 0;
+  clear_has_y();
+}
+inline ::google::protobuf::int32 MapCoords::y() const {
+  return y_;
+}
+inline void MapCoords::set_y(::google::protobuf::int32 value) {
+  set_has_y();
+  y_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2124,50 +2441,166 @@ inline void Block::set_speed(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// Map
+// EnterMap
 
-// required int32 xsize = 1;
-inline bool Map::has_xsize() const {
+// required .MapCoords mapCoords = 1;
+inline bool EnterMap::has_mapcoords() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Map::set_has_xsize() {
+inline void EnterMap::set_has_mapcoords() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Map::clear_has_xsize() {
+inline void EnterMap::clear_has_mapcoords() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Map::clear_xsize() {
-  xsize_ = 0;
-  clear_has_xsize();
+inline void EnterMap::clear_mapcoords() {
+  if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+  clear_has_mapcoords();
 }
-inline ::google::protobuf::int32 Map::xsize() const {
-  return xsize_;
+inline const ::MapCoords& EnterMap::mapcoords() const {
+  return mapcoords_ != NULL ? *mapcoords_ : *default_instance_->mapcoords_;
 }
-inline void Map::set_xsize(::google::protobuf::int32 value) {
-  set_has_xsize();
-  xsize_ = value;
+inline ::MapCoords* EnterMap::mutable_mapcoords() {
+  set_has_mapcoords();
+  if (mapcoords_ == NULL) mapcoords_ = new ::MapCoords;
+  return mapcoords_;
+}
+inline ::MapCoords* EnterMap::release_mapcoords() {
+  clear_has_mapcoords();
+  ::MapCoords* temp = mapcoords_;
+  mapcoords_ = NULL;
+  return temp;
+}
+inline void EnterMap::set_allocated_mapcoords(::MapCoords* mapcoords) {
+  delete mapcoords_;
+  mapcoords_ = mapcoords;
+  if (mapcoords) {
+    set_has_mapcoords();
+  } else {
+    clear_has_mapcoords();
+  }
 }
 
-// required int32 ysize = 2;
-inline bool Map::has_ysize() const {
+// -------------------------------------------------------------------
+
+// ExitMap
+
+// required .MapCoords mapCoords = 1;
+inline bool ExitMap::has_mapcoords() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ExitMap::set_has_mapcoords() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ExitMap::clear_has_mapcoords() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ExitMap::clear_mapcoords() {
+  if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+  clear_has_mapcoords();
+}
+inline const ::MapCoords& ExitMap::mapcoords() const {
+  return mapcoords_ != NULL ? *mapcoords_ : *default_instance_->mapcoords_;
+}
+inline ::MapCoords* ExitMap::mutable_mapcoords() {
+  set_has_mapcoords();
+  if (mapcoords_ == NULL) mapcoords_ = new ::MapCoords;
+  return mapcoords_;
+}
+inline ::MapCoords* ExitMap::release_mapcoords() {
+  clear_has_mapcoords();
+  ::MapCoords* temp = mapcoords_;
+  mapcoords_ = NULL;
+  return temp;
+}
+inline void ExitMap::set_allocated_mapcoords(::MapCoords* mapcoords) {
+  delete mapcoords_;
+  mapcoords_ = mapcoords;
+  if (mapcoords) {
+    set_has_mapcoords();
+  } else {
+    clear_has_mapcoords();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// Map
+
+// required .MapCoords mapCoords = 1;
+inline bool Map::has_mapcoords() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Map::set_has_mapcoords() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Map::clear_has_mapcoords() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Map::clear_mapcoords() {
+  if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+  clear_has_mapcoords();
+}
+inline const ::MapCoords& Map::mapcoords() const {
+  return mapcoords_ != NULL ? *mapcoords_ : *default_instance_->mapcoords_;
+}
+inline ::MapCoords* Map::mutable_mapcoords() {
+  set_has_mapcoords();
+  if (mapcoords_ == NULL) mapcoords_ = new ::MapCoords;
+  return mapcoords_;
+}
+inline ::MapCoords* Map::release_mapcoords() {
+  clear_has_mapcoords();
+  ::MapCoords* temp = mapcoords_;
+  mapcoords_ = NULL;
+  return temp;
+}
+inline void Map::set_allocated_mapcoords(::MapCoords* mapcoords) {
+  delete mapcoords_;
+  mapcoords_ = mapcoords;
+  if (mapcoords) {
+    set_has_mapcoords();
+  } else {
+    clear_has_mapcoords();
+  }
+}
+
+// required .MapCoords mapSize = 2;
+inline bool Map::has_mapsize() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Map::set_has_ysize() {
+inline void Map::set_has_mapsize() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Map::clear_has_ysize() {
+inline void Map::clear_has_mapsize() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Map::clear_ysize() {
-  ysize_ = 0;
-  clear_has_ysize();
+inline void Map::clear_mapsize() {
+  if (mapsize_ != NULL) mapsize_->::MapCoords::Clear();
+  clear_has_mapsize();
 }
-inline ::google::protobuf::int32 Map::ysize() const {
-  return ysize_;
+inline const ::MapCoords& Map::mapsize() const {
+  return mapsize_ != NULL ? *mapsize_ : *default_instance_->mapsize_;
 }
-inline void Map::set_ysize(::google::protobuf::int32 value) {
-  set_has_ysize();
-  ysize_ = value;
+inline ::MapCoords* Map::mutable_mapsize() {
+  set_has_mapsize();
+  if (mapsize_ == NULL) mapsize_ = new ::MapCoords;
+  return mapsize_;
+}
+inline ::MapCoords* Map::release_mapsize() {
+  clear_has_mapsize();
+  ::MapCoords* temp = mapsize_;
+  mapsize_ = NULL;
+  return temp;
+}
+inline void Map::set_allocated_mapsize(::MapCoords* mapsize) {
+  delete mapsize_;
+  mapsize_ = mapsize;
+  if (mapsize) {
+    set_has_mapsize();
+  } else {
+    clear_has_mapsize();
+  }
 }
 
 // required int32 timestamp = 3;

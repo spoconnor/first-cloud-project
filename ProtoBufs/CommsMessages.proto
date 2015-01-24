@@ -15,7 +15,6 @@ option optimize_for = SPEED;
   message Register
   {
     required string name = 1;
-    required MapCoords mapCoords = 2;
   }
   
   message Registered
@@ -80,10 +79,20 @@ option optimize_for = SPEED;
     }
   }
 
+  message EnterMap
+  {
+    required MapCoords mapCoords = 1;
+  }
+
+  message ExitMap
+  {
+    required MapCoords mapCoords = 1;
+  }
+
   message Map
   {
-    required int32 xsize = 1;
-    required int32 ysize = 2;
+    required MapCoords mapCoords = 1;
+    required MapCoords mapSize = 2;
     required int32 timestamp = 3;
     repeated int32 data = 4 [packed=true];
   }
@@ -96,7 +105,8 @@ option optimize_for = SPEED;
     eMovement = 5;
     eAction = 6;
     eBlock = 7;
-    eMap = 8;
+    eEnterMap = 8;
+    eExitMap = 9;
   }
 
   message Header {

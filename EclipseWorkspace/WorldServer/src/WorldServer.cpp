@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "CommsMessages.pb.h"
-#include "PerlinNoise.h"
+#include "MapServer.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace AmqpClient;
@@ -69,34 +69,34 @@ int main()
 
                 Header header;
                 header.ParseFromString(headStr);
+
+		Register regMsg;
+		Say sayMsg;
+    	EnterMap enterMapMsg;
         switch (header.msgtype())
         {
         case 1 : // Ping
           std::cout << "Ping" << std::endl;
           break;
         case 2: // Register
-          Register regMsg;
-          if (!regMsg.ParseFromStrig(bodyStr))
+          if (!regMsg.ParseFromString(bodyStr))
           {
-                    std::cout << "Error parsing 'Register' message.\n";
-                    continue;
+			std::cout << "Error parsing 'Register' message.\n";
+			continue;
           }
-          std::cout << "Register '" << regMsg.name << "' at (" << regMsg.mapCoords.x << "," << regMsg.mapCoords.y << ")" << std::endl;
-    
-
+          std::cout << "Register '" << regMsg.name() << std::endl;
           break;
         case 3: // Registered
           std::cout << "Registered" << std::endl;
 
           break;
         case 4: // Say
-                Say sayMsg;
-                  if (!sayMsg.ParseFromString(bodyStr))
-                  {
-                    std::cout << "Error parsing 'Say' message.\n";
-                    continue;
-                  }
-                  std::cout << "Say: '" << sayMsg.text() << "'\n";
+			if (!sayMsg.ParseFromString(bodyStr))
+			{
+				std::cout << "Error parsing 'Say' message.\n";
+				continue;
+			}
+			std::cout << "Say: '" << sayMsg.text() << "'\n";
           break;
         case 5: // Movement
           std::cout << "Movement" << std::endl;
@@ -107,9 +107,17 @@ int main()
         case 7: // Block
           std::cout << "Block" << std::endl;
           break;
-        case 8: // Map
-          std::cout << "Map: '" << std::endl;
+        case 8: // EnterMap
+			if (!enterMapMsg.ParseFromString(bodyStr))
+			{
+				std::cout << "Error parsing 'EnterMap' message.\n";
+				continue;
+			}
+			MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
           break;
+        case 9: // ExitMap
+            break;
+
         default:
           std::cout << "Unknown message type " << header.msgtype() << std::endl;
         }

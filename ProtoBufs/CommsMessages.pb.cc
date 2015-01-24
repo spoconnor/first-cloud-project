@@ -30,6 +30,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Say_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Say_reflection_ = NULL;
+const ::google::protobuf::Descriptor* MapCoords_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  MapCoords_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Coords_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Coords_reflection_ = NULL;
@@ -46,6 +49,12 @@ const ::google::protobuf::Descriptor* Block_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Block_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* Block_ObjectAction_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* EnterMap_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  EnterMap_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ExitMap_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ExitMap_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Map_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Map_reflection_ = NULL;
@@ -126,7 +135,23 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Say));
-  Coords_descriptor_ = file->message_type(4);
+  MapCoords_descriptor_ = file->message_type(4);
+  static const int MapCoords_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MapCoords, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MapCoords, y_),
+  };
+  MapCoords_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      MapCoords_descriptor_,
+      MapCoords::default_instance_,
+      MapCoords_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MapCoords, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MapCoords, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(MapCoords));
+  Coords_descriptor_ = file->message_type(5);
   static const int Coords_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Coords, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Coords, y_),
@@ -142,7 +167,7 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Coords));
-  BlockPosition_descriptor_ = file->message_type(5);
+  BlockPosition_descriptor_ = file->message_type(6);
   static const int BlockPosition_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BlockPosition, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BlockPosition, y_),
@@ -158,7 +183,7 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BlockPosition));
-  Move_descriptor_ = file->message_type(6);
+  Move_descriptor_ = file->message_type(7);
   static const int Move_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Move, object_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Move, from_),
@@ -176,7 +201,7 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Move));
-  Action_descriptor_ = file->message_type(7);
+  Action_descriptor_ = file->message_type(8);
   static const int Action_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Action, from_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Action, target_),
@@ -194,7 +219,7 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Action));
-  Block_descriptor_ = file->message_type(8);
+  Block_descriptor_ = file->message_type(9);
   static const int Block_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Block, location_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Block, type_),
@@ -214,10 +239,40 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Block));
   Block_ObjectAction_descriptor_ = Block_descriptor_->enum_type(0);
-  Map_descriptor_ = file->message_type(9);
+  EnterMap_descriptor_ = file->message_type(10);
+  static const int EnterMap_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EnterMap, mapcoords_),
+  };
+  EnterMap_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      EnterMap_descriptor_,
+      EnterMap::default_instance_,
+      EnterMap_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EnterMap, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EnterMap, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(EnterMap));
+  ExitMap_descriptor_ = file->message_type(11);
+  static const int ExitMap_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExitMap, mapcoords_),
+  };
+  ExitMap_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ExitMap_descriptor_,
+      ExitMap::default_instance_,
+      ExitMap_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExitMap, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ExitMap, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ExitMap));
+  Map_descriptor_ = file->message_type(12);
   static const int Map_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, xsize_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, ysize_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, mapcoords_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, mapsize_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Map, data_),
   };
@@ -232,7 +287,7 @@ void protobuf_AssignDesc_CommsMessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Map));
-  Header_descriptor_ = file->message_type(10);
+  Header_descriptor_ = file->message_type(13);
   static const int Header_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Header, msgtype_),
   };
@@ -269,6 +324,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Say_descriptor_, &Say::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    MapCoords_descriptor_, &MapCoords::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Coords_descriptor_, &Coords::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     BlockPosition_descriptor_, &BlockPosition::default_instance());
@@ -278,6 +335,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     Action_descriptor_, &Action::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Block_descriptor_, &Block::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    EnterMap_descriptor_, &EnterMap::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ExitMap_descriptor_, &ExitMap::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Map_descriptor_, &Map::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
@@ -295,6 +356,8 @@ void protobuf_ShutdownFile_CommsMessages_2eproto() {
   delete Registered_reflection_;
   delete Say::default_instance_;
   delete Say_reflection_;
+  delete MapCoords::default_instance_;
+  delete MapCoords_reflection_;
   delete Coords::default_instance_;
   delete Coords_reflection_;
   delete BlockPosition::default_instance_;
@@ -305,6 +368,10 @@ void protobuf_ShutdownFile_CommsMessages_2eproto() {
   delete Action_reflection_;
   delete Block::default_instance_;
   delete Block_reflection_;
+  delete EnterMap::default_instance_;
+  delete EnterMap_reflection_;
+  delete ExitMap::default_instance_;
+  delete ExitMap_reflection_;
   delete Map::default_instance_;
   delete Map_reflection_;
   delete Header::default_instance_;
@@ -322,45 +389,56 @@ void protobuf_AddDesc_CommsMessages_2eproto() {
     " \002(\005\"\030\n\010Register\022\014\n\004name\030\001 \002(\t\",\n\nRegist"
     "ered\022\020\n\010objectid\030\001 \002(\005\022\014\n\004motd\030\002 \001(\t\"1\n\003"
     "Say\022\014\n\004from\030\001 \002(\005\022\016\n\006target\030\002 \002(\005\022\014\n\004tex"
-    "t\030\003 \002(\t\"\036\n\006Coords\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\""
-    "%\n\rBlockPosition\022\t\n\001x\030\001 \002(\005\022\t\n\001y\030\002 \002(\005\"_"
-    "\n\004Move\022\016\n\006object\030\001 \002(\005\022\034\n\004from\030\002 \002(\0132\016.B"
-    "lockPosition\022\032\n\002to\030\003 \002(\0132\016.BlockPosition"
-    "\022\r\n\005speed\030\004 \001(\005\"R\n\006Action\022\014\n\004from\030\001 \002(\005\022"
-    "\036\n\006target\030\002 \002(\0132\016.BlockPosition\022\014\n\004what\030"
-    "\003 \002(\t\022\014\n\004with\030\004 \002(\t\"\302\001\n\005Block\022 \n\010locatio"
-    "n\030\001 \002(\0132\016.BlockPosition\022\014\n\004type\030\002 \002(\005\022#\n"
-    "\006action\030\003 \002(\0162\023.Block.ObjectAction\022#\n\013de"
-    "stination\030\004 \002(\0132\016.BlockPosition\022\r\n\005speed"
-    "\030\005 \002(\005\"0\n\014ObjectAction\022\010\n\004eAdd\020\000\022\013\n\007eRem"
-    "ove\020\001\022\t\n\005eMove\020\002\"H\n\003Map\022\r\n\005xsize\030\001 \002(\005\022\r"
-    "\n\005ysize\030\002 \002(\005\022\021\n\ttimestamp\030\003 \002(\005\022\020\n\004data"
-    "\030\004 \003(\005B\002\020\001\"\031\n\006Header\022\017\n\007msgtype\030\001 \002(\005*f\n"
-    "\007MsgType\022\t\n\005ePing\020\001\022\r\n\teRegister\020\002\022\017\n\013eR"
-    "egistered\020\003\022\010\n\004eSay\020\004\022\r\n\teMovement\020\005\022\013\n\007"
-    "eAction\020\006\022\n\n\006eBlock\020\007B\002H\001", 825);
+    "t\030\003 \002(\t\"!\n\tMapCoords\022\t\n\001x\030\001 \002(\005\022\t\n\001y\030\002 \002"
+    "(\005\"\036\n\006Coords\022\t\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\"%\n\rBl"
+    "ockPosition\022\t\n\001x\030\001 \002(\005\022\t\n\001y\030\002 \002(\005\"_\n\004Mov"
+    "e\022\016\n\006object\030\001 \002(\005\022\034\n\004from\030\002 \002(\0132\016.BlockP"
+    "osition\022\032\n\002to\030\003 \002(\0132\016.BlockPosition\022\r\n\005s"
+    "peed\030\004 \001(\005\"R\n\006Action\022\014\n\004from\030\001 \002(\005\022\036\n\006ta"
+    "rget\030\002 \002(\0132\016.BlockPosition\022\014\n\004what\030\003 \002(\t"
+    "\022\014\n\004with\030\004 \002(\t\"\302\001\n\005Block\022 \n\010location\030\001 \002"
+    "(\0132\016.BlockPosition\022\014\n\004type\030\002 \002(\005\022#\n\006acti"
+    "on\030\003 \002(\0162\023.Block.ObjectAction\022#\n\013destina"
+    "tion\030\004 \002(\0132\016.BlockPosition\022\r\n\005speed\030\005 \002("
+    "\005\"0\n\014ObjectAction\022\010\n\004eAdd\020\000\022\013\n\007eRemove\020\001"
+    "\022\t\n\005eMove\020\002\")\n\010EnterMap\022\035\n\tmapCoords\030\001 \002"
+    "(\0132\n.MapCoords\"(\n\007ExitMap\022\035\n\tmapCoords\030\001"
+    " \002(\0132\n.MapCoords\"f\n\003Map\022\035\n\tmapCoords\030\001 \002"
+    "(\0132\n.MapCoords\022\033\n\007mapSize\030\002 \002(\0132\n.MapCoo"
+    "rds\022\021\n\ttimestamp\030\003 \002(\005\022\020\n\004data\030\004 \003(\005B\002\020\001"
+    "\"\031\n\006Header\022\017\n\007msgtype\030\001 \002(\005*\203\001\n\007MsgType\022"
+    "\t\n\005ePing\020\001\022\r\n\teRegister\020\002\022\017\n\013eRegistered"
+    "\020\003\022\010\n\004eSay\020\004\022\r\n\teMovement\020\005\022\013\n\007eAction\020\006"
+    "\022\n\n\006eBlock\020\007\022\r\n\teEnterMap\020\010\022\014\n\010eExitMap\020"
+    "\tB\002H\001", 1005);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "CommsMessages.proto", &protobuf_RegisterTypes);
   Ping::default_instance_ = new Ping();
   Register::default_instance_ = new Register();
   Registered::default_instance_ = new Registered();
   Say::default_instance_ = new Say();
+  MapCoords::default_instance_ = new MapCoords();
   Coords::default_instance_ = new Coords();
   BlockPosition::default_instance_ = new BlockPosition();
   Move::default_instance_ = new Move();
   Action::default_instance_ = new Action();
   Block::default_instance_ = new Block();
+  EnterMap::default_instance_ = new EnterMap();
+  ExitMap::default_instance_ = new ExitMap();
   Map::default_instance_ = new Map();
   Header::default_instance_ = new Header();
   Ping::default_instance_->InitAsDefaultInstance();
   Register::default_instance_->InitAsDefaultInstance();
   Registered::default_instance_->InitAsDefaultInstance();
   Say::default_instance_->InitAsDefaultInstance();
+  MapCoords::default_instance_->InitAsDefaultInstance();
   Coords::default_instance_->InitAsDefaultInstance();
   BlockPosition::default_instance_->InitAsDefaultInstance();
   Move::default_instance_->InitAsDefaultInstance();
   Action::default_instance_->InitAsDefaultInstance();
   Block::default_instance_->InitAsDefaultInstance();
+  EnterMap::default_instance_->InitAsDefaultInstance();
+  ExitMap::default_instance_->InitAsDefaultInstance();
   Map::default_instance_->InitAsDefaultInstance();
   Header::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_CommsMessages_2eproto);
@@ -385,6 +463,8 @@ bool MsgType_IsValid(int value) {
     case 5:
     case 6:
     case 7:
+    case 8:
+    case 9:
       return true;
     default:
       return false;
@@ -1395,6 +1475,255 @@ void Say::Swap(Say* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = Say_descriptor_;
   metadata.reflection = Say_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int MapCoords::kXFieldNumber;
+const int MapCoords::kYFieldNumber;
+#endif  // !_MSC_VER
+
+MapCoords::MapCoords()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void MapCoords::InitAsDefaultInstance() {
+}
+
+MapCoords::MapCoords(const MapCoords& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void MapCoords::SharedCtor() {
+  _cached_size_ = 0;
+  x_ = 0;
+  y_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+MapCoords::~MapCoords() {
+  SharedDtor();
+}
+
+void MapCoords::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void MapCoords::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* MapCoords::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return MapCoords_descriptor_;
+}
+
+const MapCoords& MapCoords::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_CommsMessages_2eproto();
+  return *default_instance_;
+}
+
+MapCoords* MapCoords::default_instance_ = NULL;
+
+MapCoords* MapCoords::New() const {
+  return new MapCoords;
+}
+
+void MapCoords::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    x_ = 0;
+    y_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool MapCoords::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required int32 x = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &x_)));
+          set_has_x();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_y;
+        break;
+      }
+
+      // required int32 y = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_y:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &y_)));
+          set_has_y();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void MapCoords::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required int32 x = 1;
+  if (has_x()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->x(), output);
+  }
+
+  // required int32 y = 2;
+  if (has_y()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->y(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* MapCoords::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required int32 x = 1;
+  if (has_x()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->x(), target);
+  }
+
+  // required int32 y = 2;
+  if (has_y()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->y(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int MapCoords::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int32 x = 1;
+    if (has_x()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->x());
+    }
+
+    // required int32 y = 2;
+    if (has_y()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->y());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void MapCoords::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const MapCoords* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const MapCoords*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void MapCoords::MergeFrom(const MapCoords& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_x()) {
+      set_x(from.x());
+    }
+    if (from.has_y()) {
+      set_y(from.y());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void MapCoords::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void MapCoords::CopyFrom(const MapCoords& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MapCoords::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void MapCoords::Swap(MapCoords* other) {
+  if (other != this) {
+    std::swap(x_, other->x_);
+    std::swap(y_, other->y_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata MapCoords::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = MapCoords_descriptor_;
+  metadata.reflection = MapCoords_reflection_;
   return metadata;
 }
 
@@ -3026,8 +3355,442 @@ void Block::Swap(Block* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Map::kXsizeFieldNumber;
-const int Map::kYsizeFieldNumber;
+const int EnterMap::kMapCoordsFieldNumber;
+#endif  // !_MSC_VER
+
+EnterMap::EnterMap()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void EnterMap::InitAsDefaultInstance() {
+  mapcoords_ = const_cast< ::MapCoords*>(&::MapCoords::default_instance());
+}
+
+EnterMap::EnterMap(const EnterMap& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void EnterMap::SharedCtor() {
+  _cached_size_ = 0;
+  mapcoords_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+EnterMap::~EnterMap() {
+  SharedDtor();
+}
+
+void EnterMap::SharedDtor() {
+  if (this != default_instance_) {
+    delete mapcoords_;
+  }
+}
+
+void EnterMap::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* EnterMap::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return EnterMap_descriptor_;
+}
+
+const EnterMap& EnterMap::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_CommsMessages_2eproto();
+  return *default_instance_;
+}
+
+EnterMap* EnterMap::default_instance_ = NULL;
+
+EnterMap* EnterMap::New() const {
+  return new EnterMap;
+}
+
+void EnterMap::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_mapcoords()) {
+      if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool EnterMap::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .MapCoords mapCoords = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_mapcoords()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void EnterMap::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->mapcoords(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* EnterMap::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->mapcoords(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int EnterMap::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .MapCoords mapCoords = 1;
+    if (has_mapcoords()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->mapcoords());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void EnterMap::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const EnterMap* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const EnterMap*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void EnterMap::MergeFrom(const EnterMap& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_mapcoords()) {
+      mutable_mapcoords()->::MapCoords::MergeFrom(from.mapcoords());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void EnterMap::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void EnterMap::CopyFrom(const EnterMap& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool EnterMap::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  if (has_mapcoords()) {
+    if (!this->mapcoords().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void EnterMap::Swap(EnterMap* other) {
+  if (other != this) {
+    std::swap(mapcoords_, other->mapcoords_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata EnterMap::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = EnterMap_descriptor_;
+  metadata.reflection = EnterMap_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int ExitMap::kMapCoordsFieldNumber;
+#endif  // !_MSC_VER
+
+ExitMap::ExitMap()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void ExitMap::InitAsDefaultInstance() {
+  mapcoords_ = const_cast< ::MapCoords*>(&::MapCoords::default_instance());
+}
+
+ExitMap::ExitMap(const ExitMap& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void ExitMap::SharedCtor() {
+  _cached_size_ = 0;
+  mapcoords_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ExitMap::~ExitMap() {
+  SharedDtor();
+}
+
+void ExitMap::SharedDtor() {
+  if (this != default_instance_) {
+    delete mapcoords_;
+  }
+}
+
+void ExitMap::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ExitMap::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ExitMap_descriptor_;
+}
+
+const ExitMap& ExitMap::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_CommsMessages_2eproto();
+  return *default_instance_;
+}
+
+ExitMap* ExitMap::default_instance_ = NULL;
+
+ExitMap* ExitMap::New() const {
+  return new ExitMap;
+}
+
+void ExitMap::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_mapcoords()) {
+      if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ExitMap::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required .MapCoords mapCoords = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_mapcoords()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void ExitMap::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->mapcoords(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* ExitMap::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->mapcoords(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int ExitMap::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required .MapCoords mapCoords = 1;
+    if (has_mapcoords()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->mapcoords());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ExitMap::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ExitMap* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ExitMap*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ExitMap::MergeFrom(const ExitMap& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_mapcoords()) {
+      mutable_mapcoords()->::MapCoords::MergeFrom(from.mapcoords());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ExitMap::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ExitMap::CopyFrom(const ExitMap& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ExitMap::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  if (has_mapcoords()) {
+    if (!this->mapcoords().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void ExitMap::Swap(ExitMap* other) {
+  if (other != this) {
+    std::swap(mapcoords_, other->mapcoords_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ExitMap::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ExitMap_descriptor_;
+  metadata.reflection = ExitMap_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Map::kMapCoordsFieldNumber;
+const int Map::kMapSizeFieldNumber;
 const int Map::kTimestampFieldNumber;
 const int Map::kDataFieldNumber;
 #endif  // !_MSC_VER
@@ -3038,6 +3801,8 @@ Map::Map()
 }
 
 void Map::InitAsDefaultInstance() {
+  mapcoords_ = const_cast< ::MapCoords*>(&::MapCoords::default_instance());
+  mapsize_ = const_cast< ::MapCoords*>(&::MapCoords::default_instance());
 }
 
 Map::Map(const Map& from)
@@ -3048,8 +3813,8 @@ Map::Map(const Map& from)
 
 void Map::SharedCtor() {
   _cached_size_ = 0;
-  xsize_ = 0;
-  ysize_ = 0;
+  mapcoords_ = NULL;
+  mapsize_ = NULL;
   timestamp_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3060,6 +3825,8 @@ Map::~Map() {
 
 void Map::SharedDtor() {
   if (this != default_instance_) {
+    delete mapcoords_;
+    delete mapsize_;
   }
 }
 
@@ -3086,8 +3853,12 @@ Map* Map::New() const {
 
 void Map::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    xsize_ = 0;
-    ysize_ = 0;
+    if (has_mapcoords()) {
+      if (mapcoords_ != NULL) mapcoords_->::MapCoords::Clear();
+    }
+    if (has_mapsize()) {
+      if (mapsize_ != NULL) mapsize_->::MapCoords::Clear();
+    }
     timestamp_ = 0;
   }
   data_.Clear();
@@ -3101,30 +3872,26 @@ bool Map::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 xsize = 1;
+      // required .MapCoords mapCoords = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &xsize_)));
-          set_has_xsize();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_mapcoords()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_ysize;
+        if (input->ExpectTag(18)) goto parse_mapSize;
         break;
       }
 
-      // required int32 ysize = 2;
+      // required .MapCoords mapSize = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_ysize:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &ysize_)));
-          set_has_ysize();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_mapSize:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_mapsize()));
         } else {
           goto handle_uninterpreted;
         }
@@ -3187,14 +3954,16 @@ bool Map::MergePartialFromCodedStream(
 
 void Map::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 xsize = 1;
-  if (has_xsize()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->xsize(), output);
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->mapcoords(), output);
   }
 
-  // required int32 ysize = 2;
-  if (has_ysize()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->ysize(), output);
+  // required .MapCoords mapSize = 2;
+  if (has_mapsize()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->mapsize(), output);
   }
 
   // required int32 timestamp = 3;
@@ -3220,14 +3989,18 @@ void Map::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Map::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 xsize = 1;
-  if (has_xsize()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->xsize(), target);
+  // required .MapCoords mapCoords = 1;
+  if (has_mapcoords()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->mapcoords(), target);
   }
 
-  // required int32 ysize = 2;
-  if (has_ysize()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->ysize(), target);
+  // required .MapCoords mapSize = 2;
+  if (has_mapsize()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->mapsize(), target);
   }
 
   // required int32 timestamp = 3;
@@ -3260,18 +4033,18 @@ int Map::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 xsize = 1;
-    if (has_xsize()) {
+    // required .MapCoords mapCoords = 1;
+    if (has_mapcoords()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->xsize());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->mapcoords());
     }
 
-    // required int32 ysize = 2;
-    if (has_ysize()) {
+    // required .MapCoords mapSize = 2;
+    if (has_mapsize()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->ysize());
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->mapsize());
     }
 
     // required int32 timestamp = 3;
@@ -3326,11 +4099,11 @@ void Map::MergeFrom(const Map& from) {
   GOOGLE_CHECK_NE(&from, this);
   data_.MergeFrom(from.data_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_xsize()) {
-      set_xsize(from.xsize());
+    if (from.has_mapcoords()) {
+      mutable_mapcoords()->::MapCoords::MergeFrom(from.mapcoords());
     }
-    if (from.has_ysize()) {
-      set_ysize(from.ysize());
+    if (from.has_mapsize()) {
+      mutable_mapsize()->::MapCoords::MergeFrom(from.mapsize());
     }
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
@@ -3354,13 +4127,19 @@ void Map::CopyFrom(const Map& from) {
 bool Map::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
 
+  if (has_mapcoords()) {
+    if (!this->mapcoords().IsInitialized()) return false;
+  }
+  if (has_mapsize()) {
+    if (!this->mapsize().IsInitialized()) return false;
+  }
   return true;
 }
 
 void Map::Swap(Map* other) {
   if (other != this) {
-    std::swap(xsize_, other->xsize_);
-    std::swap(ysize_, other->ysize_);
+    std::swap(mapcoords_, other->mapcoords_);
+    std::swap(mapsize_, other->mapsize_);
     std::swap(timestamp_, other->timestamp_);
     data_.Swap(&other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
