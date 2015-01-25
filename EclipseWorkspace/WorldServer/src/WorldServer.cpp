@@ -1,5 +1,6 @@
 #include <SimpleAmqpClient.h>
 #include <iostream>
+#include <sys/time.h>
 #include <stdlib.h>
 #include "CommsMessages.pb.h"
 #include "MapServer.h"
@@ -73,10 +74,14 @@ int main()
 		Register regMsg;
 		Say sayMsg;
     	EnterMap enterMapMsg;
+    	Map mapMsg;
+    	TArray2<uint>* map;
+    	std::string replyBodyStr = "";
         switch (header.msgtype())
         {
         case 1 : // Ping
           std::cout << "Ping" << std::endl;
+          replyBodyStr = bodyStr;
           break;
         case 2: // Register
           if (!regMsg.ParseFromString(bodyStr))
@@ -113,7 +118,16 @@ int main()
 				std::cout << "Error parsing 'EnterMap' message.\n";
 				continue;
 			}
-			MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
+			map = MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
+			mapMsg.set_allocated_mapcoords(enterMapMsg.mapcoords());
+			mapMsg.mapsize().set_x(map->cols());
+			mapMsg.mapsize().set_y(map->rows());
+
+			struct timeval detail_time;
+			gettimeofday(&detail_time,NULL);
+			mapMsg.set_timestamp(detail_time.tv_usec); /* microseconds */
+			mapMsg.set_data(map->c_data());
+			replyBodyStr = mapMsg.SerializeAsString();
           break;
         case 9: // ExitMap
             break;
@@ -124,7 +138,10 @@ int main()
 
         msleep(2000);
 
-        channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, env->Message());
+        BasicMessage::ptr_t outgoing_message = BasicMessage::Create();
+        outgoing_message->Body(replyBodyStr);
+        channel->BasicPublish(EXCHANGE_NAME, OUTBOUND_ROUTING_KEY, outgoing_message);
+
         }
         else
         {
