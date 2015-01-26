@@ -1,4 +1,7 @@
-﻿#include "PerlinNoise.h"
+﻿#ifndef PERLINNOISE_H_
+#define PERLINNOISE_H_
+
+#include "PerlinNoise.h"
 
 enum eBlock
 {
@@ -35,3 +38,6 @@ private:
 
 	char sprites[4];
 };
+
+
+#endif

@@ -119,14 +119,14 @@ int main()
     continue;
     }
     map = MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
-    mapMsg.set_allocated_mapcoords(enterMapMsg.mapcoords());
-    mapMsg.mapsize().set_x(map->cols());
-    mapMsg.mapsize().set_y(map->rows());
+//    mapMsg.set_allocated_mapcoords(enterMapMsg.mapcoords());
+//    mapMsg.mapsize().set_x(map->cols());
+//    mapMsg.mapsize().set_y(map->rows());
 
     struct timeval detail_time;
     gettimeofday(&detail_time,NULL);
     mapMsg.set_timestamp(detail_time.tv_usec); /* microseconds */
-    mapMsg.set_data(map->c_data());
+//    mapMsg.set_data(map->c_data());
     replyBodyStr = mapMsg.SerializeAsString();
           break;
         case 9: // ExitMap

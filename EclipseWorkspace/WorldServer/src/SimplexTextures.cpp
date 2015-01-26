@@ -18,8 +18,8 @@
 
 #include <math.h>
 
-#include "simplexnoise.h"
-#include "simplextextures.h"
+#include "SimplexNoise.h"
+#include "SimplexTextures.h"
 
 
 // 2D Marble Noise: x-axis.

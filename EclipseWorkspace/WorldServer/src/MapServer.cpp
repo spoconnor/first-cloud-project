@@ -1,4 +1,5 @@
 #include "MapServer.h"
+#include "SimplexNoise.h"
 #include <iostream>
 #include <stdlib.h>
 
