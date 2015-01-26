@@ -71,12 +71,12 @@ int main()
                 Header header;
                 header.ParseFromString(headStr);
 
-		Register regMsg;
-		Say sayMsg;
-    	EnterMap enterMapMsg;
-    	Map mapMsg;
-    	TArray2<uint>* map;
-    	std::string replyBodyStr = "";
+    Register regMsg;
+    Say sayMsg;
+           EnterMap enterMapMsg;
+        Map mapMsg;
+        TArray2<uint>* map;
+        std::string replyBodyStr = "";
         switch (header.msgtype())
         {
         case 1 : // Ping
@@ -86,8 +86,8 @@ int main()
         case 2: // Register
           if (!regMsg.ParseFromString(bodyStr))
           {
-			std::cout << "Error parsing 'Register' message.\n";
-			continue;
+    std::cout << "Error parsing 'Register' message.\n";
+    continue;
           }
           std::cout << "Register '" << regMsg.name() << std::endl;
           break;
@@ -96,12 +96,12 @@ int main()
 
           break;
         case 4: // Say
-			if (!sayMsg.ParseFromString(bodyStr))
-			{
-				std::cout << "Error parsing 'Say' message.\n";
-				continue;
-			}
-			std::cout << "Say: '" << sayMsg.text() << "'\n";
+    if (!sayMsg.ParseFromString(bodyStr))
+    {
+    std::cout << "Error parsing 'Say' message.\n";
+    continue;
+    }
+    std::cout << "Say: '" << sayMsg.text() << "'\n";
           break;
         case 5: // Movement
           std::cout << "Movement" << std::endl;
@@ -113,21 +113,21 @@ int main()
           std::cout << "Block" << std::endl;
           break;
         case 8: // EnterMap
-			if (!enterMapMsg.ParseFromString(bodyStr))
-			{
-				std::cout << "Error parsing 'EnterMap' message.\n";
-				continue;
-			}
-			map = MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
-			mapMsg.set_allocated_mapcoords(enterMapMsg.mapcoords());
-			mapMsg.mapsize().set_x(map->cols());
-			mapMsg.mapsize().set_y(map->rows());
+    if (!enterMapMsg.ParseFromString(bodyStr))
+    {
+    std::cout << "Error parsing 'EnterMap' message.\n";
+    continue;
+    }
+    map = MapServer::GetMap(enterMapMsg.mapcoords().x(), enterMapMsg.mapcoords().y());
+    mapMsg.set_allocated_mapcoords(enterMapMsg.mapcoords());
+    mapMsg.mapsize().set_x(map->cols());
+    mapMsg.mapsize().set_y(map->rows());
 
-			struct timeval detail_time;
-			gettimeofday(&detail_time,NULL);
-			mapMsg.set_timestamp(detail_time.tv_usec); /* microseconds */
-			mapMsg.set_data(map->c_data());
-			replyBodyStr = mapMsg.SerializeAsString();
+    struct timeval detail_time;
+    gettimeofday(&detail_time,NULL);
+    mapMsg.set_timestamp(detail_time.tv_usec); /* microseconds */
+    mapMsg.set_data(map->c_data());
+    replyBodyStr = mapMsg.SerializeAsString();
           break;
         case 9: // ExitMap
             break;
