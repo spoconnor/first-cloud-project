@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include "CommsMessages.pb.h"
+#include "websocket_server.h"
 #include "MapServer.h"
 #include <boost/lexical_cast.hpp>
 
@@ -25,6 +26,11 @@ using namespace AmqpClient;
     }
 #endif
 
+class echo_handler : public server::handler {
+    void on_message(connection_ptr con, std::string msg) {
+        con->write(msg);
+    }
+};
 
 int main()
 {
@@ -45,6 +51,35 @@ int main()
     const std::string INBOUND_QUEUE_NAME = "InboundQueue";
     const std::string OUTBOUND_QUEUE_NAME = "OutboundQueue";
     //const std::string ERROR_QUEUE_NAME = "ErrorQueue";
+
+    // WebSocket Server
+        // Create a server endpoint
+        server echo_server;
+        try {
+            // Set logging settings
+            echo_server.set_access_channels(websocketpp::log::alevel::all);
+            echo_server.clear_access_channels(websocketpp::log::alevel::frame_payload);
+
+            // Initialize ASIO
+            echo_server.init_asio();
+
+            // Register our message handler
+            echo_server.set_message_handler(bind(&on_message,&echo_server,::_1,::_2));
+
+            // Listen on port 9002
+            echo_server.listen(9002);
+
+            // Start the server accept loop
+            echo_server.start_accept();
+
+            // Start the ASIO io_service run loop
+            echo_server.run();
+        } catch (websocketpp::exception const & e) {
+            std::cout << e.what() << std::endl;
+        } catch (...) {
+            std::cout << "other exception" << std::endl;
+        }
+    //////
 
     try
     {
